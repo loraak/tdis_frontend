@@ -18,7 +18,7 @@ export const routes: Routes = [
         { path: 'catalogo',    component: Catalogo },
         { path: '', redirectTo: 'progreso', pathMatch: 'full' }
     ]},
-    {path: 'alumno', component: MainLayout, canActivate: [], children: [
+    {path: 'admin', component: MainLayout, canActivate: [], children: [
         { path: 'resumen',     component: Resumen },
         { path: 'alumnos',     component: Alumnos },
         { path: 'solicitudes', component: Solicitudes },

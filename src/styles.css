@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f4f7f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+:root {
+    --tdis-color-yellow: #F5A623;
+    --tdis-color-dark-yellow: #9f6404;
+    --tdis-color-navy-blue: #071728;
+    --tdis-color-text-blue: #1E3A5F;
+    --tdis-color-light-blue: #00B4D8;
+    --tdis-color-light-purple: #A78BFA;
+    --tdis-color-light-green: #00C27A;
+    --tdis-color-light-red: #EF4444;
+    --tdis-color-white-blue: #EEF4FF;
+}

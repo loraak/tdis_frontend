@@ -1,1 +1,33 @@
-<p>header works!</p>
+<header class="admin-header">
+    <div class="header-left">
+        <div class="logo-container">
+            <img src="logo-uteq.png" alt="Logo UTEQ" class="logo-img" />
+        </div>
+
+        <div class="header-title">
+            @if (isAdmin) {
+                <h1>TDI's — Panel Admin</h1>
+                <p>Carolina Rebollo Águila · Ana Guerrero · Desarrollo Humano</p>
+            } @else {
+                <h1 class="title-alumno">Tokens de Desarrollo Integral</h1>
+                <p>Matrícula 2026191005</p>
+            }
+        </div>
+    </div>
+
+    <div class="header-right">
+        @if(isAdmin) {
+            <button class="btn-header">
+                <i class="pi pi-shield"></i>
+                <span>Admin</span>
+                <i class="pi pi-sign-out"></i>
+            </button>
+        } @else {
+            <button class="btn-header">
+                <i class="pi pi-user"></i> 
+                <span>2026191005</span> 
+                <i class="pi pi-sign-out"></i>
+            </button>
+        }
+    </div>
+</header>

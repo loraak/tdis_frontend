@@ -1,0 +1,64 @@
+.admin-header {
+    background-color: var(--tdis-color-navy-blue);
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 75px;
+    width: auto;
+}
+
+.header-title h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 700;
+    color: var(--tdis-color-yellow);
+    letter-spacing: 0.5px;
+}
+
+.header-title p {
+    font-size: 0.85rem;
+    margin: 4px 0 0 0;
+    color: #94a3b8;
+}
+
+.btn-header {
+    background: transparent;
+    border: 1px solid var(--tdis-color-dark-yellow);
+    color: var(--tdis-color-yellow);
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-header:hover {
+    background: rgba(243, 156, 18, 0.1);
+    border-color: var(--tdis-color-yellow);
+}
+
+.btn-header i {
+    font-size: 1rem;
+}
