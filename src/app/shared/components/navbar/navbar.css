@@ -1,0 +1,83 @@
+.navbar-container {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0 40px;
+    position: relative;
+    z-index: 10; 
+}
+
+.nav-group {
+    display: flex;
+    gap: 24px;
+}
+
+.nav-item {
+    color: #64748b;
+    padding: 18px 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; 
+    left: 0;
+    width: 100%;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+    z-index: 11; 
+}
+
+.nav-item:hover::after,
+.nav-item.active::after {
+    transform: scaleX(1);
+}
+
+.admin-theme .nav-item:hover,
+.admin-theme .nav-item.active {
+    color: #f39c12;
+}
+
+.admin-theme .nav-item::after {
+    background-color: #f39c12; 
+}
+
+.alumno-theme .nav-item:hover,
+.alumno-theme .nav-item.active {
+    color: #10b981; 
+}
+
+.alumno-theme .nav-item::after {
+    background-color: #10b981; 
+}
+
+.badge-count {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.text-orange {
+    color: #f39c12;
+}
+
+.badge-solicitud {
+    background-color: #f39c12;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

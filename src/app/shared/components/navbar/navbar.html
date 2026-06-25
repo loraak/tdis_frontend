@@ -1,1 +1,34 @@
-<p>navbar works!</p>
+<nav class="navbar-container">
+
+    @if (isAdmin) {
+        <div class="nav-group admin-theme">
+            <a routerLink="/admin/resumen" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }">
+                <i class="pi pi-chart-bar"></i> Resumen
+            </a>
+            <a routerLink="/admin/alumnos" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: false }">
+                <i class="pi pi-users"></i> Alumnos <span class="badge-count text-orange">(57)</span>
+            </a>
+            <a routerLink="/admin/solicitudes" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: false }">
+                <i class="pi pi-file"></i> Solicitudes <span class="badge-solicitud">3</span>
+            </a>
+            <a routerLink="/admin/catalogo" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: false }">
+                <i class="pi pi-book"></i> Catálogo
+            </a>
+        </div>
+    } @else {
+        <div class="nav-group alumno-theme">
+            <a routerLink="/alumno/progreso" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-th-large"></i> Mi Progreso
+            </a>
+            <a routerLink="/alumno/solicitud" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-plus"></i> Nueva Solicitud
+            </a>
+            <a routerLink="/alumno/solicitudes" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-copy"></i> Mis Solicitudes
+            </a>
+            <a routerLink="/alumno/catalogo" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-book"></i> Catálogo
+            </a>
+        </div>
+    }
+</nav>
