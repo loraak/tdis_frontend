@@ -1,1 +1,104 @@
-<p>login works!</p>
+<div class="login-container">
+    <header class="login-header">
+        <div class="logo-wrapper">
+            <img src="/logo-uteq.png" alt="UTEQ Logo" class="university-logo">
+        </div>
+        <p class="subtitle">UNIVERSIDAD TECNOLÓGICA DE QUERÉTARO</p>
+        <h1 class="main-title">Tokens de Desarrollo Integral</h1>
+
+        <div class="badge-container">
+            <span class="badge badge-green">Entorno Social</span>
+            <span class="badge badge-blue">Cultural</span>
+            <span class="badge badge-yellow">Deportivo</span>
+            <span class="badge badge-purple">Trascendencia</span>
+        </div>
+    </header>
+
+    @if (currentView() === 'select-role') {
+    <main class="role-selection-container">
+
+        <p-card class="role-card-wrapper" (click)="setView('admin')">
+            <div class="card-content-layout">
+                <div class="icon-avatar avatar-yellow">
+                    <i class="pi pi-shield role-icon"></i>
+                </div>
+                <h2>Administrador</h2>
+                <p class="role-desc">Coordinación de Desarrollo Humano</p>
+            </div>
+        </p-card>
+
+        <p-card class="role-card-wrapper" (click)="setView('student')">
+            <div class="card-content-layout">
+                <div class="icon-avatar avatar-green">
+                    <i class="pi pi-user role-icon"></i>
+                </div>
+                <h2>Alumno</h2>
+                <p class="role-desc">Consulta tu progreso TDI</p>
+            </div>
+        </p-card>
+
+    </main>
+    }
+
+    @if (currentView() === 'student') {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <button type="button" class="btn-back" (click)="setView('select-role')">
+            <i class="pi pi-arrow-left"></i> Volver
+        </button>
+
+        <div class="card-header">
+            <div class="icon-avatar avatar-green">
+                <i class="pi pi-user user-icon"></i>
+            </div>
+            <div class="card-title-text">
+                <h2>Portal Alumno</h2>
+                <p>Ingresa tu matrícula para ver tu progreso</p>
+            </div>
+        </div>
+
+        <form class="login-form" (ngSubmit)="onStudentSubmit()">
+            <div class="form-group">
+                <label for="matricula">MATRÍCULA</label>
+                <input pInputText type="text" id="matricula" name="matricula" [(ngModel)]="matricula"
+                    placeholder="Ej. 2026191005" autocomplete="off">
+                <span class="form-examples">Ejemplos: 2024396177 · 2026191005</span>
+            </div>
+
+            <button type="submit" class="btn-submit btn-green">Ver mi progreso <i class="pi pi-arrow-right"></i>
+            </button>
+        </form>
+    </p-card>
+    }
+
+    @if (currentView() === 'admin') {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <button type="button" class="btn-back" (click)="setView('select-role')">
+            <i class="pi pi-arrow-left"></i> Volver
+        </button>
+
+        <div class="card-header">
+            <div class="icon-avatar avatar-yellow">
+                <i class="pi pi-shield user-icon"></i>
+            </div>
+            <div class="card-title-text">
+                <h2>Portal Administrador</h2>
+                <p>Gestión y Coordinación de Desarrollo Humano</p>
+            </div>
+        </div>
+
+        <form class="login-form" (ngSubmit)="onAdminSubmit()">
+            <div class="form-group">
+                <label>CORREO INSTITUCIONAL</label>
+                <input pInputText type="email" placeholder="ejemplo@uteq.edu.mx">
+            </div>
+            <div class="form-group">
+                <label>CONTRASEÑA</label>
+                <input pInputText type="password" placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn-submit btn-yellow">Iniciar Sesión <i class="pi pi-arrow-right"></i>
+            </button>
+        </form>
+    </p-card>
+    }
+</div>
