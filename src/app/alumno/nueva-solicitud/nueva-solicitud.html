@@ -1,1 +1,422 @@
-<p>nueva-solicitud works!</p>
+<div class="request-container" style="max-width: 800px;">
+
+    <div class="request-type-grid">
+
+        <div class="request-option" [ngClass]="{'active-previa': tipoFormulario === 'PREVIA'}"
+            (click)="cambiarTipo('PREVIA')">
+            <div class="option-header previa">
+                <i class="pi pi-clone"></i>
+                <span>Solicitud Previa</span>
+            </div>
+            <p class="option-desc">Para actividades que <strong>no has realizado aún</strong>. Envíala 15 días antes.
+            </p>
+        </div>
+
+        <div class="request-option" [ngClass]="{'active-evidencia': tipoFormulario === 'EVIDENCIA'}"
+            (click)="cambiarTipo('EVIDENCIA')">
+            <div class="option-header evidencia">
+                <i class="pi pi-check-square"></i>
+                <span>Solicitud de Evidencia</span>
+            </div>
+            <p class="option-desc">Para actividades que <strong>ya realizaste</strong>. Incluye evidencias y reflexión.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="validation-info-banner"
+        [ngClass]="{'bg-previa': tipoFormulario === 'PREVIA', 'bg-evidencia': tipoFormulario === 'EVIDENCIA'}">
+        <span class="banner-subtitle">Matrícula 2026191005</span>
+
+        <h2 class="banner-title">
+            Solicitud de Validación {{ tipoFormulario === 'PREVIA' ? 'PREVIA' : '' }} · TDI's
+        </h2>
+
+        <p class="banner-desc">
+            {{ tipoFormulario === 'PREVIA'
+            ? 'Llena este formulario 15 días antes de realizar la actividad. Incluye los datos del responsable.'
+            : 'Completa todos los campos. Revisión en 3–5 días hábiles.' }}
+        </p>
+    </div>
+
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+
+            @if (tipoFormulario === 'PREVIA') {
+            <div class="form-step-header">
+                <div class="step-bubble">1</div>
+                <div>
+                    <h3 class="step-title">Datos de Registro</h3>
+                    <p class="step-subtitle">Información personal y académica del alumno que solicita la validación
+                        previa.</p>
+                </div>
+            </div>
+            } @else {
+            <div class="form-step-header">
+                <div class="step-bubble">1</div>
+                <div>
+                    <h3 class="step-title">Datos del estudiante</h3>
+                    <p class="step-subtitle">Registra tus datos personales y académicos para vincular tus evidencias
+                        actuales.</p>
+                </div>
+            </div>
+            }
+
+            <form class="form-grid">
+                <div class="form-field full-width">
+                    <label class="form-label">¿Cuál es tu nombre? *</label>
+                    <input class="custom-input" type="text" placeholder="Nombre completo" />
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">¿Cuál es tu matrícula? *</label>
+                    <input class="custom-input" type="text" value="2026191005" disabled />
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Formo parte de la división: *</label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button">Industrial</button>
+                        <button type="button" class="pill-button">Económico-Administrativa</button>
+                        <button type="button" class="pill-button selected">Tecnologías</button>
+                        <button type="button" class="pill-button">Idiomas</button>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">¿Cuál es tu programa académico? *</label>
+                    <input class="custom-input" type="text" placeholder="Ej. Ingeniería Industrial" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">¿Cuál es tu grupo? *</label>
+                    <input class="custom-input" type="text" placeholder="Ej. A" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">¿En qué cuatrimestre estás? *</label>
+                    <input class="custom-input" type="text" placeholder="Ej. 4" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">¿Cuál es tu turno? *</label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button selected">Matutino</button>
+                        <button type="button" class="pill-button">Vespertino</button>
+                    </div>
+                </div>
+
+                @if (tipoFormulario === 'EVIDENCIA') {
+                <div class="form-field full-width">
+                    <label class="form-label">¿Quién es tu profesor de formación integral y/o tutor? *</label>
+                    <input class="custom-input" type="text" placeholder="Nombre completo (nombre y luego apellidos)" />
+                </div>
+                }
+
+            </form>
+
+        </div>
+    </p-card>
+
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+            <div class="form-step-header">
+                <div class="step-bubble">1</div>
+                <div>
+                    <h3 class="step-title">Información de la actividad</h3>
+                    @if (tipoFormulario === 'PREVIA') {
+                    <p class="step-subtitle">Describe la actividad que planeas realizar, incluyendo fechas estimadas,
+                        responsables y el impacto esperado.previa.</p>
+                    } @else {
+                    <p class="step-subtitle">Describe la actividad realizada: cuándo, dónde y cómo se llevó a cabo, y
+                        selecciona la dimensión del desarrollo integral correspondiente.</p>
+                    }
+                </div>
+            </div>
+
+            <form class="form-grid">
+                <div class="form-field full-width">
+                    <label class="form-label">Nombre de la actividad *</label>
+                    <input class="custom-input" type="text" placeholder="Nombre de la actividad" />
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Fecha en que se realizó *</label>
+                    <input class="custom-input" type="text" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Horas efectivas o tiempo de participación *</label>
+                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." />
+
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Lugar en donde se llevó a cabo *</label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button selected">Interno (UTEQ)</button>
+                        <button type="button" class="pill-button">Externo</button>
+                        <button type="button" class="pill-button">Otro</button>
+                    </div>
+                </div>
+
+                @if (tipoFormulario === 'PREVIA') {
+                <div class="form-field full-width">
+                    <label class="form-label">Dimensión(es) de Formación Integral * <small>(múltiple)</small></label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button">Identidad personal (Aprender a conocer)</button>
+                        <button type="button" class="pill-button">Entorno social (Aprender a convivir)</button>
+                        <button type="button" class="pill-button">Entorno físico (Aprender a Hacer)</button>
+                        <button type="button" class="pill-button">Trascendencia (Aprender a Ser)</button>
+                    </div>
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Nivel de impacto *</label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button">Sensibilizador (conoce)</button>
+                        <button type="button" class="pill-button">Formativo (participa)</button>
+                        <button type="button" class="pill-button">Aplicativo (hace)</button>
+                        <button type="button" class="pill-button">Implementador (Lidera)</button>
+                    </div>
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Público objetivo * <small>(múltiple)</small></label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button">Solo alumnas</button>
+                        <button type="button" class="pill-button">Solo alumnos</button>
+                        <button type="button" class="pill-button">Solo División Industrial</button>
+                        <button type="button" class="pill-button">Solo División Económica-Administrativa</button>
+                        <button type="button" class="pill-button">Solo División Tecnologías</button>
+                        <button type="button" class="pill-button">Solo División Idiomas</button>
+                        <button type="button" class="pill-button">Todas las divisiones</button>
+                        <button type="button" class="pill-button">Otro</button>
+                    </div>
+                </div>
+                } @else {
+                <div class="form-field full-width">
+                    <label class="form-label">Tipo de actividad *</label>
+                    <input type="text" class="custom-input"
+                        placeholder="Ej. Taller, Conferencia, Voluntariado, Torneo..." />
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Materia con la que se relaciona tu actividad *</label>
+                    <input type="text" class="custom-input" />
+                </div>
+                }
+
+                <div class="form-field full-width">
+                    @if(tipoFormulario === 'PREVIA') {
+                    <label class="form-label">Descripción detallada (días, fechas, actividades) *</label>
+                    <label class="form-label-small">Describe con detalle cómo se desarrollará la actividad: días,
+                        horarios, dinámica…</label>
+                    } @else {
+                    <label class="form-label">Descripción breve de la actividad *</label>
+                    <label class="form-label-small">¿Qué hiciste, con quién, para qué?</label>
+                    }
+                    <textarea class="custom-input" name="text-input" id="text-input"></textarea>
+                    <label class="form-numbers">0 / 20 mín.</label>
+                </div>
+
+                @if (tipoFormulario === 'PREVIA') {
+                <div class="form-field">
+                    <label class="form-label">Asistencia esperada (núm. de alumnos) *</label>
+                    <input class="custom-input" type="text" placeholder="Ej. 80" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">¿Cuántos generarán TDI's? *</label>
+                    <input class="custom-input" type="text" placeholder="Ej. 50" />
+
+                </div>
+                <div class="custom-card-data full-width">
+                    <label class="form-label">Datos del responsable</label>
+                    <div class="custom-card-content">
+                        <div class="form-field">
+                            <label class="form-label">Nombre *</label>
+                            <input class="custom-input" type="text" placeholder="Nombre completo" />
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Cargo *</label>
+                            <input class="custom-input" type="text" placeholder="Ej. Coordinador de Área" />
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Teléfono *</label>
+                            <input class="custom-input" type="text" placeholder="Ej. 442 123 4567" />
+
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Correo *</label>
+                            <input class="custom-input" type="text" placeholder="correo@ejemplo.com" />
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Impacto académico *</label>
+                    <label class="form-label-small">¿Cómo apoya esta actividad la formación o alguna asignatura de
+                        Formación Integral?</label>
+                    <textarea class="custom-input" name="text-input" id="text-input"
+                        placeholder="Describe el impacto académico esperado…"></textarea>
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Asignaturas de Formación Integral relacionadas *
+                        <small>(múltiple)</small></label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button selected">1ro Desarrollo Humano y Valores</button>
+                        <button type="button" class="pill-button">2do Habilidades Socioemocionales</button>
+                        <button type="button" class="pill-button">3ra Desarrollo del Pensamiento Crítico</button>
+                        <button type="button" class="pill-button">4to Ética y Valores</button>
+                        <button type="button" class="pill-button">5to Liderazgo de Equipos de Alto Desempeño</button>
+                        <button type="button" class="pill-button">7mo Habilidades Gerenciales</button>
+                        <button type="button" class="pill-button">Otro</button>
+                    </div>
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Competencias a reforzar * <small>(múltiple)</small></label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button selected">Comunicación efectiva</button>
+                        <button type="button" class="pill-button">Trabajo en equipo</button>
+                        <button type="button" class="pill-button">Liderazgo</button>
+                        <button type="button" class="pill-button">Pensamiento crítico</button>
+                        <button type="button" class="pill-button">Responsabilidad y ética</button>
+                        <button type="button" class="pill-button">Toma de decisiones</button>
+                        <button type="button" class="pill-button">Autogestión y disciplina</button>
+                        <button type="button" class="pill-button">Participación social</button>
+                        <button type="button" class="pill-button">Otro</button>
+                    </div>
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Horas estimadas *</label>
+                    <input type="text" class="custom-input" placeholder="Ej. 4" />
+                </div>
+                } @else {
+                <div class="form-field full-width">
+                    <label class="form-label">Reflexión sobre tu aprendizaje *</label>
+                    <label class="form-label-reflexion">La reflexión es un componente esencial del sistema TDI's.
+                        Analiza lo aprendido, cómo te sentiste y de qué manera la actividad aportó a tu desarrollo
+                        integral. <strong>Escribe entre 5 y 10 líneas.</strong></label>
+                    <textarea class="custom-input" name="text-input" id="text-input"></textarea>
+                    <label class="form-numbers">0 palabras</label>
+                </div>
+                }
+            </form>
+        </div>
+    </p-card>
+
+    @if(tipoFormulario === 'PREVIA') {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+
+            <div class="form-step-header">
+                <div class="step-bubble">3</div>
+                <div>
+                    <h3 class="step-title">Evidencias preliminares</h3>
+                    <p class="step-subtitle">¿Qué evidencia deberán entregar los alumnos para validar su participación
+                        al finalizar la actividad?</p>
+                </div>
+            </div>
+
+            <form class="form-grid">
+                <div class="form-field full-width">
+                    <label class="form-label">Tipo de evidencia requerida * <small>(múltiple)</small></label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button">Lista de Asistencia firmada por el
+                            responsable</button>
+                        <button type="button" class="pill-button">Fotografía + reflexión escrita</button>
+                        <button type="button" class="pill-button">Constancia / documento</button>
+                        <button type="button" class="pill-button">Producto o reporte elaborado</button>
+                        <button type="button" class="pill-button">Otro</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </p-card>
+
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+
+            <div class="form-step-header">
+                <div class="step-bubble">4</div>
+                <div>
+                    <h3 class="step-title">Motivo</h3>
+                    <p class="step-subtitle">Explica por qué esta actividad es relevante para tu formación integral y
+                        por qué deseas participar.</p>
+                </div>
+            </div>
+
+            <form class="form-grid">
+                <div class="form-field full-width">
+                    <label class="form-label">Justificación personal *</label>
+                    <textarea class="custom-input" name="text-input" id="text-input"
+                        placeholder="Explica la importancia de esta actividad para tu formación integral…"></textarea>
+                    <label class="form-numbers">0 / 20 mín.</label>
+                </div>
+            </form>
+        </div>
+    </p-card>
+
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+            <div class="form-step-header">
+                <div class="step-bubble">5</div>
+                <div>
+                    <h3 class="step-title">Confirmación</h3>
+                </div>
+            </div>
+
+            <div class="custom-card-data full-width">
+                <div class="custom-card-info">
+                    <input type="checkbox" id="leer" name="hobbies" value="leer">
+                    <label class="">Declaro que la información proporcionada es verdadera y que cumpliré con la entrega
+                        de evidencias al finalizar la actividad.</label>
+                </div>
+            </div>
+        </div>
+    </p-card>
+
+    } @else {
+        <p-card styleClass="custom-card-container">
+            <div class="card-inner-padding">
+
+                <div class="form-step-header">
+                    <div class="step-bubble">3</div>
+                    <div>
+                        <h3 class="step-title">Evidencias adjuntas</h3>
+                        <p class="step-subtitle">
+                            Las evidencias permiten verificar que realizaste la actividad. Adjunta tu formato de evidencias
+                            en PDF (máx. 10 MB).
+                        </p>
+                    </div>
+                </div>
+
+                <span class="upload-field-label">Adjunta tu formato de evidencias *</span>
+
+                <div class="file-dropzone" (click)="fileInput.click()">
+
+                    <input #fileInput type="file" accept=".pdf" style="display: none;" (change)="onFileSelected($event)" />
+
+                    <div class="upload-icon-container">
+                        <i class="pi pi-upload"></i>
+                    </div>
+
+                    <p class="upload-text-action">
+                        <strong>Haz clic para adjuntar</strong> o arrastra tu archivo
+                    </p>
+
+                    <p class="upload-text-hint">Solo PDF · Máximo 10 MB</p>
+
+                </div>
+
+            </div>
+        </p-card>
+    }
+
+    <button type="submit" class="btn-submit btn-yellow">Enviar solicitud de validación
+    </button>
+
+</div>
