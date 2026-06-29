@@ -1,0 +1,260 @@
+.catalog-container {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.custom-card-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Hace que todas las tarjetas midan lo mismo si el texto varía */
+}
+
+/* --- Cabecera del Catálogo --- */
+.catalogo-header {
+  margin-bottom: 1.5rem;
+}
+
+.catalogo-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.6rem;
+  color: #1e293b;
+  font-weight: 800;
+}
+
+.catalogo-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* --- Banner Informativo Crema --- */
+.tokens-info-banner {
+  background-color: #fefae0;
+  border: 1px solid #f9731633;
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--tdis-color-yellow);
+}
+
+.tokens-info-banner i {
+  font-size: 1rem;
+}
+
+.tokens-info-banner strong {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* --- Barra de Categorías / Filtros --- */
+.categories-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+/* Botón de Filtro Base (Pastilla) */
+.filter-pill {
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  padding: 0.55rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  background-color: #f8fafc;
+}
+
+/* Contador sutil dentro de la pastilla */
+.pill-count {
+  background-color: #e2e8f0;
+  color: #475569;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+/* --- Estados Activos por Categoría --- */
+
+/* Todas (Fondo naranja completo) */
+.filter-pill.active-all {
+  background-color: var(--tdis-color-yellow);
+  border-color: var(--tdis-color-yellow);
+  color: #ffffff;
+}
+.filter-pill.active-all .pill-count {
+  background-color: rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+}
+
+/* Entorno Social Activo */
+.filter-pill.active-social {
+  background-color: #f0fdf4;
+  border-color: #22c55e;
+  color: #16a34a;
+}
+.filter-pill.active-social .pill-count {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+/* Cultural Activo */
+.filter-pill.active-cultural {
+  background-color: #f0f9ff;
+  border-color: #0ea5e9;
+  color: #0369a1;
+}
+
+/* Deportivo Activo */
+.filter-pill.active-deportivo {
+  background-color: #fffbeb;
+  border-color: #f59e0b;
+  color: #b45309;
+}
+
+/* Trascendencia Activo */
+.filter-pill.active-trascendencia {
+  background-color: #fbf7ff;
+  border-color: #8b5cf6;
+  color: #6d28d9;
+}
+
+.catalogo-grid {
+  display: grid;
+  /* Fuerza exactamente 3 columnas del mismo tamaño */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Responsive Layout (Opcional, pero recomendado para móviles) --- */
+@media (max-width: 900px) {
+  .catalogo-grid {
+    /* En pantallas medianas cambia a 2 columnas */
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .catalogo-grid {
+    /* En celulares se adapta a 1 sola columna vertical */
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modificadores de borde superior por Eje */
+.card-eje-social { border-top: 4px solid #22c55e; }
+.card-eje-cultural { border-top: 4px solid #0ea5e9; }
+.card-eje-deportivo { border-top: 4px solid #f59e0b; }
+.card-eje-trascendencia { border-top: 4px solid #8b5cf6; }
+
+.card-inner-padding {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Fila de Etiquetas (Header de la tarjeta) --- */
+.card-tags-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Badges de Eje personalizados */
+.badge-eje {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+}
+.badge-eje.social { background-color: #f0fdf4; color: #16a34a; }
+.badge-eje.cultural { background-color: #f0f9ff; color: #0369a1; }
+.badge-eje.deportivo { background-color: #f0f9ff; color: #f59e0b; }
+.badge-eje.trascendencia { background-color: #f0f9ff; color: #8b5cf6; }
+
+/* Badge de Puntos (Estilo estrella amarilla) */
+.badge-points {
+  background-color: #fffbeb;
+  color: var(--tdis-color-yellow);
+  border: 1px solid #f9731633;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* --- Textos de la Actividad --- */
+.activity-title {
+  font-size: 1.05rem;
+  color: #1e293b;
+  font-weight: 800;
+  line-height: 1.4;
+  margin: 0 0 0.75rem 0;
+}
+
+.activity-description {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+  flex-grow: 1; /* Empuja el footer de la tarjeta hacia abajo equitativamente */
+}
+
+/* --- Footer de la Tarjeta --- */
+.card-activity-footer {
+  border-top: 1px dashed #f1f5f9;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-frequency {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+.info-frequency strong {
+  color: #475569;
+}
+
+.badge-evidence-required {
+  align-self: flex-start;
+  background-color: #fff7ed;
+  color: var(--tdis-color-yellow);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
