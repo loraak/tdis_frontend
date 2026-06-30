@@ -1,1 +1,174 @@
-<p>resumen works!</p>
+<div class="resume-container">
+    <div class="cards-resume">
+
+        <p-card class="custom-card-container card-resume-blue">
+            <div class="card-inner-flex-layout">
+                <div class="color-holder holder-blue">
+                    <i class="pi pi-users color-icon-blue"></i>
+                </div>
+                <div class="metric-text-group">
+                    <h2 class="metric-number number-blue">57</h2>
+                    <span class="metric-label">Alumnos registrados</span>
+                </div>
+            </div>
+        </p-card>
+
+        <p-card class="custom-card-container card-resume-green">
+            <div class="card-inner-flex-layout">
+                <div class="color-holder holder-green">
+                    <i class="pi pi-check-circle color-icon-green"></i>
+                </div>
+                <div class="metric-text-group">
+                    <h2 class="metric-number number-green">63</h2>
+                    <span class="metric-label">Actividades aprobadas</span>
+                </div>
+            </div>
+        </p-card>
+
+        <p-card class="custom-card-container card-resume-red">
+            <div class="card-inner-flex-layout">
+                <div class="color-holder holder-red">
+                    <i class="pi pi-times-circle color-icon-red"></i>
+                </div>
+                <div class="metric-text-group">
+                    <h2 class="metric-number number-red">2</h2>
+                    <span class="metric-label">Actividades rechazadas</span>
+                </div>
+            </div>
+        </p-card>
+
+        <p-card class="custom-card-container card-resume-yellow">
+            <div class="card-inner-flex-layout">
+                <div class="color-holder holder-yellow">
+                    <i class="pi pi-chart-line color-icon-yellow"></i>
+                </div>
+                <div class="metric-text-group">
+                    <h2 class="metric-number number-yellow">113</h2>
+                    <span class="metric-label">Puntos distribuidos</span>
+                </div>
+            </div>
+        </p-card>
+
+    </div>
+    <div class="cards-grafics">
+        <p-card styleClass="custom-card-container">
+            <div class="card-inner-padding">
+                <span class="analytics-card-title">Distribución por nivel</span>
+
+                <div class="chart-donut-wrapper">
+                    <div class="donut-circle">
+                        <div class="donut-center-hole">
+                            <span class="donut-number">57</span>
+                            <span class="donut-label">alumnos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-legends-grid">
+                    <div class="legend-item">
+                        <span class="legend-dot dot-sensibilizador"></span>
+                        <span>Sensibilizador (57)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-formativo"></span>
+                        <span>Formativo (0)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-aplicativo"></span>
+                        <span>Aplicativo (0)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-implementador"></span>
+                        <span>Implementador (0)</span>
+                    </div>
+                </div>
+
+            </div>
+        </p-card>
+
+
+        <p-card styleClass="custom-card-container">
+            <div class="card-inner-padding">
+                <span class="analytics-card-title">Puntos totales por eje</span>
+
+                <div class="chart-bars-container">
+                    <div class="chart-bg-lines">
+                        <div class="bg-line"></div>
+                        <div class="bg-line"></div>
+                        <div class="bg-line"></div>
+                        <div class="bg-line"></div>
+                    </div>
+
+                    <div class="bar-column-wrapper">
+                        <span class="bar-value-top劇 bar-value-top cult">25</span>
+                        <div class="bar-pillar bar-cultural" [style.height.%]="28"></div>
+                    </div>
+
+                    <div class="bar-column-wrapper">
+                        <span class="bar-value-top bar-value-top soc">88</span>
+                        <div class="bar-pillar bar-social" [style.height.%]="95"></div>
+                    </div>
+
+                    <div class="bar-column-wrapper">
+                        <span class="bar-value-top" style="color: #cbd5e1;">0</span>
+                        <div class="bar-pillar bar-deportivo" [style.height.%]="0"></div>
+                    </div>
+
+                    <div class="bar-column-wrapper">
+                        <span class="bar-value-top" style="color: #cbd5e1;">0</span>
+                        <div class="bar-pillar bar-trascendencia" [style.height.%]="0"></div>
+                    </div>
+                </div>
+
+                <div class="chart-axis-labels-row">
+                    <span class="axis-label">Cultural</span>
+                    <span class="axis-label">Entorno Social</span>
+                    <span class="axis-label">Deportivo</span>
+                    <span class="axis-label">Trascendencia</span>
+                </div>
+
+            </div>
+        </p-card>
+    </div>
+
+    <p-card styleClass="custom-card-container">
+        <div class="table-card-header">
+            <div class="table-title-area">
+                <i class="pi pi-chart-line table-title-icon"></i>
+                <span>Top alumnos</span>
+            </div>
+        </div>
+
+        <p-table [value]="alumnos" styleClass="p-datatable-striped custom-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Matricula</th>
+                    <th>Nivel</th>
+                    <th>Cult.</th>
+                    <th>Social</th>
+                    <th>Dep.</th>
+                    <th>Trasc.</th>
+                    <th>Total</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.matricula}}</td>
+                    <td>
+                        <div class="cell-level">
+                            <i [class]="item.icon" [style.color]="item.iconColor"></i>
+                            <span>{{item.nivel}}</span>
+                        </div>
+                    </td>
+                    <td class="cell-tdis">{{item.cult}}</td>
+                    <td class="cell-tdis">{{item.social}}</td>
+                    <td class="cell-tdis">{{item.dep}}</td>
+                    <td class="cell-tdis">{{item.trasc}}</td>
+                    <td class="cell-tdis">{{item.total}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+</div>
