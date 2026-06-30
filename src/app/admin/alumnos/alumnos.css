@@ -1,0 +1,120 @@
+.students-container {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.table-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem;
+}
+
+.table-title-area {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.table-title-icon {
+    color: #f59e0b;
+}
+
+.table-subtitle {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+::v-deep .custom-table .p-datatable-thead>tr>th {
+    background-color: #f8fafc !important;
+    color: #64748b !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 1rem !important;
+}
+
+::v-deep .custom-table .p-datatable-tbody>tr>td {
+    padding: 1rem !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.cell-level {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.cell-tdis {
+    font-weight: 700;
+    color: #0097a7;
+}
+
+.cell-reward {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+.reward-icon {
+    color: #00bcd4;
+}
+
+.current-level-tag {
+    font-size: 0.7rem;
+    background-color: #00bcd4 !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.custom-search-input {
+    padding: 0.55rem 0.75rem 0.55rem 2.2rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #334155;
+    width: 900px;
+    transition: all 0.2s ease;
+}
+
+.custom-search-input:focus {
+    outline: none;
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.btn-add-record {
+    background-color: #f97316 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 0.85rem !important;
+    padding: 0.55rem 1.2rem !important;
+    font-weight: 600;
+}
+
+.btn-add-record:hover {
+    background-color: #ea580c !important;
+}

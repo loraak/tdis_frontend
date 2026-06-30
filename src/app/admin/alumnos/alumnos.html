@@ -1,1 +1,71 @@
-<p>alumnos works!</p>
+<div class="students-container">
+    <p-card styleClass="custom-card-container">
+
+        <div class="table-card-header">
+            <div class="table-actions-area">
+                <span class="search-input-wrapper">
+                    <i class="pi pi-search search-icon"></i>
+                    <input type="text" placeholder="Buscar matrícula o nivel..."
+                        class="custom-search-input" />
+                </span>
+            </div>
+        </div>
+
+        <p-table #dt [value]="alumnos" [globalFilterFields]="['matricula', 'nivel']"
+            styleClass="p-datatable-striped custom-table">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Matrícula</th>
+                    <th>Nivel</th>
+                    <th>Cult.</th>
+                    <th>Social</th>
+                    <th>Dep.</th>
+                    <th>Trasc.</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.matricula}}</td>
+                    <td>
+                        <div class="cell-level">
+                            <i [class]="item.icon" [style.color]="item.iconColor"></i>
+                            <span>{{item.nivel}}</span>
+                        </div>
+                    </td>
+                    <td class="cell-tdis">{{item.cult}}</td>
+                    <td class="cell-tdis">{{item.social}}</td>
+                    <td class="cell-tdis">{{item.dep}}</td>
+                    <td class="cell-tdis">{{item.trasc}}</td>
+                    <td class="cell-tdis">{{item.total}}</td>
+                    <td>
+                        <button pButton label="+ Agregar registro" icon="pi pi-plus" class="btn-add-record"
+                    (click)="verProgresoAlumno(item)">
+                </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+
+    <p-dialog 
+        header="Detalle de Progreso del Alumno" 
+        [(visible)]="mostrarModal" 
+        [modal]="true" 
+        [style]="{ width: '85vw', 'max-width': '1200px' }" 
+        [draggable]="false"
+        [resizable]="false">
+        
+        @if (alumnoSeleccionado) {
+            <app-progreso-alumno 
+            [matriculaAlumno]="alumnoSeleccionado.matricula">
+            </app-progreso-alumno>
+        }
+
+        </p-dialog>
+</div>
