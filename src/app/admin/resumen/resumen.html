@@ -7,7 +7,7 @@
                     <i class="pi pi-users color-icon-blue"></i>
                 </div>
                 <div class="metric-text-group">
-                    <h2 class="metric-number number-blue">57</h2>
+                    <h2 class="metric-number number-blue">{{ totalAlumnos }}</h2>
                     <span class="metric-label">Alumnos registrados</span>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                     <i class="pi pi-check-circle color-icon-green"></i>
                 </div>
                 <div class="metric-text-group">
-                    <h2 class="metric-number number-green">63</h2>
+                    <h2 class="metric-number number-green">{{ actividadesAprobadas }}</h2>
                     <span class="metric-label">Actividades aprobadas</span>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                     <i class="pi pi-times-circle color-icon-red"></i>
                 </div>
                 <div class="metric-text-group">
-                    <h2 class="metric-number number-red">2</h2>
+                    <h2 class="metric-number number-red">{{ actividadesRechazadas }}</h2>
                     <span class="metric-label">Actividades rechazadas</span>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                     <i class="pi pi-chart-line color-icon-yellow"></i>
                 </div>
                 <div class="metric-text-group">
-                    <h2 class="metric-number number-yellow">113</h2>
+                    <h2 class="metric-number number-yellow">{{ puntosDistribuidos }}</h2>
                     <span class="metric-label">Puntos distribuidos</span>
                 </div>
             </div>
@@ -58,29 +58,19 @@
                 <div class="chart-donut-wrapper">
                     <div class="donut-circle">
                         <div class="donut-center-hole">
-                            <span class="donut-number">57</span>
+                            <span class="donut-number">{{ totalAlumnos }}</span>
                             <span class="donut-label">alumnos</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="chart-legends-grid">
+                    @for (n of niveles; track n.label) {
                     <div class="legend-item">
-                        <span class="legend-dot dot-sensibilizador"></span>
-                        <span>Sensibilizador (57)</span>
+                        <span class="legend-dot" [class]="'dot-' + (n.label | lowercase)"></span>
+                        <span>{{ nivelLabel(n.label) }} ({{ n.count }})</span>
                     </div>
-                    <div class="legend-item">
-                        <span class="legend-dot dot-formativo"></span>
-                        <span>Formativo (0)</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-dot dot-aplicativo"></span>
-                        <span>Aplicativo (0)</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-dot dot-implementador"></span>
-                        <span>Implementador (0)</span>
-                    </div>
+                    }
                 </div>
 
             </div>
@@ -99,32 +89,18 @@
                         <div class="bg-line"></div>
                     </div>
 
+                    @for (eje of barEjes; track eje) {
                     <div class="bar-column-wrapper">
-                        <span class="bar-value-top劇 bar-value-top cult">25</span>
-                        <div class="bar-pillar bar-cultural" [style.height.%]="28"></div>
+                        <span class="bar-value-top" [style.color]="puntosEje(eje) > 0 ? '#334155' : '#cbd5e1'">{{ puntosEje(eje) }}</span>
+                        <div class="bar-pillar" [class]="'bar-' + (eje | lowercase)" [style.height.%]="alturaEje(eje)"></div>
                     </div>
-
-                    <div class="bar-column-wrapper">
-                        <span class="bar-value-top bar-value-top soc">88</span>
-                        <div class="bar-pillar bar-social" [style.height.%]="95"></div>
-                    </div>
-
-                    <div class="bar-column-wrapper">
-                        <span class="bar-value-top" style="color: #cbd5e1;">0</span>
-                        <div class="bar-pillar bar-deportivo" [style.height.%]="0"></div>
-                    </div>
-
-                    <div class="bar-column-wrapper">
-                        <span class="bar-value-top" style="color: #cbd5e1;">0</span>
-                        <div class="bar-pillar bar-trascendencia" [style.height.%]="0"></div>
-                    </div>
+                    }
                 </div>
 
                 <div class="chart-axis-labels-row">
-                    <span class="axis-label">Cultural</span>
-                    <span class="axis-label">Entorno Social</span>
-                    <span class="axis-label">Deportivo</span>
-                    <span class="axis-label">Trascendencia</span>
+                    @for (eje of barEjes; track eje) {
+                    <span class="axis-label">{{ ejeLabel(eje) }}</span>
+                    }
                 </div>
 
             </div>

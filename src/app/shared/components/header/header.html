@@ -7,25 +7,25 @@
         <div class="header-title">
             @if (isAdmin) {
                 <h1>TDI's — Panel Admin</h1>
-                <p>Carolina Rebollo Águila · Ana Guerrero · Desarrollo Humano</p>
+                <p>{{ getNombreUsuario() }} · Desarrollo Humano</p>
             } @else {
                 <h1 class="title-alumno">Tokens de Desarrollo Integral</h1>
-                <p>Matrícula 2026191005</p>
+                <p>Matrícula {{ getMatricula() }}</p>
             }
         </div>
     </div>
 
     <div class="header-right">
         @if(isAdmin) {
-            <button class="btn-header">
+            <button class="btn-header" (click)="cerrarSesion()">
                 <i class="pi pi-shield"></i>
-                <span>Admin</span>
+                <span>{{ getNombreUsuario() }}</span>
                 <i class="pi pi-sign-out"></i>
             </button>
         } @else {
-            <button class="btn-header">
+            <button class="btn-header" (click)="cerrarSesion()">
                 <i class="pi pi-user"></i> 
-                <span>2026191005</span> 
+                <span>{{ getMatricula() }}</span> 
                 <i class="pi pi-sign-out"></i>
             </button>
         }

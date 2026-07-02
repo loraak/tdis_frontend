@@ -3,86 +3,112 @@
     <div class="page-header-flex">
         <div>
             <h1 class="page-title">Mis solicitudes</h1>
-            <p class="page-subtitle">1 solicitud · 1 en revisión</p>
+            <p class="page-subtitle">{{ totalSolicitudes }} solicitud{{ totalSolicitudes !== 1 ? 'es' : '' }} · {{ enRevision }} en revisión</p>
         </div>
-        <button type="submit" class="btn-nueva-solicitud">+ Nueva solicitud</button>
+        <button type="button" class="btn-nueva-solicitud" (click)="nuevaSolicitud()">+ Nueva solicitud</button>
     </div>
 
+    @if (loading) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">Cargando solicitudes...</div>
+    </p-card>
+    }
+
+    @for (sol of solicitudes; track sol.id) {
     <p-card styleClass="custom-card-container">
         <div class="card-inner-padding">
 
-            <div class="request-card-header" [style.border-bottom]="estaComprimida ? 'none' : '1px solid #f1f5f9'" [style.margin-bottom]="estaComprimida ? '0' : '1.5rem'">
+            <div class="request-card-header" [style.border-bottom]="!isExpanded(sol.id) ? 'none' : '1px solid #f1f5f9'"
+                [style.margin-bottom]="!isExpanded(sol.id) ? '0' : '1.5rem'">
                 <div class="request-title-block">
-                    <h3>CineClub</h3>
+                    <h3>{{ sol.actividadTitulo }}</h3>
                     <div class="request-meta-info">
-                        <span class="meta-item"><i class="pi pi-calendar"></i> 9889-09-08</span>
-                        <span class="meta-item"><i class="pi pi-file-pdf"></i> Programa TDIS para maestros.pdf</span>
-                        <span class="meta-item">Enviada: 30/5/2026, 6:42:55 p.m.</span>
+                        <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
+                        @if (sol.nombreArchivo) {
+                        <span class="meta-item"><i class="pi pi-file-pdf"></i> {{ sol.nombreArchivo }}</span>
+                        }
+                        <span class="meta-item">Enviada: {{ sol.createdAt | date:'short' }}</span>
                     </div>
                 </div>
                 <div class="header-actions-group">
-                    <p-tag value="En revisión" icon="pi pi-clock" styleClass="status-badge-review"></p-tag>
-                    <button (click)="toggleCompresion()" class="btn-toggle-view"> <i class="pi pi-chevron-up"></i> Ocultar</button>
+                    <p-tag [value]="estadoLabel(sol.estado)" [icon]="estadoIcon(sol.estado)" [styleClass]="estadoBadgeClass(sol.estado)"></p-tag>
+                    <button (click)="toggleExpand(sol.id)" class="btn-toggle-view">
+                        <i class="pi" [class.pi-chevron-up]="isExpanded(sol.id)" [class.pi-chevron-down]="!isExpanded(sol.id)"></i>
+                        {{ isExpanded(sol.id) ? 'Ocultar' : 'Ver detalle' }}
+                    </button>
                 </div>
             </div>
 
-            @if (!estaComprimida) {
-                <div>
-                    <span class="data-section-title">Datos del estudiante</span>
-                    <div class="data-grid-layout">
-                        <span class="data-label">Nombre</span>
-                        <span class="data-value">Juan Pablo</span>
+            @if (isExpanded(sol.id)) {
+            <div>
+                <span class="data-section-title">Datos del estudiante</span>
+                <div class="data-grid-layout">
+                    <span class="data-label">Nombre</span>
+                    <span class="data-value">{{ sol.alumnoNombre }}</span>
 
-                        <span class="data-label">División</span>
-                        <span class="data-value">Tecnologías</span>
+                    <span class="data-label">División</span>
+                    <span class="data-value">{{ sol.division || '—' }}</span>
 
-                        <span class="data-label">Programa</span>
-                        <span class="data-value">Tic</span>
+                    <span class="data-label">Programa</span>
+                    <span class="data-value">{{ sol.programa || '—' }}</span>
 
-                        <span class="data-label">Grupo · Cuatrimestre · Turno</span>
-                        <span class="data-value">IDGS15 · 9° · Vespertino</span>
+                    <span class="data-label">Grupo · Cuatrimestre · Turno</span>
+                    <span class="data-value">{{ sol.grupo || '—' }} · {{ sol.cuatrimestre || '—' }} · {{ sol.turno || '—' }}</span>
 
-                        <span class="data-label">Tutor</span>
-                        <span class="data-value">hththhghh</span>
-                    </div>
-
-                    <span class="data-section-title space-top">Actividad</span>
-                    <div class="data-grid-layout">
-                        <span class="data-label">Lugar</span>
-                        <span class="data-value">Externo</span>
-
-                        <span class="data-label">Horas</span>
-                        <span class="data-value">71.5 horas</span>
-
-                        <span class="data-label">Tipo</span>
-                        <span class="data-value">kjhu</span>
-
-                        <span class="data-label">Materia relacionada</span>
-                        <span class="data-value">Desarrollo del pensamiento y toma de decisiones</span>
-                    </div>
-
-                    <span class="text-block-title">Descripción</span>
-                    <p class="text-block-content">fgjno gdgdf gfdfgdfgdf</p>
-
-                    <span class="text-block-title">Reflexión</span>
-                    <p class="text-block-content">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the
-                        librarian at St Bride Printing Library, took a 1914 Cicero translation and scrambled it to make dummy
-                        text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into
-                        electronic typesetting, remaining essentially unchanged.
-                    </p>
-
-                    <div class="chat-input-wrapper">
-                        <textarea class="custom-native-textarea"
-                            placeholder="¿Tienes alguna nota para Coordinación?"></textarea>
-                        <button class="btn-send-message"><i class="pi pi-send"></i></button>
-                    </div>
-
+                    <span class="data-label">Tutor</span>
+                    <span class="data-value">{{ sol.tutor || '—' }}</span>
                 </div>
+
+                <span class="data-section-title space-top">Actividad</span>
+                <div class="data-grid-layout">
+                    <span class="data-label">Lugar</span>
+                    <span class="data-value">{{ sol.lugar || '—' }}</span>
+
+                    <span class="data-label">Horas</span>
+                    <span class="data-value">{{ sol.horas || '—' }}</span>
+
+                    <span class="data-label">Tipo</span>
+                    <span class="data-value">{{ sol.tipoActividad || '—' }}</span>
+
+                    <span class="data-label">Materia relacionada</span>
+                    <span class="data-value">{{ sol.materiaRelacionada || '—' }}</span>
+                </div>
+
+                @if (sol.descripcion) {
+                <span class="text-block-title">Descripción</span>
+                <p class="text-block-content">{{ sol.descripcion }}</p>
+                }
+
+                @if (sol.reflexion) {
+                <span class="text-block-title">Reflexión</span>
+                <p class="text-block-content">{{ sol.reflexion }}</p>
+                }
+
+                @if (sol.comentarioRechazo) {
+                <span class="text-block-title" style="color:#ef4444;">Motivo de rechazo</span>
+                <p class="text-block-content" style="color:#ef4444;">{{ sol.comentarioRechazo }}</p>
+                }
+
+                <div class="chat-input-wrapper">
+                    <textarea class="custom-native-textarea"
+                        placeholder="¿Tienes alguna nota para Coordinación?"></textarea>
+                    <button class="btn-send-message"><i class="pi pi-send"></i></button>
+                </div>
+
+            </div>
             }
         </div>
-    
+
     </p-card>
+    }
+
+    @if (!loading && solicitudes.length === 0) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">
+            <p>No tienes solicitudes registradas.</p>
+            <button type="button" class="btn-nueva-solicitud" (click)="nuevaSolicitud()">+ Nueva solicitud</button>
+        </div>
+    </p-card>
+    }
 
 </div>

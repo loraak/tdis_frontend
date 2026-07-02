@@ -2,157 +2,141 @@
 
     <div class="page-header-flex">
         <div>
-            <h1 class="page-title">Mis solicitudes</h1>
-            <p class="page-subtitle">1 solicitud · 1 pendientes</p>
+            <h1 class="page-title">Solicitudes</h1>
+            <p class="page-subtitle">{{ totalSolicitudes }} solicitudes · {{ pendientes }} pendientes</p>
         </div>
         <div class="categories-btn">
-            <button type="submit" class="btn-nueva-solicitud btn-select">Todo</button>
-            <button type="submit" class="btn-nueva-solicitud">Pendientes</button>
-            <button type="submit" class="btn-nueva-solicitud">Aprobados</button>
-            <button type="submit" class="btn-nueva-solicitud">Rechazados</button>
+            <button type="button" class="btn-nueva-solicitud" [class.btn-select]="filtroEstado === 'TODO'" (click)="setFiltro('TODO')">Todo</button>
+            <button type="button" class="btn-nueva-solicitud" [class.btn-select]="filtroEstado === 'EN_REVISION'" (click)="setFiltro('EN_REVISION')">Pendientes ({{ pendientes }})</button>
+            <button type="button" class="btn-nueva-solicitud" [class.btn-select]="filtroEstado === 'APROBADA'" (click)="setFiltro('APROBADA')">Aprobados ({{ aprobadas }})</button>
+            <button type="button" class="btn-nueva-solicitud" [class.btn-select]="filtroEstado === 'RECHAZADA'" (click)="setFiltro('RECHAZADA')">Rechazados ({{ rechazadas }})</button>
         </div>
     </div>
 
+    @if (loading) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">Cargando solicitudes...</div>
+    </p-card>
+    }
+
+    @for (sol of solicitudesFiltradas; track sol.id) {
     <p-card styleClass="custom-card-container">
         <div class="card-inner-padding">
             <div class="data-alumno">
-                    <span class="data-matricula">2026191005</span>
-                    <span class="data-nombre">Juan Pablo</span>
-                    <span class="data-fecha">· 30/5/2026, 6:42:55 p.m.</span>
+                    <span class="data-matricula">{{ sol.alumnoMatricula }}</span>
+                    <span class="data-nombre">{{ sol.alumnoNombre }}</span>
+                    <span class="data-fecha">· {{ sol.createdAt | date:'short' }}</span>
                 </div>
-            <div class="request-card-header" [style.border-bottom]="estaComprimida ? 'none' : '1px solid #f1f5f9'"
-                [style.margin-bottom]="estaComprimida ? '0' : '1.5rem'">
-                
+            <div class="request-card-header"
+                [style.border-bottom]="!isExpanded(sol.id) ? 'none' : '1px solid #f1f5f9'"
+                [style.margin-bottom]="!isExpanded(sol.id) ? '0' : '1.5rem'">
+
                 <div class="request-title-block">
-                    <h3>CineClub</h3>
+                    <h3>{{ sol.actividadTitulo }}</h3>
                     <div class="request-meta-info">
-                        <span class="meta-item"><i class="pi pi-calendar"></i> 9889-09-08</span>
-                        <span class="meta-item"><i class="pi pi-file-pdf"></i> Programa TDIS para maestros.pdf</span>
-                        <span class="meta-item">Enviada: 30/5/2026, 6:42:55 p.m.</span>
+                        <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
+                        @if (sol.nombreArchivo) {
+                        <span class="meta-item"><i class="pi pi-file-pdf"></i> {{ sol.nombreArchivo }}</span>
+                        }
+                        <span class="meta-item">Enviada: {{ sol.createdAt | date:'short' }}</span>
                     </div>
                 </div>
                 <div class="header-actions-group">
-                    <p-tag value="En revisión" icon="pi pi-clock" styleClass="status-badge-review"></p-tag>
-                    <button (click)="toggleCompresion()" class="btn-toggle-view"> <i class="pi pi-chevron-up"></i>
-                        Ocultar</button>
+                    <p-tag [value]="estadoLabel(sol.estado)" [icon]="estadoIcon(sol.estado)" [styleClass]="estadoBadgeClass(sol.estado)"></p-tag>
+                    <button (click)="toggleExpand(sol.id)" class="btn-toggle-view">
+                        <i class="pi" [class.pi-chevron-up]="isExpanded(sol.id)" [class.pi-chevron-down]="!isExpanded(sol.id)"></i>
+                        {{ isExpanded(sol.id) ? 'Ocultar' : 'Ver detalle' }}
+                    </button>
                 </div>
             </div>
 
-            @if (!estaComprimida) {
+            @if (isExpanded(sol.id)) {
             <div>
                 <span class="data-section-title">Datos del estudiante</span>
                 <div class="data-grid-layout">
                     <span class="data-label">Nombre</span>
-                    <span class="data-value">Juan Pablo</span>
+                    <span class="data-value">{{ sol.alumnoNombre }}</span>
 
                     <span class="data-label">División</span>
-                    <span class="data-value">Tecnologías</span>
+                    <span class="data-value">{{ sol.division || '—' }}</span>
 
                     <span class="data-label">Programa</span>
-                    <span class="data-value">Tic</span>
+                    <span class="data-value">{{ sol.programa || '—' }}</span>
 
                     <span class="data-label">Grupo · Cuatrimestre · Turno</span>
-                    <span class="data-value">IDGS15 · 9° · Vespertino</span>
+                    <span class="data-value">{{ sol.grupo || '—' }} · {{ sol.cuatrimestre || '—' }} · {{ sol.turno || '—' }}</span>
 
                     <span class="data-label">Tutor</span>
-                    <span class="data-value">hththhghh</span>
+                    <span class="data-value">{{ sol.tutor || '—' }}</span>
                 </div>
 
                 <span class="data-section-title space-top">Actividad</span>
                 <div class="data-grid-layout">
                     <span class="data-label">Lugar</span>
-                    <span class="data-value">Externo</span>
+                    <span class="data-value">{{ sol.lugar || '—' }}</span>
 
                     <span class="data-label">Horas</span>
-                    <span class="data-value">71.5 horas</span>
+                    <span class="data-value">{{ sol.horas || '—' }}</span>
 
                     <span class="data-label">Tipo</span>
-                    <span class="data-value">kjhu</span>
+                    <span class="data-value">{{ sol.tipoActividad || '—' }}</span>
 
                     <span class="data-label">Materia relacionada</span>
-                    <span class="data-value">Desarrollo del pensamiento y toma de decisiones</span>
+                    <span class="data-value">{{ sol.materiaRelacionada || '—' }}</span>
                 </div>
 
+                @if (sol.descripcion) {
                 <span class="text-block-title">Descripción</span>
-                <p class="text-block-content">fgjno gdgdf gfdfgdfgdf</p>
+                <p class="text-block-content">{{ sol.descripcion }}</p>
+                }
 
+                @if (sol.reflexion) {
                 <span class="text-block-title">Reflexión</span>
-                <p class="text-block-content">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                    industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the
-                    librarian at St Bride Printing Library, took a 1914 Cicero translation and scrambled it to make
-                    dummy
-                    text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into
-                    electronic typesetting, remaining essentially unchanged.
-                </p>
+                <p class="text-block-content">{{ sol.reflexion }}</p>
+                }
+
+                @if (sol.comentarioRechazo) {
+                <span class="text-block-title" style="color:#ef4444;">Motivo de rechazo</span>
+                <p class="text-block-content" style="color:#ef4444;">{{ sol.comentarioRechazo }}</p>
+                }
 
             </div>
             }
 
+            @if (sol.estado === 'EN_REVISION') {
             <div class="buttons-request">
-                <button class="btn-action btn-green">
+                <button class="btn-action btn-green" (click)="aprobar(sol)">
                     <div class="btn-text-action">
                     <i class="pi pi-check-circle icon-btn"></i>
                     <span>Aprobar</span>
                     </div>
                 </button>
 
-                <button class="btn-action btn-red">
+                <button class="btn-action btn-red" (click)="rechazar(sol)">
                     <div class="btn-text-action">
                     <i class="pi pi-times-circle icon-btn"></i>
                     <span>Rechazar</span>
                     </div>
                 </button>
             </div>
-
-            @if (!estaComprimida) {
-                <div class="comments-section-title">
-                    <i class="pi pi-comment"></i>
-                    <span>Hilo de mensajes</span>
-                </div>
-
-                <div class="comments-timeline-container">
-
-                    @for (comentario of comentarios; track comentario.id) {
-                    <div class="message-row" [ngClass]="comentario.remitente === 'coordinacion' ? 'row-right' : 'row-left'">
-
-                        @if (comentario.remitente === 'alumno') {
-                        <div class="avatar-holder holder-student">
-                            <i [class]="comentario.icon"></i>
-                        </div>
-                        }
-
-                        <div class="message-content-block">
-
-                            <div class="message-bubble"
-                                [ngClass]="comentario.remitente === 'coordinacion' ? 'bubble-coordinacion' : 'bubble-alumno'">
-                                {{ comentario.mensaje }}
-                            </div>
-
-                            <span class="message-meta">
-                                {{ comentario.nombre }} · {{ comentario.fecha }}
-                            </span>
-
-                        </div>
-
-                        @if (comentario.remitente === 'coordinacion') {
-                        <div class="avatar-holder holder-admin">
-                            <i [class]="comentario.icon"></i>
-                        </div>
-                        }
-
-                    </div>
-                    }
-
-                </div>
             }
+
+            @if (isExpanded(sol.id)) {
             <div class="chat-input-wrapper">
-                <textarea class="custom-native-textarea"
+                <textarea class="custom-native-textarea" [(ngModel)]="nuevoComentario"
                     placeholder="Escribe una pregunta o comentario al alumno…"></textarea>
                 <button class="btn-send-message"><i class="pi pi-send"></i></button>
             </div>
+            }
         </div>
 
     </p-card>
+    }
+
+    @if (!loading && solicitudesFiltradas.length === 0) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">No hay solicitudes {{ filtroEstado === 'TODO' ? '' : 'en este estado' }}.</div>
+    </p-card>
+    }
 
 </div>

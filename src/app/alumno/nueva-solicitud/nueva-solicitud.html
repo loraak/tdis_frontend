@@ -1,5 +1,37 @@
 <div class="request-container" style="max-width: 800px;">
 
+    @if (mostrarSelector) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+            <h3>Selecciona una actividad del catálogo</h3>
+            <div class="catalogo-grid" style="margin-top: 1rem;">
+                @for (act of actividadesFiltradas; track act.id) {
+                <div class="actividad-select-item" (click)="seleccionarActividad(act)" style="cursor:pointer;padding:0.75rem;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:0.5rem;">
+                    <strong>{{ act.titulo }}</strong>
+                    <span style="display:block;font-size:0.85rem;color:#64748b;">{{ ejeLabel(act.eje) }} · +{{ act.puntosTdi }} pts</span>
+                </div>
+                }
+            </div>
+        </div>
+    </p-card>
+    } @else {
+
+    @if (success) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">
+            <i class="pi pi-check-circle" style="font-size:3rem;color:#22c55e;"></i>
+            <h3>Solicitud enviada exitosamente</h3>
+            <p>Tu solicitud para <strong>{{ nombreActividad }}</strong> ha sido registrada y está en revisión.</p>
+            <button type="button" class="btn-submit btn-yellow" style="margin-top:1rem;" (click)="volverAlSelector()">Nueva solicitud</button>
+            <button type="button" class="btn-nueva-solicitud" style="margin-left:0.5rem;" (click)="irAMisSolicitudes()">Ver mis solicitudes</button>
+        </div>
+    </p-card>
+    } @else {
+
+    @if (error) {
+    <div class="error-msg">{{ error }}</div>
+    }
+
     <div class="request-type-grid">
 
         <div class="request-option" [ngClass]="{'active-previa': tipoFormulario === 'PREVIA'}"
@@ -26,7 +58,7 @@
 
     <div class="validation-info-banner"
         [ngClass]="{'bg-previa': tipoFormulario === 'PREVIA', 'bg-evidencia': tipoFormulario === 'EVIDENCIA'}">
-        <span class="banner-subtitle">Matrícula 2026191005</span>
+        <span class="banner-subtitle">Matrícula {{ matricula }}</span>
 
         <h2 class="banner-title">
             Solicitud de Validación {{ tipoFormulario === 'PREVIA' ? 'PREVIA' : '' }} · TDI's
@@ -62,54 +94,54 @@
             </div>
             }
 
-            <form class="form-grid">
+            <form class="form-grid" #solicitudForm="ngForm">
                 <div class="form-field full-width">
                     <label class="form-label">¿Cuál es tu nombre? *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre completo" />
+                    <input class="custom-input" type="text" placeholder="Nombre completo" [(ngModel)]="nombre" name="nombre" />
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">¿Cuál es tu matrícula? *</label>
-                    <input class="custom-input" type="text" value="2026191005" disabled />
+                    <input class="custom-input" type="text" [(ngModel)]="matricula" name="matricula" disabled />
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Formo parte de la división: *</label>
                     <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button">Industrial</button>
-                        <button type="button" class="pill-button">Económico-Administrativa</button>
-                        <button type="button" class="pill-button selected">Tecnologías</button>
-                        <button type="button" class="pill-button">Idiomas</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Industrial'" (click)="seleccionarDivision('Industrial')">Industrial</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Económico-Administrativa'" (click)="seleccionarDivision('Económico-Administrativa')">Económico-Administrativa</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'" (click)="seleccionarDivision('Tecnologías')">Tecnologías</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'" (click)="seleccionarDivision('Idiomas')">Idiomas</button>
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu programa académico? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. Ingeniería Industrial" />
+                    <input class="custom-input" type="text" placeholder="Ej. Ingeniería Industrial" [(ngModel)]="programa" name="programa" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu grupo? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. A" />
+                    <input class="custom-input" type="text" placeholder="Ej. A" [(ngModel)]="grupo" name="grupo" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿En qué cuatrimestre estás? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 4" />
+                    <input class="custom-input" type="text" placeholder="Ej. 4" [(ngModel)]="cuatrimestre" name="cuatrimestre" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu turno? *</label>
                     <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button selected">Matutino</button>
-                        <button type="button" class="pill-button">Vespertino</button>
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'" (click)="seleccionarTurno('Matutino')">Matutino</button>
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'" (click)="seleccionarTurno('Vespertino')">Vespertino</button>
                     </div>
                 </div>
 
                 @if (tipoFormulario === 'EVIDENCIA') {
                 <div class="form-field full-width">
                     <label class="form-label">¿Quién es tu profesor de formación integral y/o tutor? *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre completo (nombre y luego apellidos)" />
+                    <input class="custom-input" type="text" placeholder="Nombre completo (nombre y luego apellidos)" [(ngModel)]="tutor" name="tutor" />
                 </div>
                 }
 
@@ -137,25 +169,26 @@
             <form class="form-grid">
                 <div class="form-field full-width">
                     <label class="form-label">Nombre de la actividad *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre de la actividad" />
+                    <input class="custom-input" type="text" placeholder="Nombre de la actividad" [(ngModel)]="nombreActividad" name="nombreActividad" readonly />
+                    <small style="color:#3b82f6;cursor:pointer" (click)="volverAlSelector()">Cambiar actividad</small>
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">Fecha en que se realizó *</label>
-                    <input class="custom-input" type="text" />
+                    <input class="custom-input" type="text" [(ngModel)]="fecha" name="fecha" />
                 </div>
                 <div class="form-field">
                     <label class="form-label">Horas efectivas o tiempo de participación *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." />
+                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." [(ngModel)]="horas" name="horas" />
 
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Lugar en donde se llevó a cabo *</label>
                     <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button selected">Interno (UTEQ)</button>
-                        <button type="button" class="pill-button">Externo</button>
-                        <button type="button" class="pill-button">Otro</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Interno (UTEQ)'" (click)="seleccionarLugar('Interno (UTEQ)')">Interno (UTEQ)</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Externo'" (click)="seleccionarLugar('Externo')">Externo</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Otro'" (click)="seleccionarLugar('Otro')">Otro</button>
                     </div>
                 </div>
 
@@ -215,7 +248,7 @@
                     <label class="form-label">Descripción breve de la actividad *</label>
                     <label class="form-label-small">¿Qué hiciste, con quién, para qué?</label>
                     }
-                    <textarea class="custom-input" name="text-input" id="text-input"></textarea>
+                    <textarea class="custom-input" name="descripcion" id="descripcion" [(ngModel)]="descripcion"></textarea>
                     <label class="form-numbers">0 / 20 mín.</label>
                 </div>
 
@@ -234,20 +267,20 @@
                     <div class="custom-card-content">
                         <div class="form-field">
                             <label class="form-label">Nombre *</label>
-                            <input class="custom-input" type="text" placeholder="Nombre completo" />
+                            <input class="custom-input" type="text" placeholder="Nombre completo" [(ngModel)]="nombreResponsable" name="nombreResponsable" />
                         </div>
                         <div class="form-field">
                             <label class="form-label">Cargo *</label>
-                            <input class="custom-input" type="text" placeholder="Ej. Coordinador de Área" />
+                            <input class="custom-input" type="text" placeholder="Ej. Coordinador de Área" [(ngModel)]="cargoResponsable" name="cargoResponsable" />
                         </div>
                         <div class="form-field">
                             <label class="form-label">Teléfono *</label>
-                            <input class="custom-input" type="text" placeholder="Ej. 442 123 4567" />
+                            <input class="custom-input" type="text" placeholder="Ej. 442 123 4567" [(ngModel)]="telefonoResponsable" name="telefonoResponsable" />
 
                         </div>
                         <div class="form-field">
                             <label class="form-label">Correo *</label>
-                            <input class="custom-input" type="text" placeholder="correo@ejemplo.com" />
+                            <input class="custom-input" type="text" placeholder="correo@ejemplo.com" [(ngModel)]="correoResponsable" name="correoResponsable" />
 
                         </div>
                     </div>
@@ -300,7 +333,7 @@
                     <label class="form-label-reflexion">La reflexión es un componente esencial del sistema TDI's.
                         Analiza lo aprendido, cómo te sentiste y de qué manera la actividad aportó a tu desarrollo
                         integral. <strong>Escribe entre 5 y 10 líneas.</strong></label>
-                    <textarea class="custom-input" name="text-input" id="text-input"></textarea>
+                    <textarea class="custom-input" name="reflexion" id="reflexion" [(ngModel)]="reflexion"></textarea>
                     <label class="form-numbers">0 palabras</label>
                 </div>
                 }
@@ -416,7 +449,10 @@
         </p-card>
     }
 
-    <button type="submit" class="btn-submit btn-yellow">Enviar solicitud de validación
+    <button type="submit" class="btn-submit btn-yellow" (click)="onSubmit()" [disabled]="loading || !actividadSeleccionada">{{ loading ? 'Enviando...' : 'Enviar solicitud de validación' }}
     </button>
+
+    }
+    }
 
 </div>

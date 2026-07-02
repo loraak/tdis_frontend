@@ -1,0 +1,12 @@
+﻿[33m>[39m Building...
+[32mÔêÜ[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mmain-J57ADB3U.js[39m   [2m | [22m[2mmain[22m         [2m | [22m  [36m1.41 MB[39m[2m | [22m              [36m285.66 kB[39m
+[32mstyles-RPDGLNFB.css[39m[2m | [22m[2mstyles[22m       [2m | [22m[36m103.56 kB[39m[2m | [22m               [36m20.51 kB[39m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m  [1m1.51 MB[22m[2m | [22m              [1m306.17 kB[22m
+
+Application bundle generation complete. [9.524 seconds] - 2026-06-30T19:39:43.817Z
+
+Output location: C:\TDIS\tdis_frontend\dist\tdis_frontend
+
