@@ -1,11 +1,13 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { ChartModule } from 'primeng/chart'; 
+import { ChartModule } from 'primeng/chart';
+import { ProgresoService } from '../../../core/services/progreso.service';
+import { ProgresoDTO } from '../../../core/models/progreso';
 
 @Component({
   selector: 'app-progreso-alumno',
@@ -14,31 +16,23 @@ import { ChartModule } from 'primeng/chart';
   styleUrl: './progreso-alumno.css',
 })
 export class ProgresoAlumno implements OnInit, OnChanges {
-  @Input() matriculaAlumno!: string; 
+  @Input() matriculaAlumno!: string;
 
-  ngOnInit() {
-    this.cargarDatos();
-    this.initCharts();
-  }
+  private progresoService = inject(ProgresoService);
 
-  ngOnChanges(changes: SimpleChanges) {
-    // Si el administrador cambia de alumno en la tabla, recargamos los datos
-    if (changes['matriculaAlumno'] && !changes['matriculaAlumno'].firstChange) {
-      this.cargarDatos();
-    }
-  }
+  nivelLabels: Record<string, string> = {
+    SENSIBILIZADOR: 'Sensibilizador',
+    FORMATIVO: 'Formativo',
+    APLICATIVO: 'Aplicativo',
+    IMPLEMENTADOR: 'Implementador',
+  };
 
-  cargarDatos() {
-    // Aquí haces la petición a tu API/Servicio usando la this.matriculaAlumno
-    console.log('Cargando el gran progreso para:', this.matriculaAlumno);
-  }
-
-  tokenMatricula = '2026191005';
-  nivelDesarrollo = 'Sensibilizador';
-  puntosTotales = 5;
-  actividades = 2;
-  ptsRestantes = 45;
-  porcentajeProgreso = 10;
+  tokenMatricula = '';
+  nivelDesarrollo = '';
+  puntosTotales = 0;
+  actividades = 0;
+  ptsRestantes = 0;
+  porcentajeProgreso = 0;
 
   recompensas = [
     { nivel: 'Sensibilizador', tdis: '20', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
@@ -49,26 +43,89 @@ export class ProgresoAlumno implements OnInit, OnChanges {
 
   radarData: any;
   radarOptions: any;
-  
-  // Datos para los circulos pequeños
   dataCultural: any;
   dataSocial: any;
   dataDeportivo: any;
   dataTrascendencia: any;
   chartOptionsSmall: any;
 
-  actividades_data = [
-    { fecha: '13/03/2026 12:37', nombre: 'Ponte en su lugar: Museo de las heridas no visibles', p_cult: 0, p_soc: 1, p_dep: 0, p_tras: 0 },
-    { fecha: '13/03/2026 13:24', nombre: 'Defensa Urbana Femenina', p_cult: 0, p_soc: 4, p_dep: 0, p_tras: 0 }
-  ];
+  actividades_data: any[] = [];
 
-  initCharts() {
-    // Configuración Radar
+  ngOnInit() {
+    this.cargarDatos();
+    this.initCharts();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['matriculaAlumno'] && !changes['matriculaAlumno'].firstChange) {
+      this.cargarDatos();
+    }
+  }
+
+  cargarDatos() {
+    if (!this.matriculaAlumno) return;
+
+    this.progresoService.obtenerPorMatricula(this.matriculaAlumno).subscribe({
+      next: (data) => this.procesarProgreso(data),
+    });
+  }
+
+  private procesarProgreso(data: ProgresoDTO) {
+    this.tokenMatricula = data.alumnoMatricula || this.matriculaAlumno;
+    this.puntosTotales = data.puntosTotales;
+    this.actividades = data.actividadesCompletadas;
+    this.nivelDesarrollo = this.nivelLabels[data.nivelActual] || data.nivelActual;
+    this.ptsRestantes = data.puntosSiguienteNivel || 0;
+    this.porcentajeProgreso = data.porcentajeProgreso || 0;
+
+    this.recompensas = this.recompensas.map((r) => ({
+      ...r,
+      isCurrent: r.nivel === this.nivelDesarrollo,
+    }));
+
+    this.actualizarChartEjes(data.puntosPorEje);
+  }
+
+  actualizarChartEjes(puntosPorEje: { [key: string]: number }) {
+    const cult = puntosPorEje['CULTURAL'] || 0;
+    const soc = puntosPorEje['ENTORNO_SOCIAL'] || 0;
+    const dep = puntosPorEje['DEPORTIVO'] || 0;
+    const tras = puntosPorEje['TRASCENDENCIA'] || 0;
+
+    this.dataCultural = this.donutData(cult, '#0ea5e9');
+    this.dataSocial = this.donutData(soc, '#22c55e');
+    this.dataDeportivo = this.donutData(dep, '#f59e0b');
+    this.dataTrascendencia = this.donutData(tras, '#8b5cf6');
+
     this.radarData = {
       labels: ['Cult.', 'Social', 'Dep.', 'Trasc.'],
       datasets: [{
         label: 'Perfil de Avance',
-        data: [2, 5, 1, 1],
+        data: [cult, soc, dep, tras],
+        fill: true,
+        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+        borderColor: '#f59e0b',
+        pointBackgroundColor: '#f59e0b',
+      }]
+    };
+  }
+
+  private donutData(valor: number, color: string) {
+    return {
+      datasets: [{
+        data: [Math.min(valor, 10), Math.max(10 - valor, 0)],
+        backgroundColor: [color, '#f1f5f9'],
+        borderWidth: 0,
+      }]
+    };
+  }
+
+  initCharts() {
+    this.radarData = {
+      labels: ['Cult.', 'Social', 'Dep.', 'Trasc.'],
+      datasets: [{
+        label: 'Perfil de Avance',
+        data: [0, 0, 0, 0],
         fill: true,
         backgroundColor: 'rgba(245, 158, 11, 0.2)',
         borderColor: '#f59e0b',
@@ -86,22 +143,9 @@ export class ProgresoAlumno implements OnInit, OnChanges {
       plugins: { legend: { display: false }, tooltip: { enabled: false } }
     };
 
-    // Ejemplo de un eje con puntos (Social = 5 puntos de 10)
-    this.dataSocial = {
-      datasets: [{
-        data: [5, 5],
-        backgroundColor: ['#22c55e', '#f1f5f9'],
-        borderWidth: 0
-      }]
-    };
-
-    // Ejes vacíos
-    const emptyData = (color: string) => ({
-      datasets: [{ data: [0, 10], backgroundColor: [color, '#f1f5f9'], borderWidth: 0 }]
-    });
-
-    this.dataCultural = emptyData('#0ea5e9');
-    this.dataDeportivo = emptyData('#f59e0b');
-    this.dataTrascendencia = emptyData('#8b5cf6');
+    this.dataSocial = { datasets: [{ data: [0, 10], backgroundColor: ['#22c55e', '#f1f5f9'], borderWidth: 0 }] };
+    this.dataCultural = { datasets: [{ data: [0, 10], backgroundColor: ['#0ea5e9', '#f1f5f9'], borderWidth: 0 }] };
+    this.dataDeportivo = { datasets: [{ data: [0, 10], backgroundColor: ['#f59e0b', '#f1f5f9'], borderWidth: 0 }] };
+    this.dataTrascendencia = { datasets: [{ data: [0, 10], backgroundColor: ['#8b5cf6', '#f1f5f9'], borderWidth: 0 }] };
   }
 }

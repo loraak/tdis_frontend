@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -10,11 +11,14 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './navbar.css',
 })
 export class Navbar implements OnInit {
-  isAdmin: boolean = true;
+  private auth = inject(Auth);
+
+  isAdmin: boolean = false;
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    this.isAdmin = this.auth.isAdmin();
     this.evaluarRuta(this.router.url);
 
     this.router.events.pipe(
@@ -25,6 +29,6 @@ export class Navbar implements OnInit {
   }
 
   evaluarRuta(url: string): void {
-    this.isAdmin = url.includes('/admin');
+    this.isAdmin = url.includes('/admin') || this.auth.isAdmin();
   }
 }

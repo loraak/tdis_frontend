@@ -2,176 +2,54 @@
 
     <header class="catalogo-header">
         <h1 class="catalogo-title">Catálogo de Actividades</h1>
-        <p class="catalogo-subtitle">20 tokens disponibles — 5 por cada eje de formación.</p>
+        <p class="catalogo-subtitle">{{ totalActividades }} tokens disponibles — {{ conteoEje('ENTORNO_SOCIAL') }} por cada eje de formación.</p>
     </header>
 
     <div class="tokens-info-banner">
         <i class="pi pi-file"></i>
         <span>
-            <strong>20 Tokens de Desarrollo Integral</strong> — 5 por eje. Todas requieren evidencias. Solicita
+            <strong>{{ totalActividades }} Tokens de Desarrollo Integral</strong> — {{ conteoEje('ENTORNO_SOCIAL') }} por eje. Todas requieren evidencias. Solicita
             validación con <strong>15 días de anticipación</strong>.
         </span>
     </div>
 
     <div class="categories-filter-row">
-
-        <button type="button" class="filter-pill active-all">
+        <button type="button" class="filter-pill" [class.active-all]="filtroActivo() === 'TODAS'" (click)="filtrar('TODAS')">
             <span>Todas</span>
-            <span class="pill-count">20</span>
+            <span class="pill-count">{{ totalActividades }}</span>
         </button>
 
-        <button type="button" class="filter-pill">
-            <i class="pi pi-users" style="color: #22c55e;"></i>
-            <span>Entorno Social</span>
-            <span class="pill-count" style="background-color: #dcfce7; color: #15803d;">5</span>
+        @for (eje of EJES; track eje) {
+        <button type="button" class="filter-pill" [class.active-all]="filtroActivo() === eje" (click)="filtrar(eje)">
+            <i [class]="ejeIcon(eje)"></i>
+            <span>{{ ejeLabel(eje) }}</span>
+            <span class="pill-count">{{ conteoEje(eje) }}</span>
         </button>
-
-        <button type="button" class="filter-pill">
-            <i class="pi pi-book" style="color: #0ea5e9;"></i>
-            <span>Cultural</span>
-            <span class="pill-count" style="background-color: #e0f2fe; color: #0369a1;">5</span>
-        </button>
-
-        <button type="button" class="filter-pill">
-            <i class="pi pi-percentage" style="color: #f59e0b;"></i> <span>Deportivo</span>
-            <span class="pill-count" style="background-color: #fef3c7; color: #b45309;">5</span>
-        </button>
-
-        <button type="button" class="filter-pill">
-            <i class="pi pi-sparkles" style="color: #8b5cf6;"></i>
-            <span>Trascendencia</span>
-            <span class="pill-count" style="background-color: #f3e8ff; color: #6d28d9;">5</span>
-        </button>
-
+        }
     </div>
 
     <div class="catalogo-grid">
-        <p-card styleClass="custom-card-container card-eje-social">
+        @for (actividad of actividadesFiltradas; track actividad.id) {
+        <p-card [styleClass]="'custom-card-container ' + cardEjeClass(actividad.eje)">
             <div class="card-inner-padding">
 
                 <div class="card-tags-row">
-                    <span class="badge-eje social"><i class="pi pi-users"></i> Entorno Social</span>
-                    <span class="badge-points"><i class="pi pi-star-fill"></i> +3 pts</span>
+                    <span class="badge-eje" [class]="badgeEjeClass(actividad.eje)">
+                        <i [class]="ejeIcon(actividad.eje)"></i> {{ ejeLabel(actividad.eje) }}
+                    </span>
+                    <span class="badge-points"><i class="pi pi-star-fill"></i> +{{ actividad.puntosTdi }} pts</span>
                 </div>
 
-                <h4 class="activity-title">Apoyo Social — Croquetón y acciones comunitarias</h4>
-                <p class="activity-description">
-                    Participación en actividades de apoyo a la comunidad: croquetón, colectas y brigadas solidarias.
-                </p>
+                <h4 class="activity-title">{{ actividad.titulo }}</h4>
+                <p class="activity-description">{{ actividad.descripcion }}</p>
 
                 <div class="card-activity-footer">
-                    <span class="info-frequency">FRECUENCIA: <strong>Semestral</strong></span>
+                    <span class="info-frequency">FRECUENCIA: <strong>{{ actividad.temporalidad }}</strong></span>
                     <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
                 </div>
 
             </div>
         </p-card>
-
-        <p-card styleClass="custom-card-container card-eje-social">
-            <div class="card-inner-padding">
-
-                <div class="card-tags-row">
-                    <span class="badge-eje social"><i class="pi pi-users"></i> Entorno Social</span>
-                    <span class="badge-points"><i class="pi pi-star-fill"></i> +1 pts</span>
-                </div>
-
-                <h4 class="activity-title">Ponte en su Lugar: Museo de las Heridas no Visibles</h4>
-                <p class="activity-description">
-                    Experiencia de sensibilización sobre salud mental y bienestar emocional en contextos de
-                    vulnerabilidad.
-                </p>
-
-                <div class="card-activity-footer">
-                    <span class="info-frequency">FRECUENCIA: <strong>Semestral</strong></span>
-                    <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
-                </div>
-
-            </div>
-        </p-card>
-
-        <p-card styleClass="custom-card-container card-eje-social">
-            <div class="card-inner-padding">
-
-                <div class="card-tags-row">
-                    <span class="badge-eje social"><i class="pi pi-users"></i> Entorno Social</span>
-                    <span class="badge-points"><i class="pi pi-star-fill"></i> +4 pts</span>
-                </div>
-
-                <h4 class="activity-title">Defensa Urbana Femenina</h4>
-                <p class="activity-description">
-                    Taller de autodefensa y seguridad personal para mujeres en entornos urbanos.
-                </p>
-
-                <div class="card-activity-footer">
-                    <span class="info-frequency">FRECUENCIA: <strong>Semestral</strong></span>
-                    <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
-                </div>
-
-            </div>
-        </p-card>
-
-        <p-card styleClass="custom-card-container card-eje-cultural">
-            <div class="card-inner-padding">
-
-                <div class="card-tags-row">
-                    <span class="badge-eje cultural"><i class="fas fa-book-open"></i> Cultural</span>
-                    <span class="badge-points"><i class="pi pi-star-fill"></i> +2 pts</span>
-                </div>
-
-                <h4 class="activity-title">CineClub</h4>
-                <p class="activity-description">
-                    Proyección de películas con reflexión guiada sobre valores, diversidad cultural y sociedad.
-                </p>
-
-                <div class="card-activity-footer">
-                    <span class="info-frequency">FRECUENCIA: <strong>Mensual</strong></span>
-                    <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
-                </div>
-
-            </div>
-        </p-card>
-
-        <p-card styleClass="custom-card-container card-eje-deportivo">
-            <div class="card-inner-padding">
-
-                <div class="card-tags-row">
-                    <span class="badge-eje deportivo"><i class="fa-solid fa-dumbbell"></i> Deportiva</span>
-                    <span class="badge-points"><i class="pi pi-star-fill"></i> +2 pts</span>
-                </div>
-
-                <h4 class="activity-title">Jornada de Vacunación Influenza</h4>
-                <p class="activity-description">
-                    Campaña institucional de vacunación preventiva contra influenza y otras enfermedades.
-                </p>
-
-                <div class="card-activity-footer">
-                    <span class="info-frequency">FRECUENCIA: <strong>Anual</strong></span>
-                    <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
-                </div>
-
-            </div>
-        </p-card>
-
-        <p-card styleClass="custom-card-container card-eje-trascendencia">
-            <div class="card-inner-padding">
-
-                <div class="card-tags-row">
-                    <span class="badge-eje trascendencia"><i class="fa-solid fa-dumbbell"></i> Trascendencia</span>
-                    <span class="badge-points"><i class="pi pi-star-fill"></i> +4 pts</span>
-                </div>
-
-                <h4 class="activity-title">Voluntariado Social Externo</h4>
-                <p class="activity-description">
-                    Servicio voluntario en organizaciones externas: casas hogar, albergues, fundaciones o comunidades.
-                </p>
-
-                <div class="card-activity-footer">
-                    <span class="info-frequency">FRECUENCIA: <strong>Libre</strong></span>
-                    <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
-                </div>
-
-            </div>
-        </p-card>
-
+        }
     </div>
 </div>

@@ -1,0 +1,73 @@
+﻿[33m>[39m Building...
+[32mÔêÜ[39m Building...
+Application bundle generation failed. [4.590 seconds] - 2026-06-30T19:46:21.124Z
+
+node.exe : [1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen 
+when the tag has already been closed by another tag. For more info see 
+https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+En línea: 1 Carácter: 1
++ & "C:\nvm4w\nodejs/node.exe" "C:\nvm4w\nodejs/node_modules/npm/bin/np ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([1m[31m[31mX...r-compiler][0m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.html:455:4:
+[37m      455 Ôöé     [32m</div>[37m
+          ÔòÁ     [32m~~~~~~[0m
+
+  Error occurs in the template of component NuevaSolicitud.
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.ts:16:15:
+[37m      16 Ôöé   templateUrl: [32m'./nueva-solicitud.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has 
+already been closed by another tag. For more info see 
+https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.html:456:4:
+[37m      456 Ôöé     [32m</div>[37m
+          ÔòÁ     [32m~~~~~~[0m
+
+  Error occurs in the template of component NuevaSolicitud.
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.ts:16:15:
+[37m      16 Ôöé   templateUrl: [32m'./nueva-solicitud.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing block. The block may have been closed 
+earlier. If you meant to write the `}` character, you should use the "&#125;" HTML entity instead.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.html:457:4:
+[37m      457 Ôöé     [32m}[37m
+          ÔòÁ     [32m^[0m
+
+  Error occurs in the template of component NuevaSolicitud.
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.ts:16:15:
+[37m      16 Ôöé   templateUrl: [32m'./nueva-solicitud.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has 
+already been closed by another tag. For more info see 
+https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.html:459:0:
+[37m      459 Ôöé [32m</div>[37m
+          ÔòÁ [32m~~~~~~[0m
+
+  Error occurs in the template of component NuevaSolicitud.
+
+    src/app/alumno/nueva-solicitud/nueva-solicitud.ts:16:15:
+[37m      16 Ôöé   templateUrl: [32m'./nueva-solicitud.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

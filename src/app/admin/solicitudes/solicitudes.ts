@@ -1,17 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
-
-interface Comentario {
-  id: number;
-  remitente: 'alumno' | 'coordinacion';
-  nombre: string;
-  mensaje: string;
-  fecha: string;
-  icon: string;
-}
+import { SolicitudesService } from '../../core/services/solicitudes.service';
+import { SolicitudDTO } from '../../core/models/solicitud';
 
 @Component({
   selector: 'app-solicitudes',
@@ -19,47 +12,89 @@ interface Comentario {
   templateUrl: './solicitudes.html',
   styleUrl: './solicitudes.css',
 })
-export class Solicitudes {
-  estaComprimida: boolean = true;
+export class Solicitudes implements OnInit {
+  private solicitudesService = inject(SolicitudesService);
 
-  toggleCompresion(): void {
-    this.estaComprimida = !this.estaComprimida;
-  }
-
-  comentarios: Comentario[] = [
-    {
-      id: 1,
-      remitente: 'alumno',
-      nombre: 'Juan Pablo',
-      mensaje: 'Holaaa',
-      fecha: '30/5/2026, 6:43:24 p.m.',
-      icon: 'pi pi-user'
-    },
-    {
-      id: 2,
-      remitente: 'coordinacion',
-      nombre: 'Coordinación',
-      mensaje: 'Holla',
-      fecha: '30/5/2026, 6:43:46 p.m.',
-      icon: 'pi pi-shield'
-    }
-  ];
+  solicitudes: SolicitudDTO[] = [];
+  filtroEstado: string = 'TODO';
+  expandedId: string | null = null;
+  loading = true;
 
   nuevoComentario: string = '';
 
-  enviarComentario() {
-    if (!this.nuevoComentario.trim()) return;
-
-    // Simulación de envío por parte del rol actual (ej. Coordinación o Alumno)
-    this.comentarios.push({
-      id: this.comentarios.length + 1,
-      remitente: 'coordinacion', // Aquí dependerá de quién tenga la sesión activa
-      nombre: 'Coordinación',
-      mensaje: this.nuevoComentario,
-      fecha: new Date().toLocaleString(),
-      icon: 'pi pi-shield'
-    });
-
-    this.nuevoComentario = ''; // Limpiamos el input
+  ngOnInit() {
+    this.cargarSolicitudes();
   }
+
+  cargarSolicitudes() {
+    this.loading = true;
+    this.solicitudesService.listarTodas().subscribe({
+      next: (data) => {
+        this.solicitudes = data;
+        this.loading = false;
+      },
+      error: () => this.loading = false,
+    });
+  }
+
+  get solicitudesFiltradas(): SolicitudDTO[] {
+    if (this.filtroEstado === 'TODO') return this.solicitudes;
+    return this.solicitudes.filter(s => s.estado === this.filtroEstado);
+  }
+
+  setFiltro(estado: string) {
+    this.filtroEstado = estado;
+  }
+
+  toggleExpand(id: string) {
+    this.expandedId = this.expandedId === id ? null : id;
+  }
+
+  isExpanded(id: string): boolean {
+    return this.expandedId === id;
+  }
+
+  aprobar(sol: SolicitudDTO) {
+    this.solicitudesService.revisar(sol.id, { estado: 'APROBADA', comentario: this.nuevoComentario || undefined })
+      .subscribe({ next: () => this.cargarSolicitudes() });
+  }
+
+  rechazar(sol: SolicitudDTO) {
+    const motivo = prompt('Motivo de rechazo:');
+    if (!motivo) return;
+    this.solicitudesService.revisar(sol.id, { estado: 'RECHAZADA', comentario: motivo })
+      .subscribe({ next: () => this.cargarSolicitudes() });
+  }
+
+  estadoBadgeClass(estado: string): string {
+    const map: Record<string, string> = {
+      'EN_REVISION': 'status-badge-review',
+      'APROBADA': 'status-badge-approved',
+      'RECHAZADA': 'status-badge-rejected',
+    };
+    return map[estado] || 'status-badge-review';
+  }
+
+  estadoLabel(estado: string): string {
+    const map: Record<string, string> = {
+      'EN_REVISION': 'En revisión',
+      'APROBADA': 'Aprobada',
+      'RECHAZADA': 'Rechazada',
+    };
+    return map[estado] || estado;
+  }
+
+  estadoIcon(estado: string): string {
+    const map: Record<string, string> = {
+      'EN_REVISION': 'pi pi-clock',
+      'APROBADA': 'pi pi-check-circle',
+      'RECHAZADA': 'pi pi-times-circle',
+    };
+    return map[estado] || 'pi pi-clock';
+  }
+
+  get totalSolicitudes(): number { return this.solicitudes.length; }
+  get pendientes(): number { return this.solicitudes.filter(s => s.estado === 'EN_REVISION').length; }
+  get aprobadas(): number { return this.solicitudes.filter(s => s.estado === 'APROBADA').length; }
+  get rechazadas(): number { return this.solicitudes.filter(s => s.estado === 'RECHAZADA').length; }
 }
