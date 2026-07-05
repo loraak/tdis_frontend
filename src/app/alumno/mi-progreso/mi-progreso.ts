@@ -11,6 +11,12 @@ import { Auth } from '../../core/services/auth';
 import { ProgresoService } from '../../core/services/progreso.service';
 import { ProgresoDTO } from '../../core/models/progreso';
 
+interface NivelDef {
+  nombre: string;
+  minPuntos: number;
+  icon: string;
+  recompensa?: string;
+}
 @Component({
   selector: 'app-mi-progreso',
   imports: [CommonModule, CardModule, ProgressBarModule, TableModule, ButtonModule, TagModule, ChartModule],
@@ -29,11 +35,48 @@ export class MiProgreso implements OnInit {
     IMPLEMENTADOR: 'Implementador',
   };
 
+  niveles: NivelDef[] = [
+    { nombre: 'Sensibilizador', minPuntos: 0,    icon: 'fa-solid fa-leaf' },
+    { nombre: 'Formativo',      minPuntos: 301,  icon: 'pi pi-bolt' },
+    { nombre: 'Aplicativo',     minPuntos: 601,  icon: 'pi pi-check-circle' },
+    { nombre: 'Implementador',  minPuntos: 1000, icon: 'pi pi-trophy' },
+  ];
+
+  puntosCultural = 2;
+puntosSocial = 2;
+puntosDeportivo = 1;
+puntosTrascendencia = 0;
+
+get totalPuntos(): number {
+  return this.puntosCultural + this.puntosSocial + this.puntosDeportivo + this.puntosTrascendencia;
+}
+
+// Replica el mismo patrón de IFs anidados del Excel, pero genérico
+get nivelActual(): NivelDef {
+  return [...this.niveles].reverse().find(n => this.totalPuntos >= n.minPuntos)!;
+}
+
+get nivelSiguiente(): NivelDef | null {
+  const idx = this.niveles.indexOf(this.nivelActual);
+  return idx < this.niveles.length - 1 ? this.niveles[idx + 1] : null;
+}
+
+get puntosRestantes(): number {
+  return this.nivelSiguiente ? this.nivelSiguiente.minPuntos - this.totalPuntos : 0;
+}
+
+get progresoPorcentaje(): number {
+  if (!this.nivelSiguiente) return 100;
+  const rango = this.nivelSiguiente.minPuntos - this.nivelActual.minPuntos;
+  const avance = this.totalPuntos - this.nivelActual.minPuntos;
+  return Math.round((avance / rango) * 100);
+}
+
   recompensas = [
-    { nivel: 'Sensibilizador', tdis: '20', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
-    { nivel: 'Formativo', tdis: '50', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
-    { nivel: 'Aplicativo', tdis: '90', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
-    { nivel: 'Implementador', tdis: '+160', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
+    { nivel: 'Sensibilizador', tdis: '0', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
+    { nivel: 'Formativo', tdis: '<301', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
+    { nivel: 'Aplicativo', tdis: '<601', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
+    { nivel: 'Implementador', tdis: '+1000', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
   ];
 
   radarData: any;
