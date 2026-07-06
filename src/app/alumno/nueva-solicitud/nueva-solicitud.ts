@@ -86,8 +86,8 @@ export class NuevaSolicitud implements OnInit {
   volverAlSelector() {
     this.actividadSeleccionada = null;
     this.nombreActividad = '';
-    this.mostrarSelector = true;
-    this.success = false;
+    this.mostrarSelector = false;
+    this.success = true;
     this.error = '';
   }
 
