@@ -8,8 +8,8 @@ import { Catalogo } from './shared/components/catalogo/catalogo';
 import { Resumen } from './admin/resumen/resumen';
 import { Alumnos } from './admin/alumnos/alumnos';
 import { Solicitudes } from './admin/solicitudes/solicitudes';
-import { SolicitudPrevia } from './solicitante/solicitud-previa/solicitud-previa';
-import { SolicitudesPrevias } from './solicitante/solicitudes-previas/solicitudes-previas';
+import { Actividad } from './solicitante/actividad/actividad';
+import { Actividades } from './solicitante/actividades/actividades';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -21,7 +21,7 @@ export const routes: Routes = [
         { path: 'catalogo',    component: Catalogo },
         { path: '', redirectTo: 'progreso', pathMatch: 'full' }
     ]},
-    {path: 'admin', component: MainLayout, canActivate: [authGuard], data: {role: 'admin'}, children: [
+    {path: 'admin', component: MainLayout, /*canActivate: [authGuard],*/ data: {role: 'admin'}, children: [
         { path: 'resumen',     component: Resumen },
         { path: 'alumnos',     component: Alumnos },
         { path: 'solicitudes', component: Solicitudes },
@@ -29,8 +29,8 @@ export const routes: Routes = [
         { path: '', redirectTo: 'resumen', pathMatch: 'full' }
     ]},
     {path: 'solicitante', component: MainLayout, /*canActivate: [authGuard],*/ data: {role: 'solicitante'}, children: [
-        { path: 'nueva-solicitud', component: SolicitudPrevia },
-        { path: 'mis-solicitudes', component: SolicitudesPrevias },
+        { path: 'nueva-actividad', component: Actividad },
+        { path: 'mis-actividades', component: Actividades },
         { path: 'catalogo',    component: Catalogo },
         { path: '', redirectTo: 'mis-solicitudes', pathMatch: 'full' }
     ]},
