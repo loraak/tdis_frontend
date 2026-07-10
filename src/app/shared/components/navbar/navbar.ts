@@ -14,17 +14,19 @@ export class Navbar implements OnInit {
   private auth = inject(Auth);
 
   isAdmin: boolean = false;
+  isSolicitante: boolean = true;
+  rol: string = 'SOLICITANTE';
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.isAdmin = this.auth.isAdmin();
-    this.evaluarRuta(this.router.url);
-
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      this.evaluarRuta(event.urlAfterRedirects);
+      const url = event.urlAfterRedirects;
+      if (url.includes('/admin')) this.rol = 'ADMIN';
+      else if (url.includes('/solicitante')) this.rol = 'SOLICITANTE';
+      else this.rol = 'ALUMNO';
     });
   }
 

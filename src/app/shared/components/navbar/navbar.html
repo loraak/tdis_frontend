@@ -1,6 +1,6 @@
 <nav class="navbar-container">
 
-    @if (isAdmin) {
+    @if (rol === "ADMIN") {
         <div class="nav-group admin-theme">
             <a routerLink="/admin/resumen" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }">
                 <i class="pi pi-chart-bar"></i> Resumen
@@ -15,18 +15,32 @@
                 <i class="pi pi-book"></i> Catálogo
             </a>
         </div>
-    } @else {
+    } @else if (rol === "ALUMNO"){
         <div class="nav-group alumno-theme">
             <a routerLink="/alumno/progreso" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-th-large"></i> Mi Progreso
             </a>
-            <a routerLink="/alumno/solicitud" routerLinkActive="active" class="nav-item">
+            <a routerLink="/alumno/nueva-solicitud" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-plus"></i> Nueva Solicitud
             </a>
-            <a routerLink="/alumno/solicitudes" routerLinkActive="active" class="nav-item">
+            <a routerLink="/alumno/mis-solicitudes" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-copy"></i> Mis Solicitudes
             </a>
             <a routerLink="/alumno/catalogo" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-book"></i> Catálogo
+            </a>
+        </div>
+    }
+
+    @if(rol === "SOLICITANTE") {
+        <div class="nav-group alumno-theme">
+            <a routerLink="/solicitante/nueva-actividad" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-plus"></i> Nueva Actividad
+            </a>
+            <a routerLink="/solicitante/mis-actividades" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-copy"></i> Mis Actividades
+            </a>
+            <a routerLink="/solicitante/catalogo" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-book"></i> Catálogo
             </a>
         </div>
