@@ -13,26 +13,26 @@ import { Actividades } from './solicitante/actividades/actividades';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-    //{path: 'login', component: Login},
-    {path: 'alumno', component: MainLayout, /*canActivate: [authGuard],*/ data: {role: 'alumno'}, children: [
+    {path: 'login', component: Login},
+    {path: 'alumno', component: MainLayout, canActivate: [authGuard], data: {role: 'alumno'}, children: [
         { path: 'progreso',    component: MiProgreso },
         { path: 'nueva-solicitud',   component: NuevaSolicitud },
         { path: 'mis-solicitudes', component: MisSolicitudes },
         { path: 'catalogo',    component: Catalogo },
         { path: '', redirectTo: 'progreso', pathMatch: 'full' }
     ]},
-    {path: 'admin', component: MainLayout, /*canActivate: [authGuard],*/ data: {role: 'admin'}, children: [
+    {path: 'admin', component: MainLayout, canActivate: [authGuard], data: {role: 'admin'}, children: [
         { path: 'resumen',     component: Resumen },
         { path: 'alumnos',     component: Alumnos },
         { path: 'solicitudes', component: Solicitudes },
         { path: 'catalogo',    component: Catalogo },
         { path: '', redirectTo: 'resumen', pathMatch: 'full' }
     ]},
-    {path: 'solicitante', component: MainLayout, /*canActivate: [authGuard],*/ data: {role: 'solicitante'}, children: [
+    {path: 'solicitante', component: MainLayout, canActivate: [authGuard], data: {role: 'solicitante'}, children: [
         { path: 'nueva-actividad', component: Actividad },
         { path: 'mis-actividades', component: Actividades },
         { path: 'catalogo',    component: Catalogo },
         { path: '', redirectTo: 'mis-solicitudes', pathMatch: 'full' }
     ]},
-    //{path: '', redirectTo: 'login', pathMatch: 'full'}
+    {path: '', redirectTo: 'login', pathMatch: 'full'}
 ];
