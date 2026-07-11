@@ -6,4 +6,5 @@ export interface ActividadDTO {
   puntosTdi: number;
   temporalidad: string;
   activa: boolean;
+  createdAt: Date;
 }

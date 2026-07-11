@@ -50,6 +50,19 @@
         </p-card>
 
     </div>
+
+<div class="reportes-actions">
+    <button 
+            [disabled]="generandoReporte"
+            (click)="onGenerarReporteAlumnos()">Reporte de alumnos</button>
+
+    <button
+            [disabled]="generandoReporte"
+            (click)="onGenerarReporteCompleto()">Reporte completo</button>
+
+</div>
+
+
     <div class="cards-grafics">
         <p-card styleClass="custom-card-container">
             <div class="card-inner-padding">

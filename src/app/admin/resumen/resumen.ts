@@ -1,20 +1,30 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../core/services/admin.service';
 import { AdminResumenDTO, AlumnoResumenDTO } from '../../core/models/admin';
+import { ActividadDTO } from '../../core/models/actividad';
+import { ReporteService } from '../../core/services/reporte.service';
+import { REPORTE_ALUMNOS_PRESET, REPORTE_COMPLETO_PRESET, ReporteConfig } from '../../core/models/reporte-config';
+import { CheckboxModule } from "primeng/checkbox";
 
 @Component({
   selector: 'app-resumen',
-  imports: [CommonModule, CardModule, TableModule, TagModule],
+  imports: [FormsModule, CommonModule, CardModule, TableModule, TagModule, CheckboxModule],
   templateUrl: './resumen.html',
   styleUrl: './resumen.css',
 })
 export class Resumen implements OnInit {
   private adminService = inject(AdminService);
+  private reporteService = inject(ReporteService);
   private cd = inject(ChangeDetectorRef);
+
+  // --- Referencias a los gráficos (para captura con html2canvas) ---
+  @ViewChild('donutRef') donutRef!: ElementRef<HTMLElement>;
+  @ViewChild('barrasRef') barrasRef!: ElementRef<HTMLElement>;
 
   recompensas = [
     { nivel: 'Sensibilizador', tdis: '20', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
@@ -25,7 +35,23 @@ export class Resumen implements OnInit {
 
   resumenData: AdminResumenDTO | null = null;
   alumnos: AlumnoResumenDTO[] = [];
+  actividades: ActividadDTO[] = [];
   maxPuntosEje = 1;
+
+  generandoReporte = false;
+  mostrarConfigReporte = false;
+
+  config: ReporteConfig = {
+    incluirTablaAlumnos: false,
+    incluirGraficos: false,
+    incluirMetricasResumen: false,
+    incluirAlumnosNuevos: false,
+    diasAlumnosNuevos: 7,
+    incluirActividadesRecientes: false,
+    diasActividadesRecientes: 7,
+    incluirCambiosNivel: false,
+    incluirEstadisticasNiveles: false
+  };
 
   ngOnInit() {
     this.cargarDatos();
@@ -38,6 +64,7 @@ export class Resumen implements OnInit {
       this.maxPuntosEje = Math.max(1, ...Object.values(data.puntosPorEje));
       this.cd.markForCheck();
     });
+    this.actividades = [];
   }
 
   get totalAlumnos(): number { return this.resumenData?.totalAlumnos ?? 0; }
@@ -85,5 +112,36 @@ export class Resumen implements OnInit {
       'IMPLEMENTADOR': 'Implementador',
     };
     return map[key] || key;
+  }
+
+  async onGenerarReporteAlumnos(): Promise<void> {
+    this.generandoReporte = true;
+    try {
+      await this.reporteService.generarReporte(REPORTE_ALUMNOS_PRESET, this.alumnos, this.actividades);
+    } finally {
+      this.generandoReporte = false;
+    }
+  }
+
+  async onGenerarReporteCompleto(): Promise<void> {
+    if (!this.donutRef || !this.barrasRef) return;
+
+    this.generandoReporte = true;
+    try {
+      await this.reporteService.generarReporte(
+        REPORTE_COMPLETO_PRESET,
+        this.alumnos,
+        this.actividades,
+        {
+          totalAlumnos: this.totalAlumnos,
+          aprobadas: this.actividadesAprobadas,
+          rechazadas: this.actividadesRechazadas,
+          puntos: this.puntosDistribuidos
+        },
+        { donutEl: this.donutRef.nativeElement, barrasEl: this.barrasRef.nativeElement }
+      );
+    } finally {
+      this.generandoReporte = false;
+    }
   }
 }
