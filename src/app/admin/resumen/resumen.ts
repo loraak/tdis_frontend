@@ -27,14 +27,22 @@ export class Resumen implements OnInit {
   @ViewChild('barrasRef') barrasRef!: ElementRef<HTMLElement>;
 
   recompensas = [
-    { nivel: 'Sensibilizador', tdis: '20', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
-    { nivel: 'Formativo', tdis: '50', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
-    { nivel: 'Aplicativo', tdis: '90', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
-    { nivel: 'Implementador', tdis: '+160', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
+    { nivel: 'Explorador', tdis: '20', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
+    { nivel: 'Promotor', tdis: '50', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
+    { nivel: 'Líder', tdis: '90', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
+    { nivel: 'Embajador', tdis: '+160', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
   ];
 
   resumenData: AdminResumenDTO | null = null;
-  alumnos: AlumnoResumenDTO[] = [];
+  alumnos: AlumnoResumenDTO[] = [
+    { id: '1', matricula: '20231001', nombre: 'Sofía',     apellidos: 'Ramírez Torres',  nivel: 'Embajador', cult: 320, social: 280, dep: 210, trasc: 290, total: 1100, createdAt: new Date('2026-06-20') },
+  { id: '2', matricula: '20231002', nombre: 'Diego',     apellidos: 'Hernández Cruz',   nivel: 'Embajador', cult: 300, social: 260, dep: 240, trasc: 250, total: 1050, createdAt: new Date('2026-05-14') },
+  { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina',      nivel: 'Líder',      cult: 180, social: 150, dep: 160, trasc: 140, total: 630,  createdAt: new Date('2026-07-08') },
+  { id: '4', matricula: '20231004', nombre: 'Emiliano',  apellidos: 'Gómez Rivas',       nivel: 'Líder',      cult: 170, social: 160, dep: 130, trasc: 150, total: 610,  createdAt: new Date('2026-07-05') },
+  { id: '5', matricula: '20231005', nombre: 'Camila',    apellidos: 'Sánchez Ortiz',     nivel: 'Líder',      cult: 160, social: 140, dep: 150, trasc: 155, total: 605,  createdAt: new Date('2026-06-28') },
+  { id: '6', matricula: '20231006', nombre: 'Mateo',     apellidos: 'Fernández Solís',   nivel: 'Promotor',   cult: 90,  social: 85,  dep: 80,  trasc: 75,  total: 330,  createdAt: new Date('2026-07-09') },
+  { id: '7', matricula: '20231007', nombre: 'Regina',    apellidos: 'Castillo Vega',     nivel: 'Promotor',   cult: 85,  social: 90,  dep: 70,  trasc: 65,  total: 310,  createdAt: new Date('2026-07-10') }
+  ];
   actividades: ActividadDTO[] = [];
   maxPuntosEje = 1;
 
@@ -54,7 +62,7 @@ export class Resumen implements OnInit {
   };
 
   ngOnInit() {
-    this.cargarDatos();
+    //this.cargarDatos();
   }
 
   cargarDatos() {
@@ -92,7 +100,7 @@ export class Resumen implements OnInit {
 
   ejeLabel(key: string): string {
     const map: Record<string, string> = {
-      'CULTURAL': 'Cultural',
+      'PERSONAL': 'Personal',
       'ENTORNO_SOCIAL': 'Entorno Social',
       'DEPORTIVO': 'Deportivo',
       'TRASCENDENCIA': 'Trascendencia',
@@ -101,47 +109,43 @@ export class Resumen implements OnInit {
   }
 
   get barEjes(): string[] {
-    return ['CULTURAL', 'ENTORNO_SOCIAL', 'DEPORTIVO', 'TRASCENDENCIA'];
+    return ['PERSONAL', 'ENTORNO_SOCIAL', 'DEPORTIVO', 'TRASCENDENCIA'];
   }
 
   nivelLabel(key: string): string {
     const map: Record<string, string> = {
-      'SENSIBILIZADOR': 'Sensibilizador',
-      'FORMATIVO': 'Formativo',
-      'APLICATIVO': 'Aplicativo',
-      'IMPLEMENTADOR': 'Implementador',
+      'EXPLORADOR': 'Explorador',
+      'PROMOTOR': 'Promotor',
+      'LÍDER': 'Líder',
+      'EMBAJADOR': 'Embajador',
     };
-    return map[key] || key;
+    return map[key.toUpperCase()] || key;
   }
 
   async onGenerarReporteAlumnos(): Promise<void> {
     this.generandoReporte = true;
     try {
-      await this.reporteService.generarReporte(REPORTE_ALUMNOS_PRESET, this.alumnos, this.actividades);
-    } finally {
-      this.generandoReporte = false;
-    }
-  }
-
-  async onGenerarReporteCompleto(): Promise<void> {
-    if (!this.donutRef || !this.barrasRef) return;
-
-    this.generandoReporte = true;
-    try {
-      await this.reporteService.generarReporte(
-        REPORTE_COMPLETO_PRESET,
+      await this.reporteService.generarReporteAlumnos(
         this.alumnos,
-        this.actividades,
-        {
-          totalAlumnos: this.totalAlumnos,
-          aprobadas: this.actividadesAprobadas,
-          rechazadas: this.actividadesRechazadas,
-          puntos: this.puntosDistribuidos
-        },
-        { donutEl: this.donutRef.nativeElement, barrasEl: this.barrasRef.nativeElement }
+        //this.resumenData?.distribucionNiveles ?? {},
+        //this.resumenData?.puntosPorEje ?? {}
+        DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
       );
     } finally {
       this.generandoReporte = false;
     }
   }
 }
+const DISTRIBUCION_NIVELES_MOCK = {
+  'Explorador': 4,
+  'Promotor': 3,
+  'Líder': 3,
+  'Embajador': 2,
+};
+
+const PUNTOS_POR_EJE_MOCK = {
+  PERSONAL: 1480,
+  ENTORNO_SOCIAL: 1320,
+  DEPORTIVO: 1178,
+  TRASCENDENCIA: 1242,
+};

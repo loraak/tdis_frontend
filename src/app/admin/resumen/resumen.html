@@ -51,17 +51,11 @@
 
     </div>
 
-<div class="reportes-actions">
-    <button 
-            [disabled]="generandoReporte"
-            (click)="onGenerarReporteAlumnos()">Reporte de alumnos</button>
-
-    <button
-            [disabled]="generandoReporte"
-            (click)="onGenerarReporteCompleto()">Reporte completo</button>
-
-</div>
-
+    <div class="custom-card-container">
+        <div class="reportes-actions">
+            <button type="submit" class="btn-report" (click)="onGenerarReporteAlumnos()">Generar Reporte de Alumnos</button>
+        </div>
+    </div>
 
     <div class="cards-grafics">
         <p-card styleClass="custom-card-container">

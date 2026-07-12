@@ -14,6 +14,41 @@
     overflow: hidden;
 }
 
+.reportes-actions {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-report {
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.1s ease, filter 0.2s ease;
+    background-color: var(--tdis-color-light-green);
+}
+
+.btn-report:hover {
+    filter: brightness(0.95);
+}
+
+.btn-report:active {
+    transform: scale(0.98);
+}
+
+.btn-report:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .cards-resume {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

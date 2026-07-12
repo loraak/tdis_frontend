@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -14,6 +14,7 @@ export class Navbar implements OnInit {
   private auth = inject(Auth);
 
   isAdmin: boolean = false;
+  rolUsuario = computed(() => this.auth.rol() || '');
   isSolicitante: boolean = true;
   rol: string = 'SOLICITANTE';
 
