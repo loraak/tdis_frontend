@@ -113,6 +113,8 @@
     font-size: 0.85rem !important;
     padding: 0.55rem 1.2rem !important;
     font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
 }
 
 .btn-add-record:hover {
