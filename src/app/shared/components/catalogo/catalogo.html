@@ -28,6 +28,21 @@
         }
     </div>
 
+    <div class="categories-filter-row">
+        @for (tiem of TIEMPO; track tiem) {
+        <button type="button" class="filter-pill" [class.active-all]="filtroActivo() === tiem" (click)="filtrar(tiem)">
+            <span>{{ tiempoLabel(tiem) }}</span>
+            <span class="pill-count">2</span>
+        </button>
+        }
+        @if(rolUsuario() === 'ADMINISTRADOR') {
+            <button type="button" class="filter-pill" [class.active-all]="filtroActivo() === 'Expiradas'" (click)="filtrar('Expiradas')">
+                <span>Expiradas</span>
+                <span class="pill-count">2</span>
+            </button>
+        }
+    </div>
+
     <div class="catalogo-grid">
         @for (actividad of actividadesFiltradas; track actividad.id) {
         <p-card [styleClass]="'custom-card-container ' + cardEjeClass(actividad.eje)">

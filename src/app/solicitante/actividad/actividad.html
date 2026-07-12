@@ -189,13 +189,31 @@
                 </div>
 
                 <div class="form-field">
-                    <label class="form-label">Fecha excta de realización *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. Del 15 al 18 de Octubre" [(ngModel)]="fechaPeriodo" name="fechaPeriodo" />
+                    <label class="form-label">Periodicidad *</label>
+                    <select class="custom-input" [(ngModel)]="periodicidad" name="periodicidad">
+                        <option value="UNICA">Única ocasión</option>
+                        <option value="SEMANAL">Semanal</option>
+                        <option value="MENSUAL">Mensual</option>
+                    </select>
                 </div>
 
                 <div class="form-field">
-                    <label class="form-label">Periodo de realización *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. Semanal, mensual, única ocasión..." [(ngModel)]="periodicidad" name="periodicidad" />
+                    <label class="form-label">
+                        @if (periodicidad === 'UNICA') { Fecha de realización * } @else { Fecha de inicio * }
+                    </label>
+                    <input class="custom-input" type="date" [(ngModel)]="fechaInicio" name="fechaInicio" required />
+                </div>
+
+                @if (periodicidad !== 'UNICA') {
+                    <div class="form-field">
+                        <label class="form-label">Fecha de finalización (Opcional)</label>
+                        <input class="custom-input" type="date" [(ngModel)]="fechaFin" name="fechaFin" [min]="fechaInicio" />
+                    </div>
+                }
+
+                <div class="form-field">
+                    <label class="form-label">Tiempo estimado de la actividad</label>
+                    <input class="custom-input" type="text" placeholder="Coloca el número de horas. Ej. 2" [(ngModel)]="tiempoEstimado" name="tiempoEstimado" />
                 </div>
 
                 <div class="form-field full-width">
@@ -211,10 +229,10 @@
                 <div class="form-field full-width">
                     <label class="form-label">¿Cuál es el nivel de impacto de la actividad? *</label>
                     <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="nivel === 'Sensibilizador'" (click)="nivel = 'Sensibilizador'">Sensibilizador (conoce)</button>
-                        <button type="button" class="pill-button" [class.selected]="nivel === 'Formativo'" (click)="nivel = 'Formativo'">Formativo (participa)</button>
-                        <button type="button" class="pill-button" [class.selected]="nivel === 'Aplicativo'" (click)="nivel = 'Aplicativo'">Aplicativo (hace)</button>
-                        <button type="button" class="pill-button" [class.selected]="nivel === 'Implementador'" (click)="nivel = 'Implementador'">Implementador (Lidera)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivel === 'Explorador'" (click)="nivel = 'Explorador'">Explorador (conoce)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivel === 'Promotor'" (click)="nivel = 'Promotor'">Promotor (participa)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivel === 'Líder'" (click)="nivel = 'Líder'">Líder (hace)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivel === 'Embajador'" (click)="nivel = 'Embajador'">Embajador (Lidera)</button>
                     </div>
                 </div>
 
@@ -245,11 +263,6 @@
                         <button type="button" class="pill-button">Valores</button>
 
                     </div>
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Tiempo estimado de la actividad</label>
-                    <input class="custom-input" type="text" placeholder="Coloca el número de horas. Ej. 2" [(ngModel)]="tiempoEstimado" name="tiempoEstimado" />
                 </div>
 
                 <div class="form-field full-width">
@@ -302,7 +315,7 @@
 
     <!-- Botón de Envío -->
     <button type="submit" class="btn-submit btn-yellow" (click)="onSubmit()" [disabled]="loading">
-        {{ loading ? 'Enviando...' : 'Enviar solicitud de actividad' }}
+        {{ loading ? 'Enviando...' : 'Enviar nueva actividad' }}
     </button>
 
     }

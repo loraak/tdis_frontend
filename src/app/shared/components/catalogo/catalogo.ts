@@ -1,8 +1,9 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { CatalogoService } from '../../../core/services/catalogo.service';
 import { ActividadDTO } from '../../../core/models/actividad';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-catalogo',
@@ -12,11 +13,14 @@ import { ActividadDTO } from '../../../core/models/actividad';
 })
 export class Catalogo implements OnInit {
   private catalogoService = inject(CatalogoService);
+  private auth = inject(Auth);
+  rolUsuario = computed(() => this.auth.rol() || '');
 
   actividades = signal<ActividadDTO[]>([]);
   filtroActivo = signal<string>('TODAS');
 
   EJES = ['ENTORNO_SOCIAL', 'CULTURAL', 'DEPORTIVO', 'TRASCENDENCIA'];
+  TIEMPO = ['ULTIMOS_DIAS', 'UNICA_OCASION', 'SEMANAL', 'MENSUAL']
 
   ngOnInit() {
     this.cargarActividades();
@@ -64,6 +68,16 @@ export class Catalogo implements OnInit {
       'TRASCENDENCIA': 'pi pi-sparkles',
     };
     return map[eje] || 'pi pi-question';
+  }
+
+  tiempoLabel(tiempo: string): string {
+    const map: Record<string, string> = {
+      'ULTIMOS_DIAS': 'Últimos días', 
+      'UNICA_OCASION': 'Única ocasión', 
+      'SEMANAL': "Semanal", 
+      'MENSUAL': "Mensual"
+    };
+    return map[tiempo] || tiempo;
   }
 
   cardEjeClass(eje: string): string {

@@ -56,6 +56,8 @@ export class Actividad {
   tiempoEstimado: any;
   asistenciaEsperada: any;
   minParticipacion: any;
+  fechaInicio: any;
+  fechaFin: any;
 
   ngOnInit() {
     const user = this.auth.usuario();
