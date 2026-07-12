@@ -1,6 +1,6 @@
 <nav class="navbar-container">
 
-    @if (rol === "ADMIN") {
+    @if (rolUsuario() === 'ADMINISTRADOR') {
         <div class="nav-group admin-theme">
             <a routerLink="/admin/resumen" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: true }">
                 <i class="pi pi-chart-bar"></i> Resumen
@@ -15,24 +15,26 @@
                 <i class="pi pi-book"></i> Catálogo
             </a>
         </div>
-    } @else if (rol === "ALUMNO"){
-        <div class="nav-group alumno-theme">
-            <a routerLink="/alumno/progreso" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-th-large"></i> Mi Progreso
-            </a>
-            <a routerLink="/alumno/nueva-solicitud" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-plus"></i> Nueva Solicitud
-            </a>
-            <a routerLink="/alumno/mis-solicitudes" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-copy"></i> Mis Solicitudes
-            </a>
-            <a routerLink="/alumno/catalogo" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-book"></i> Catálogo
-            </a>
-        </div>
     }
+    
+    @if(rolUsuario() === 'ALUMNO') {
+            <div class="nav-group alumno-theme">
+                <a routerLink="/alumno/progreso" routerLinkActive="active" class="nav-item">
+                    <i class="pi pi-th-large"></i> Mi Progreso
+                </a>
+                <a routerLink="/alumno/nueva-solicitud" routerLinkActive="active" class="nav-item">
+                    <i class="pi pi-plus"></i> Nueva Solicitud
+                </a>
+                <a routerLink="/alumno/mis-solicitudes" routerLinkActive="active" class="nav-item">
+                    <i class="pi pi-copy"></i> Mis Solicitudes
+                </a>
+                <a routerLink="/alumno/catalogo" routerLinkActive="active" class="nav-item">
+                    <i class="pi pi-book"></i> Catálogo
+                </a>
+            </div>
+        }
 
-    @if(rol === "SOLICITANTE") {
+    @if(rolUsuario() === 'SOLICITANTE') {
         <div class="nav-group alumno-theme">
             <a routerLink="/solicitante/nueva-actividad" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-plus"></i> Nueva Actividad

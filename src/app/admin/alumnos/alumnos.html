@@ -44,8 +44,8 @@
                     <td class="cell-tdis">{{item.trasc}}</td>
                     <td class="cell-tdis">{{item.total}}</td>
                     <td>
-                        <button pButton label="+ Agregar registro" icon="pi pi-plus" class="btn-add-record"
-                    (click)="verProgresoAlumno(item)">
+                        <button class="btn-add-record"
+                    (click)="verProgresoAlumno(item)"> <i class="pi pi-info-circle"></i>Ver
                 </button>
                     </td>
                 </tr>
@@ -63,7 +63,8 @@
         
         @if (alumnoSeleccionado) {
             <app-progreso-alumno 
-            [matriculaAlumno]="alumnoSeleccionado.matricula">
+            [matriculaAlumno]="alumnoSeleccionado.matricula"
+            [nombreAlumno]="alumnoSeleccionado.nombre">
             </app-progreso-alumno>
         }
 

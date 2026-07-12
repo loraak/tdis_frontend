@@ -4,36 +4,51 @@
         <div class="header-layout">
 
             <div class="user-info-side">
-                <span class="token-text">TOKEN · 2026191005</span>
+                @if (esAdmin()) {
+                    <div class="admin-identity">
+                        <span class="admin-name">{{nombreAlumno}}</span>
+                        <span class="admin-meta"> · Matrícula {{matriculaAlumno}}</span>
+                    </div>
+                } @else {
+                    <span class="token-text">Matrícula · {{matriculaAlumno}}</span>
+                }
+
                 <div class="profile-row">
                     <div class="avatar-holder">
                         <i class="fa-solid fa-leaf avatar-icon"></i>
                     </div>
                     <div>
-                        <h1 class="user-title">Sensibilizador</h1>
+                        <h1 class="user-title">{{nivelActual.nombre}}</h1>
                         <p class="user-subtitle">Nivel de desarrollo integral</p>
-                        <p-tag value="Reconocimiento oficial" icon="pi pi-gift" styleClass="custom-tag"></p-tag>
+                        @if (!esAdmin()) {
+                            <p-tag value="Reconocimiento oficial" icon="pi pi-gift" styleClass="custom-tag"></p-tag>
+                        }
                     </div>
                 </div>
 
                 <div class="progress-section">
                     <div class="progress-labels">
-                        <span class="label-left">Progreso hacia <i class="pi pi-bolt"></i> Formativo</span>
-                        <span class="label-right">45 pts restantes</span>
+                        <span class="label-right">{{ totalPuntos }} pts actuales</span>
                     </div>
-                    <p-progressBar [value]="10" [showValue]="false"></p-progressBar>
+                    <p-progressBar [value]="progresoPorcentaje" [showValue]="false"></p-progressBar>
                 </div>
             </div>
 
             <div class="metrics-side">
                 <div class="metric-box">
-                    <h2 class="metric-number-amber">5</h2>
+                    <h2 class="metric-number-amber">{{puntosTotales}}</h2>
                     <span class="metric-label">Puntos Totales</span>
                 </div>
                 <div class="metric-box">
-                    <h2 class="metric-number-green">2</h2>
+                    <h2 class="metric-number-green">{{actividades}}</h2>
                     <span class="metric-label">Actividades</span>
                 </div>
+                @if (esAdmin()) {
+                    <div class="metric-box">
+                        <h2 class="metric-number-amber">{{actividadesPendientes}}</h2>
+                        <span class="metric-label">Pendientes de validar</span>
+                    </div>
+                }
             </div>
 
         </div>
@@ -43,69 +58,60 @@
         <div class="ruta-container">
             <span class="ruta-title">Ruta</span>
             <div class="ruta-steps-wrapper">
-                <div class="ruta-step active">
-                    <i class="fa-solid fa-leaf"></i> Sensibilizador <span class="step-points">20</span>
-                </div>
-                <i class="pi pi-chevron-right ruta-arrow"></i>
-                <div class="ruta-step">
-                    <i class="pi pi-bolt"></i> Formativo <span class="step-points">50</span>
-                </div>
-                <i class="pi pi-chevron-right ruta-arrow"></i>
-                <div class="ruta-step">
-                    <i class="pi pi-check-circle"></i> Aplicativo <span class="step-points">90</span>
-                </div>
-                <i class="pi pi-chevron-right ruta-arrow"></i>
-                <div class="ruta-step">
-                    <i class="pi pi-trophy"></i> Implementador <span class="step-points">+160</span>
-                </div>
+                <ng-container *ngFor="let nivel of niveles; let last = last; let i = index">
+                    <div class="ruta-step"
+                        [class.active]="nivel.nombre === nivelActual.nombre"
+                        [class.completed]="totalPuntos >= nivel.minPuntos && nivel.nombre !== nivelActual.nombre">
+                        <i [class]="nivel.icon"></i> {{ nivel.nombre }}
+                        <span class="step-points">{{ nivel.minPuntos }}</span>
+                    </div>
+                    <i *ngIf="!last" class="pi pi-chevron-right ruta-arrow"></i>
+                </ng-container>
             </div>
         </div>
     </p-card>
 
-    <p-card styleClass="custom-card-container">
-        <div class="table-card-header">
-            <div class="table-title-area">
-                <i class="pi pi-gift table-title-icon"></i>
-                <span>Esquema de recompensas</span>
+    @if (!esAdmin()) {
+        <p-card styleClass="custom-card-container">
+            <div class="table-card-header">
+                <div class="table-title-area">
+                    <i class="pi pi-gift table-title-icon"></i>
+                    <span>Esquema de recompensas</span>
+                </div>
+                <span class="table-subtitle">Propuesta oficial UTEQ</span>
             </div>
-            <span class="table-subtitle">Propuesta oficial UTEQ</span>
-        </div>
 
-        <p-table [value]="recompensas" styleClass="p-datatable-striped custom-table">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Nivel</th>
-                    <th>TDI's Requeridos</th>
-                    <th>Recompensa</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-item>
-                <tr>
-                    <td>
-                        <div class="cell-level">
-                            <i [class]="item.icon" [style.color]="item.iconColor"></i>
-                            <span>{{item.nivel}}</span>
-                            <p-tag *ngIf="item.isCurrent" value="Tu nivel" styleClass="current-level-tag"></p-tag>
-                        </div>
-                    </td>
-                    <td class="cell-tdis">{{item.tdis}}</td>
-                    <td>
-                        <div class="cell-reward">
-                            <i class="pi pi-gift reward-icon"></i>
-                            <span>{{item.recompensa}}</span>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-
-        <div class="footer-alert">
-            <i class="pi pi-chart-line alert-icon"></i>
-            <span>Te faltan <span class="highlight-amber">45 TDI's</span> para alcanzar <i class="pi pi-bolt"></i>
-                <strong>Formativo</strong> y
-                ganar: <strong>Playera UTEQ + Reconocimiento</strong></span>
-        </div>
-    </p-card>
+            <p-table [value]="recompensas" styleClass="p-datatable-striped custom-table">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Nivel</th>
+                        <th>TDI's Requeridos</th>
+                        <th>Recompensa</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td>
+                            <div class="cell-level">
+                                <i [class]="item.icon" [style.color]="item.iconColor"></i>
+                                <span>{{item.nivel}}</span>
+                                @if (item.isCurrent) {
+                                    <p-tag value="Tu nivel" styleClass="current-level-tag"></p-tag>
+                                }
+                            </div>
+                        </td>
+                        <td class="cell-tdis">{{item.tdis}}</td>
+                        <td>
+                            <div class="cell-reward">
+                                <i class="pi pi-gift reward-icon"></i>
+                                <span>{{item.recompensa}}</span>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+    }
 
     <div class="top-grid">
 
@@ -117,9 +123,9 @@
                 <div class="ejes-grid">
                     <div class="eje-item">
                         <div class="chart-small">
-                            <p-chart type="doughnut" [data]="dataCultural" [options]="chartOptionsSmall"></p-chart>
+                            <p-chart type="doughnut" [data]="dataPersonal" [options]="chartOptionsSmall"></p-chart>
                         </div>
-                        <span class="eje-label">Cultural</span>
+                        <span class="eje-label">Personal</span>
                     </div>
                     <div class="eje-item">
                         <div class="chart-small">
@@ -165,15 +171,23 @@
                     <span>Historial de actividades</span>
                 </div>
                 <div class="header-right">
-                    <p-tag value="2 aprobadas" severity="success"
+                    <p-tag value="{{actividades}} aprobadas" severity="success"
                         styleClass="bg-green-100 text-green-700 border-none"></p-tag>
-                    <button pButton label="+ Nueva solicitud" class="btn-nueva"></button>
+                    @if (!esAdmin()) {
+                        <button pButton label="+ Nueva solicitud" class="btn-nueva"></button>
+                    }
                 </div>
             </div>
 
-            <div class="info-banner">
-                <i class="pi pi-info-circle"></i> Haz clic en cualquier actividad para solicitar su validación.
-            </div>
+            @if (esAdmin()) {
+                <div class="info-banner">
+                    <i class="pi pi-info-circle"></i> Revisa la evidencia y aprueba o rechaza cada actividad pendiente.
+                </div>
+            } @else {
+                <div class="info-banner">
+                    <i class="pi pi-info-circle"></i> Haz clic en cualquier actividad para solicitar su validación.
+                </div>
+            }
 
             <p-table [value]="actividades_data" styleClass="history-table">
                 <ng-template pTemplate="header">
@@ -185,7 +199,10 @@
                         <th>Dep.</th>
                         <th>Trasc.</th>
                         <th>Evidencia</th>
-                        <th></th>
+                        <th>Estado</th>
+                        @if (esAdmin()) {
+                            <th>Acciones</th>
+                        }
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-act>
@@ -193,18 +210,36 @@
                         <td class="col-date">{{act.fecha}}</td>
                         <td class="col-activity">
                             {{act.nombre}}
-                            <span style="color: #94a3b8; font-size: 0.75rem; font-weight: 400;">→ solicitar</span>
+                            @if (!esAdmin()) {
+                                <span style="color: #94a3b8; font-size: 0.75rem; font-weight: 400;">→ solicitar</span>
+                            }
                         </td>
                         <td class="col-points" [class.points-active]="act.p_cult > 0">{{act.p_cult}}</td>
                         <td class="col-points" [class.points-active]="act.p_soc > 0">{{act.p_soc}}</td>
                         <td class="col-points" [class.points-active]="act.p_dep > 0">{{act.p_dep}}</td>
                         <td class="col-points" [class.points-active]="act.p_tras > 0">{{act.p_tras}}</td>
                         <td>
-                            <button pButton icon="pi pi-file" label="Requerida" class="btn-evidence"></button>
+                            @if (esAdmin()) {
+                                <button pButton icon="pi pi-eye" label="Ver" class="btn-evidence" (click)="onVerEvidencia(act)"></button>
+                            } @else {
+                                <button pButton icon="pi pi-file" label="Requerida" class="btn-evidence"></button>
+                            }
                         </td>
                         <td>
-                            <i class="pi pi-check-circle status-check"></i>
+                            @switch (act.estado) {
+                                @case ('APROBADA') { <p-tag value="Aprobada" severity="success"></p-tag> }
+                                @case ('PENDIENTE') { <p-tag value="Pendiente" severity="warn"></p-tag> }
+                                @case ('RECHAZADA') { <p-tag value="Rechazada" severity="danger"></p-tag> }
+                            }
                         </td>
+                        @if (esAdmin()) {
+                            <td>
+                                @if (act.estado === 'PENDIENTE') {
+                                    <button pButton icon="pi pi-check" class="p-button-success p-button-sm" (click)="onAprobar(act)"></button>
+                                    <button pButton icon="pi pi-times" class="p-button-danger p-button-sm" (click)="onRechazar(act)"></button>
+                                }
+                            </td>
+                        }
                     </tr>
                 </ng-template>
             </p-table>

@@ -70,7 +70,7 @@ export class NuevaSolicitud implements OnInit {
   ejeLabel(eje: string): string {
     const map: Record<string, string> = {
       'ENTORNO_SOCIAL': 'Entorno Social',
-      'CULTURAL': 'Cultural',
+      'PERSONAL': 'Personal',
       'DEPORTIVO': 'Deportivo',
       'TRASCENDENCIA': 'Trascendencia',
     };

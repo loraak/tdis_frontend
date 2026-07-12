@@ -3,7 +3,7 @@ export interface ProgresoDTO {
   alumnoMatricula?: string;
   alumnoNombre?: string;
   puntosTotales: number;
-  nivelActual: 'SENSIBILIZADOR' | 'FORMATIVO' | 'APLICATIVO' | 'IMPLEMENTADOR';
+  nivelActual: 'EXPLORADOR' | 'PROMOTOR' | 'LIDER' | 'EMBAJADOR';
   puntosPorEje: { [key: string]: number };
   actividadesCompletadas: number;
   actividadesEnRevision: number;

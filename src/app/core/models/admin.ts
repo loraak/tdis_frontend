@@ -19,4 +19,5 @@ export interface AlumnoResumenDTO {
   dep: number;
   trasc: number;
   total: number;
+  createdAt: Date;
 }

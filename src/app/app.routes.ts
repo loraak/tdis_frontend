@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Login } from './auth/login/login';
 import { MainLayout } from './shared/components/main-layout/main-layout';
-import { MiProgreso } from './alumno/mi-progreso/mi-progreso';
 import { NuevaSolicitud } from './alumno/nueva-solicitud/nueva-solicitud';
 import { MisSolicitudes } from './alumno/mis-solicitudes/mis-solicitudes';
 import { Catalogo } from './shared/components/catalogo/catalogo';
@@ -11,11 +10,12 @@ import { Solicitudes } from './admin/solicitudes/solicitudes';
 import { Actividad } from './solicitante/actividad/actividad';
 import { Actividades } from './solicitante/actividades/actividades';
 import { authGuard } from './core/guards/auth.guard';
+import { ProgresoAlumno } from './shared/components/progreso-alumno/progreso-alumno';
 
 export const routes: Routes = [
     {path: 'login', component: Login},
     {path: 'alumno', component: MainLayout, canActivate: [authGuard], data: {role: 'alumno'}, children: [
-        { path: 'progreso',    component: MiProgreso },
+        { path: 'progreso',    component: ProgresoAlumno },
         { path: 'nueva-solicitud',   component: NuevaSolicitud },
         { path: 'mis-solicitudes', component: MisSolicitudes },
         { path: 'catalogo',    component: Catalogo },
