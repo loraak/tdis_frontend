@@ -22,7 +22,6 @@ export class Resumen implements OnInit {
   private reporteService = inject(ReporteService);
   private cd = inject(ChangeDetectorRef);
 
-  // --- Referencias a los gráficos (para captura con html2canvas) ---
   @ViewChild('donutRef') donutRef!: ElementRef<HTMLElement>;
   @ViewChild('barrasRef') barrasRef!: ElementRef<HTMLElement>;
 
@@ -62,7 +61,7 @@ export class Resumen implements OnInit {
   };
 
   ngOnInit() {
-    //this.cargarDatos();
+    this.cargarDatos();
   }
 
   cargarDatos() {
@@ -127,9 +126,9 @@ export class Resumen implements OnInit {
     try {
       await this.reporteService.generarReporteAlumnos(
         this.alumnos,
-        //this.resumenData?.distribucionNiveles ?? {},
-        //this.resumenData?.puntosPorEje ?? {}
-        DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
+        this.resumenData?.distribucionNiveles ?? {},
+        this.resumenData?.puntosPorEje ?? {}
+        //DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
       );
     } finally {
       this.generandoReporte = false;

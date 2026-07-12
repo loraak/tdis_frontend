@@ -19,7 +19,7 @@ export class Catalogo implements OnInit {
   actividades = signal<ActividadDTO[]>([]);
   filtroActivo = signal<string>('TODAS');
 
-  EJES = ['ENTORNO_SOCIAL', 'CULTURAL', 'DEPORTIVO', 'TRASCENDENCIA'];
+  EJES = ['ENTORNO_SOCIAL', 'PERSONAL', 'DEPORTIVO', 'TRASCENDENCIA'];
   TIEMPO = ['ULTIMOS_DIAS', 'UNICA_OCASION', 'SEMANAL', 'MENSUAL']
 
   ngOnInit() {
@@ -53,7 +53,7 @@ export class Catalogo implements OnInit {
   ejeLabel(eje: string): string {
     const map: Record<string, string> = {
       'ENTORNO_SOCIAL': 'Entorno Social',
-      'CULTURAL': 'Cultural',
+      'PERSONAL': 'Personal',
       'DEPORTIVO': 'Deportivo',
       'TRASCENDENCIA': 'Trascendencia',
     };
@@ -63,7 +63,7 @@ export class Catalogo implements OnInit {
   ejeIcon(eje: string): string {
     const map: Record<string, string> = {
       'ENTORNO_SOCIAL': 'pi pi-users',
-      'CULTURAL': 'pi pi-book',
+      'PERSONAL': 'pi pi-book',
       'DEPORTIVO': 'pi pi-percentage',
       'TRASCENDENCIA': 'pi pi-sparkles',
     };
@@ -83,7 +83,7 @@ export class Catalogo implements OnInit {
   cardEjeClass(eje: string): string {
     const map: Record<string, string> = {
       'ENTORNO_SOCIAL': 'card-eje-social',
-      'CULTURAL': 'card-eje-cultural',
+      'PERSONAL': 'card-eje-personal',
       'DEPORTIVO': 'card-eje-deportivo',
       'TRASCENDENCIA': 'card-eje-trascendencia',
     };
@@ -93,7 +93,7 @@ export class Catalogo implements OnInit {
   badgeEjeClass(eje: string): string {
     const map: Record<string, string> = {
       'ENTORNO_SOCIAL': 'social',
-      'CULTURAL': 'cultural',
+      'PERSONAL': 'personal',
       'DEPORTIVO': 'deportivo',
       'TRASCENDENCIA': 'trascendencia',
     };

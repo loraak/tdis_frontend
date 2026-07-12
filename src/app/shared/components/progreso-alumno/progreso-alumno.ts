@@ -29,26 +29,26 @@ export class ProgresoAlumno implements OnInit, OnChanges {
   private router = inject(Router);
 
   nivelLabels: Record<string, string> = {
-    SENSIBILIZADOR: 'Sensibilizador',
-    FORMATIVO: 'Formativo',
-    APLICATIVO: 'Aplicativo',
-    IMPLEMENTADOR: 'Implementador',
+    EXPLORADOR: 'Explorador',
+    PROMOTOR: 'Promotor',
+    LIDER: 'Líder',
+    EMBAJADOR: 'Embajador',
   };
 
   niveles: NivelDef[] = [
-    { nombre: 'Sensibilizador', minPuntos: 0, icon: 'fa-solid fa-leaf' },
-    { nombre: 'Formativo', minPuntos: 301, icon: 'pi pi-bolt' },
-    { nombre: 'Aplicativo', minPuntos: 601, icon: 'pi pi-check-circle' },
-    { nombre: 'Implementador', minPuntos: 1000, icon: 'pi pi-trophy' },
+    { nombre: 'Explorador', minPuntos: 0, icon: 'fa-solid fa-leaf' },
+    { nombre: 'Promotor', minPuntos: 301, icon: 'pi pi-bolt' },
+    { nombre: 'Líder', minPuntos: 601, icon: 'pi pi-check-circle' },
+    { nombre: 'Embajador', minPuntos: 1000, icon: 'pi pi-trophy' },
   ];
 
-  puntosCultural = 2;
+  puntosPersonal = 2;
   puntosSocial = 2;
   puntosDeportivo = 1;
   puntosTrascendencia = 0;
 
   get totalPuntos(): number {
-    return this.puntosCultural + this.puntosSocial + this.puntosDeportivo + this.puntosTrascendencia;
+    return this.puntosPersonal + this.puntosSocial + this.puntosDeportivo + this.puntosTrascendencia;
   }
 
   get nivelActual(): NivelDef {
@@ -72,15 +72,15 @@ export class ProgresoAlumno implements OnInit, OnChanges {
   }
 
   recompensas = [
-    { nivel: 'Sensibilizador', tdis: '0', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
-    { nivel: 'Formativo', tdis: '<301', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
-    { nivel: 'Aplicativo', tdis: '<601', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
-    { nivel: 'Implementador', tdis: '+1000', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
+    { nivel: 'Explorador', tdis: '0', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
+    { nivel: 'Promotor', tdis: '<301', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
+    { nivel: 'Líder', tdis: '<601', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
+    { nivel: 'Embajador', tdis: '+1000', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
   ];
 
   radarData: any;
   radarOptions: any;
-  dataCultural: any;
+  dataPersonal: any;
   dataSocial: any;
   dataDeportivo: any;
   dataTrascendencia: any;
@@ -133,12 +133,12 @@ export class ProgresoAlumno implements OnInit, OnChanges {
   }
 
   private actualizarChartEjes(puntosPorEje: { [key: string]: number }) {
-    const cult = puntosPorEje['CULTURAL'] || 0;
+    const cult = puntosPorEje['PERSONAL'] || 0;
     const soc = puntosPorEje['ENTORNO_SOCIAL'] || 0;
     const dep = puntosPorEje['DEPORTIVO'] || 0;
     const tras = puntosPorEje['TRASCENDENCIA'] || 0;
 
-    this.dataCultural = this.donutData(cult, '#0ea5e9');
+    this.dataPersonal = this.donutData(cult, '#0ea5e9');
     this.dataSocial = this.donutData(soc, '#22c55e');
     this.dataDeportivo = this.donutData(dep, '#f59e0b');
     this.dataTrascendencia = this.donutData(tras, '#8b5cf6');
@@ -190,7 +190,7 @@ export class ProgresoAlumno implements OnInit, OnChanges {
     };
 
     this.dataSocial = { datasets: [{ data: [0, 10], backgroundColor: ['#22c55e', '#f1f5f9'], borderWidth: 0 }] };
-    this.dataCultural = { datasets: [{ data: [0, 10], backgroundColor: ['#0ea5e9', '#f1f5f9'], borderWidth: 0 }] };
+    this.dataPersonal = { datasets: [{ data: [0, 10], backgroundColor: ['#0ea5e9', '#f1f5f9'], borderWidth: 0 }] };
     this.dataDeportivo = { datasets: [{ data: [0, 10], backgroundColor: ['#f59e0b', '#f1f5f9'], borderWidth: 0 }] };
     this.dataTrascendencia = { datasets: [{ data: [0, 10], backgroundColor: ['#8b5cf6', '#f1f5f9'], borderWidth: 0 }] };
   }

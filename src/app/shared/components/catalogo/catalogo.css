@@ -119,8 +119,8 @@
   color: #15803d;
 }
 
-/* Cultural Activo */
-.filter-pill.active-cultural {
+/* Personal Activo */
+.filter-pill.active-personal {
   background-color: #f0f9ff;
   border-color: #0ea5e9;
   color: #0369a1;
@@ -166,7 +166,7 @@
 
 /* Modificadores de borde superior por Eje */
 .card-eje-social { border-top: 4px solid #22c55e; }
-.card-eje-cultural { border-top: 4px solid #0ea5e9; }
+.card-eje-personal { border-top: 4px solid #0ea5e9; }
 .card-eje-deportivo { border-top: 4px solid #f59e0b; }
 .card-eje-trascendencia { border-top: 4px solid #8b5cf6; }
 
@@ -194,7 +194,7 @@
   border-radius: 20px;
 }
 .badge-eje.social { background-color: #f0fdf4; color: #16a34a; }
-.badge-eje.cultural { background-color: #f0f9ff; color: #0369a1; }
+.badge-eje.personal { background-color: #f0f9ff; color: #0369a1; }
 .badge-eje.deportivo { background-color: #f0f9ff; color: #f59e0b; }
 .badge-eje.trascendencia { background-color: #f0f9ff; color: #8b5cf6; }
 

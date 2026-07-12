@@ -309,19 +309,19 @@
     border-radius: 50%;
 }
 
-.dot-sensibilizador {
+.dot-explorador {
     background-color: #00bcd4;
 }
 
-.dot-formativo {
+.dot-promotor {
     background-color: #f59e0b;
 }
 
-.dot-aplicativo {
+.dot-lider {
     background-color: #8b5cf6;
 }
 
-.dot-implementador {
+.dot-embajador {
     background-color: #22c55e;
 }
 
@@ -386,7 +386,7 @@
     transition: height 0.5s ease-in-out;
 }
 
-.bar-pillar.bar-cultural {
+.bar-pillar.bar-personal {
     background-color: #24b4dc;
 }
 
