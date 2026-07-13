@@ -51,12 +51,18 @@
 
     </div>
 
-    <div class="custom-card-container">
-        <div class="reportes-actions">
-            <button type="submit" class="btn-report" (click)="onGenerarReporteAlumnos()">Generar Reporte de Alumnos</button>
-            <button type="submit" class="btn-report" (click)="onGenerarReporteActividades()">Generar Reporte de Actividades</button>
+    <p-card class="custom-card-container">
+        <div class="">
+            <div class="table-title-area">
+                <i class="pi pi-file-pdf table-title-icon"></i>
+                <span>Generar reportes</span>
+            </div>
         </div>
-    </div>
+        <div class="reportes-actions">
+            <button type="submit" class="btn-report alumnos" (click)="onGenerarReporteAlumnos()">Reporte de Alumnos</button>
+            <button type="submit" class="btn-report actividades" (click)="onGenerarReporteActividades()">Reporte de Actividades</button>
+        </div>
+    </p-card>
 
     <div class="cards-grafics">
         <p-card styleClass="custom-card-container">
