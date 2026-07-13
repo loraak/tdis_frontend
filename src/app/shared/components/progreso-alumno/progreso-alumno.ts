@@ -133,21 +133,21 @@ export class ProgresoAlumno implements OnInit, OnChanges {
   }
 
   private actualizarChartEjes(puntosPorEje: { [key: string]: number }) {
-    const cult = puntosPorEje['PERSONAL'] || 0;
+    const personal = puntosPorEje['PERSONAL'] || 0;
     const soc = puntosPorEje['ENTORNO_SOCIAL'] || 0;
     const dep = puntosPorEje['DEPORTIVO'] || 0;
     const tras = puntosPorEje['TRASCENDENCIA'] || 0;
 
-    this.dataPersonal = this.donutData(cult, '#0ea5e9');
+    this.dataPersonal = this.donutData(personal, '#0ea5e9');
     this.dataSocial = this.donutData(soc, '#22c55e');
     this.dataDeportivo = this.donutData(dep, '#f59e0b');
     this.dataTrascendencia = this.donutData(tras, '#8b5cf6');
 
     this.radarData = {
-      labels: ['Cult.', 'Social', 'Dep.', 'Trasc.'],
+      labels: ['Personal', 'Social', 'Dep.', 'Trasc.'],
       datasets: [{
         label: 'Perfil de Avance',
-        data: [cult, soc, dep, tras],
+        data: [personal, soc, dep, tras],
         fill: true,
         backgroundColor: 'rgba(245, 158, 11, 0.2)',
         borderColor: '#f59e0b',
@@ -168,7 +168,7 @@ export class ProgresoAlumno implements OnInit, OnChanges {
 
   initCharts() {
     this.radarData = {
-      labels: ['Cult.', 'Social', 'Dep.', 'Trasc.'],
+      labels: ['Personal', 'Social', 'Dep.', 'Trasc.'],
       datasets: [{
         label: 'Perfil de Avance',
         data: [0, 0, 0, 0],
