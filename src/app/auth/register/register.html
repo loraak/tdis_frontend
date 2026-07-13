@@ -1,0 +1,182 @@
+<div class="login-container">
+    <header class="login-header">
+        <div class="logo-wrapper">
+            <img src="/logo-uteq.png" alt="UTEQ Logo" class="university-logo">
+        </div>
+        <p class="subtitle">UNIVERSIDAD TECNOLOGICA DE QUERETARO</p>
+        <h1 class="main-title">Tokens de Desarrollo Integral</h1>
+
+        <div class="badge-container">
+            <span class="badge badge-green">Entorno Social</span>
+            <span class="badge badge-blue">Personal</span>
+            <span class="badge badge-yellow">Deportivo</span>
+            <span class="badge badge-purple">Trascendencia</span>
+        </div>
+    </header>
+
+    @if (success()) {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <div class="success-content">
+            <i class="pi pi-check-circle success-icon"></i>
+            <h2>Cuenta creada exitosamente</h2>
+            <p>Tu cuenta ha sido registrada. Ahora puedes iniciar sesion con tu matricula.</p>
+            <button type="button" class="btn-submit btn-green" (click)="irALogin()">Ir a Iniciar Sesion <i class="pi pi-arrow-right"></i></button>
+        </div>
+    </p-card>
+    } @else {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <button type="button" class="btn-back" routerLink="/login">
+            <i class="pi pi-arrow-left"></i> Volver al login
+        </button>
+
+        <div class="card-header">
+            <div class="icon-avatar avatar-green">
+                <i class="pi pi-user-plus user-icon"></i>
+            </div>
+            <div class="card-title-text">
+                <h2>Crear cuenta de Alumno</h2>
+                <p>Registra tus datos para acceder al sistema TDI</p>
+            </div>
+        </div>
+
+        <form class="register-form" (ngSubmit)="onSubmit()">
+
+            <div class="form-section">
+                <h3 class="section-title"><i class="pi pi-user"></i> Datos personales</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>NOMBRE *</label>
+                        <input pInputText type="text" [(ngModel)]="nombre" name="nombre"
+                            placeholder="Nombre(s)" autocomplete="off">
+                        @if (submitted && !nombre.trim()) {
+                            <span class="field-error">Requerido</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>APELLIDOS *</label>
+                        <input pInputText type="text" [(ngModel)]="apellidos" name="apellidos"
+                            placeholder="Apellido(s)" autocomplete="off">
+                        @if (submitted && !apellidos.trim()) {
+                            <span class="field-error">Requerido</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>MATRICULA *</label>
+                    <input pInputText type="text" [(ngModel)]="matricula" name="matricula"
+                        placeholder="Ej. 2026191005" autocomplete="off">
+                    @if (submitted && !matricula.trim()) {
+                        <span class="field-error">Requerido</span>
+                    } @else if (submitted && matricula.length < 8) {
+                        <span class="field-error">Minimo 8 digitos</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>CORREO INSTITUCIONAL *</label>
+                    <input pInputText type="email" [(ngModel)]="email" name="email"
+                        placeholder="ejemplo@uteq.edu.mx">
+                    @if (submitted && !email.trim()) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>CONTRASENA *</label>
+                        <input pInputText type="password" [(ngModel)]="password" name="password"
+                            placeholder="Minimo 6 caracteres">
+                        @if (submitted && !password.trim()) {
+                            <span class="field-error">Requerido</span>
+                        } @else if (submitted && password.length < 6) {
+                            <span class="field-error">Minimo 6 caracteres</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>REPETIR CONTRASENA *</label>
+                        <input pInputText type="password" [(ngModel)]="confirmPassword" name="confirmPassword"
+                            placeholder="Repite tu contrasena">
+                        @if (submitted && !confirmPassword.trim()) {
+                            <span class="field-error">Requerido</span>
+                        } @else if (submitted && password !== confirmPassword) {
+                            <span class="field-error">Las contrasenas no coinciden</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="section-title"><i class="pi pi-book"></i> Datos academicos</h3>
+
+                <div class="form-group">
+                    <label>DIVISION *</label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button" [class.selected]="division === 'Industrial'" (click)="seleccionarDivision('Industrial')">Industrial</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Económico-Administrativa'" (click)="seleccionarDivision('Económico-Administrativa')">Económico-Administrativa</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'" (click)="seleccionarDivision('Tecnologías')">Tecnologías</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'" (click)="seleccionarDivision('Idiomas')">Idiomas</button>
+                    </div>
+                    @if (submitted && !division) {
+                        <span class="field-error">Selecciona tu division</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>PROGRAMA ACADEMICO *</label>
+                    <input pInputText type="text" [(ngModel)]="programa" name="programa"
+                        placeholder="Ej. Ingenieria Industrial">
+                    @if (submitted && !programa.trim()) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>GRUPO *</label>
+                        <input pInputText type="text" [(ngModel)]="grupo" name="grupo"
+                            placeholder="Ej. A">
+                        @if (submitted && !grupo.trim()) {
+                            <span class="field-error">Requerido</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>CUATRIMESTRE *</label>
+                        <input pInputText type="text" [(ngModel)]="cuatrimestre" name="cuatrimestre"
+                            placeholder="Ej. 4">
+                        @if (submitted && !cuatrimestre.trim()) {
+                            <span class="field-error">Requerido</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>TURNO *</label>
+                    <div class="pill-selection-wrapper">
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'" (click)="seleccionarTurno('Matutino')">Matutino</button>
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'" (click)="seleccionarTurno('Vespertino')">Vespertino</button>
+                    </div>
+                    @if (submitted && !turno) {
+                        <span class="field-error">Selecciona tu turno</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>TUTOR</label>
+                    <input pInputText type="text" [(ngModel)]="tutor" name="tutor"
+                        placeholder="Nombre completo del tutor">
+                </div>
+            </div>
+
+            @if (error()) {
+                <div class="error-msg">{{ error() }}</div>
+            }
+
+            <button type="submit" class="btn-submit btn-green" [disabled]="loading()">
+                {{ loading() ? 'Creando cuenta...' : 'Crear cuenta' }} <i class="pi pi-arrow-right"></i>
+            </button>
+        </form>
+    </p-card>
+    }
+</div>

@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
+import { Router } from '@angular/router';
 import { CatalogoService } from '../../../core/services/catalogo.service';
 import { ActividadDTO } from '../../../core/models/actividad';
 import { Auth } from '../../../core/services/auth';
@@ -14,13 +15,14 @@ import { Auth } from '../../../core/services/auth';
 export class Catalogo implements OnInit {
   private catalogoService = inject(CatalogoService);
   private auth = inject(Auth);
+  private router = inject(Router);
   rolUsuario = computed(() => this.auth.rol() || '');
 
   actividades = signal<ActividadDTO[]>([]);
   filtroActivo = signal<string>('TODAS');
 
   EJES = ['ENTORNO_SOCIAL', 'PERSONAL', 'DEPORTIVO', 'TRASCENDENCIA'];
-  TIEMPO = ['ULTIMOS_DIAS', 'UNICA_OCASION', 'SEMANAL', 'MENSUAL']
+  TIEMPO = ['UNICA', 'SEMANAL', 'MENSUAL']
 
   ngOnInit() {
     this.cargarActividades();
@@ -43,7 +45,9 @@ export class Catalogo implements OnInit {
   get actividadesFiltradas(): ActividadDTO[] {
     const filtro = this.filtroActivo();
     if (filtro === 'TODAS') return this.actividades();
-    return this.actividades().filter(a => a.eje === filtro);
+    if (this.EJES.includes(filtro)) return this.actividades().filter(a => a.eje === filtro);
+    if (this.TIEMPO.includes(filtro)) return this.actividades().filter(a => a.periodicidad === filtro);
+    return this.actividades();
   }
 
   conteoEje(eje: string): number {
@@ -72,12 +76,20 @@ export class Catalogo implements OnInit {
 
   tiempoLabel(tiempo: string): string {
     const map: Record<string, string> = {
-      'ULTIMOS_DIAS': 'Últimos días', 
-      'UNICA_OCASION': 'Única ocasión', 
-      'SEMANAL': "Semanal", 
-      'MENSUAL': "Mensual"
+      'UNICA': 'Única ocasión',
+      'SEMANAL': 'Semanal',
+      'MENSUAL': 'Mensual'
     };
     return map[tiempo] || tiempo;
+  }
+
+  periodicidadLabel(periodicidad: string): string {
+    const map: Record<string, string> = {
+      'UNICA': 'Única ocasión',
+      'SEMANAL': 'Semanal',
+      'MENSUAL': 'Mensual'
+    };
+    return map[periodicidad] || periodicidad;
   }
 
   cardEjeClass(eje: string): string {
@@ -98,5 +110,11 @@ export class Catalogo implements OnInit {
       'TRASCENDENCIA': 'trascendencia',
     };
     return map[eje] || '';
+  }
+
+  seleccionarActividad(actividad: ActividadDTO) {
+    if (this.rolUsuario() === 'ALUMNO') {
+      this.router.navigate(['/alumno/nueva-solicitud'], { queryParams: { actividadId: actividad.id } });
+    }
   }
 }

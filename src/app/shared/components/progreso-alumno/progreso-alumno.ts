@@ -87,8 +87,8 @@ export class ProgresoAlumno implements OnInit, OnChanges {
   chartOptionsSmall: any;
 
   nivelDesarrollo = '';
-  puntosTotales = 5;
-  actividades = 2;
+  puntosTotales = 0;
+  actividades = 0;
 
   actividades_data: any[] = [];
 

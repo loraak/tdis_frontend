@@ -45,7 +45,9 @@
 
     <div class="catalogo-grid">
         @for (actividad of actividadesFiltradas; track actividad.id) {
-        <p-card [styleClass]="'custom-card-container ' + cardEjeClass(actividad.eje)">
+        <p-card [styleClass]="'custom-card-container ' + cardEjeClass(actividad.eje)"
+            [class.catalog-card-alumno]="rolUsuario() === 'ALUMNO'"
+            (click)="seleccionarActividad(actividad)">
             <div class="card-inner-padding">
 
                 <div class="card-tags-row">
@@ -59,7 +61,10 @@
                 <p class="activity-description">{{ actividad.descripcion }}</p>
 
                 <div class="card-activity-footer">
-                    <span class="info-frequency">FRECUENCIA: <strong>{{ actividad.temporalidad }}</strong></span>
+                    <span class="info-frequency">FRECUENCIA: <strong>{{ periodicidadLabel(actividad.periodicidad) }}</strong></span>
+                    @if (actividad.periodicidad === 'UNICA' && actividad.fechaInicio) {
+                    <span class="info-date"><i class="pi pi-calendar"></i> {{ actividad.fechaInicio }}</span>
+                    }
                     <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
                 </div>
 

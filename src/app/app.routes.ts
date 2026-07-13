@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Login } from './auth/login/login';
+import { Register } from './auth/register/register';
 import { MainLayout } from './shared/components/main-layout/main-layout';
 import { NuevaSolicitud } from './alumno/nueva-solicitud/nueva-solicitud';
 import { MisSolicitudes } from './alumno/mis-solicitudes/mis-solicitudes';
@@ -14,6 +15,7 @@ import { ProgresoAlumno } from './shared/components/progreso-alumno/progreso-alu
 
 export const routes: Routes = [
     {path: 'login', component: Login},
+    {path: 'register', component: Register},
     {path: 'alumno', component: MainLayout, canActivate: [authGuard], data: {role: 'alumno'}, children: [
         { path: 'progreso',    component: ProgresoAlumno },
         { path: 'nueva-solicitud',   component: NuevaSolicitud },

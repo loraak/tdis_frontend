@@ -13,6 +13,14 @@ export interface LoginResponse {
   tipoUsuario: 'ALUMNO' | 'ADMINISTRADOR';
 }
 
+export interface RegisterRequest {
+  matricula: string;
+  email: string;
+  password: string;
+  nombre: string;
+  apellidos: string;
+}
+
 export interface UsuarioDTO {
   id: string;
   matricula?: string;

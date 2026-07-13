@@ -97,7 +97,7 @@
             <form class="form-grid" #solicitudForm="ngForm">
                 <div class="form-field full-width">
                     <label class="form-label">¿Cuál es tu nombre? *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre completo" [(ngModel)]="nombre" name="nombre" />
+                    <input class="custom-input" type="text" placeholder="Nombre completo" [(ngModel)]="nombre" name="nombre" [disabled]="datosPrecargados" />
                 </div>
 
                 <div class="form-field full-width">
@@ -108,40 +108,40 @@
                 <div class="form-field full-width">
                     <label class="form-label">Formo parte de la división: *</label>
                     <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="division === 'Industrial'" (click)="seleccionarDivision('Industrial')">Industrial</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Económico-Administrativa'" (click)="seleccionarDivision('Económico-Administrativa')">Económico-Administrativa</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'" (click)="seleccionarDivision('Tecnologías')">Tecnologías</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'" (click)="seleccionarDivision('Idiomas')">Idiomas</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Industrial'" (click)="seleccionarDivision('Industrial')" [disabled]="datosPrecargados">Industrial</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Económico-Administrativa'" (click)="seleccionarDivision('Económico-Administrativa')" [disabled]="datosPrecargados">Económico-Administrativa</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'" (click)="seleccionarDivision('Tecnologías')" [disabled]="datosPrecargados">Tecnologías</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'" (click)="seleccionarDivision('Idiomas')" [disabled]="datosPrecargados">Idiomas</button>
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu programa académico? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. Ingeniería Industrial" [(ngModel)]="programa" name="programa" />
+                    <input class="custom-input" type="text" placeholder="Ej. Ingeniería Industrial" [(ngModel)]="programa" name="programa" [disabled]="datosPrecargados" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu grupo? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. A" [(ngModel)]="grupo" name="grupo" />
+                    <input class="custom-input" type="text" placeholder="Ej. A" [(ngModel)]="grupo" name="grupo" [disabled]="datosPrecargados" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿En qué cuatrimestre estás? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 4" [(ngModel)]="cuatrimestre" name="cuatrimestre" />
+                    <input class="custom-input" type="text" placeholder="Ej. 4" [(ngModel)]="cuatrimestre" name="cuatrimestre" [disabled]="datosPrecargados" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu turno? *</label>
                     <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'" (click)="seleccionarTurno('Matutino')">Matutino</button>
-                        <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'" (click)="seleccionarTurno('Vespertino')">Vespertino</button>
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'" (click)="seleccionarTurno('Matutino')" [disabled]="datosPrecargados">Matutino</button>
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'" (click)="seleccionarTurno('Vespertino')" [disabled]="datosPrecargados">Vespertino</button>
                     </div>
                 </div>
 
                 @if (tipoFormulario === 'EVIDENCIA') {
                 <div class="form-field full-width">
-                    <label class="form-label">¿Quién es tu profesor de formación integral y/o tutor? *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre completo (nombre y luego apellidos)" [(ngModel)]="tutor" name="tutor" />
+                    <label class="form-label">¿Quién es tu tutor? *</label>
+                    <input class="custom-input" type="text" placeholder="Nombre completo (nombre y luego apellidos)" [(ngModel)]="tutor" name="tutor" [disabled]="datosPrecargados" />
                 </div>
                 }
 
@@ -169,13 +169,17 @@
             <form class="form-grid">
                 <div class="form-field full-width">
                     <label class="form-label">Nombre de la actividad *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre de la actividad" [(ngModel)]="nombreActividad" name="nombreActividad" readonly />
+                    <input class="custom-input" type="text" placeholder="Nombre de la actividad" [(ngModel)]="nombreActividad" name="nombreActividad" [disabled]="actividadPrecargada" />
+                    @if (actividadPrecargada) {
+                    <small style="color:#ef4444;cursor:pointer" (click)="limpiarActividad()"><i class="pi pi-times-circle"></i> Quitar actividad</small>
+                    } @else {
                     <small style="color:#3b82f6;cursor:pointer" (click)="volverAlSelector()">Cambiar actividad</small>
+                    }
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">Fecha en que se realizó *</label>
-                    <input class="custom-input" type="text" [(ngModel)]="fecha" name="fecha" />
+                    <input class="custom-input" type="text" [(ngModel)]="fecha" name="fecha" [disabled]="actividadPrecargada" />
                 </div>
                 <div class="form-field">
                     <label class="form-label">Horas efectivas o tiempo de participación *</label>
@@ -230,12 +234,12 @@
                 <div class="form-field full-width">
                     <label class="form-label">Tipo de actividad *</label>
                     <input type="text" class="custom-input"
-                        placeholder="Ej. Taller, Conferencia, Voluntariado, Torneo..." />
+                        placeholder="Ej. Taller, Conferencia, Voluntariado, Torneo..." [(ngModel)]="tipoActividad" name="tipoActividad" />
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Materia con la que se relaciona tu actividad *</label>
-                    <input type="text" class="custom-input" />
+                    <input type="text" class="custom-input" [(ngModel)]="materiaRelacionada" name="materiaRelacionada" />
                 </div>
                 }
 
@@ -248,7 +252,7 @@
                     <label class="form-label">Descripción breve de la actividad *</label>
                     <label class="form-label-small">¿Qué hiciste, con quién, para qué?</label>
                     }
-                    <textarea class="custom-input" name="descripcion" id="descripcion" [(ngModel)]="descripcion"></textarea>
+                    <textarea class="custom-input" name="descripcion" id="descripcion" [(ngModel)]="descripcion" [disabled]="actividadPrecargada"></textarea>
                     <label class="form-numbers">0 / 20 mín.</label>
                 </div>
 
@@ -421,27 +425,35 @@
                     <div>
                         <h3 class="step-title">Evidencias adjuntas</h3>
                         <p class="step-subtitle">
-                            Las evidencias permiten verificar que realizaste la actividad. Adjunta tu formato de evidencias
-                            en PDF (máx. 10 MB).
+                            Las evidencias permiten verificar que realizaste la actividad. Adjunta una imagen
+                            de tu evidencia en PNG o JPG (máx. 10 MB).
                         </p>
                     </div>
                 </div>
 
-                <span class="upload-field-label">Adjunta tu formato de evidencias *</span>
+                <span class="upload-field-label">Adjunta tu evidencia de imagen *</span>
 
                 <div class="file-dropzone" (click)="fileInput.click()">
 
-                    <input #fileInput type="file" accept=".pdf" style="display: none;" (change)="onFileSelected($event)" />
+                    <input #fileInput type="file" accept=".png,.jpg,.jpeg" style="display: none;" (change)="onFileSelected($event)" />
 
+                    @if (archivoSeleccionado) {
+                    <div class="upload-icon-container uploaded">
+                        <i class="pi pi-check-circle"></i>
+                    </div>
+                    <p class="upload-text-action">
+                        <strong>{{ archivoSeleccionado.name }}</strong>
+                    </p>
+                    <p class="upload-text-hint">{{ (archivoSeleccionado.size / 1024 / 1024).toFixed(2) }} MB · Haz clic para cambiar</p>
+                    } @else {
                     <div class="upload-icon-container">
                         <i class="pi pi-upload"></i>
                     </div>
-
                     <p class="upload-text-action">
-                        <strong>Haz clic para adjuntar</strong> o arrastra tu archivo
+                        <strong>Haz clic para adjuntar</strong> o arrastra tu imagen
                     </p>
-
-                    <p class="upload-text-hint">Solo PDF · Máximo 10 MB</p>
+                    <p class="upload-text-hint">Solo PNG o JPG · Máximo 10 MB</p>
+                    }
 
                 </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -14,6 +14,7 @@ import { SolicitudDTO } from '../../core/models/solicitud';
 })
 export class Solicitudes implements OnInit {
   private solicitudesService = inject(SolicitudesService);
+  private cdr = inject(ChangeDetectorRef);
 
   solicitudes: SolicitudDTO[] = [];
   filtroEstado: string = 'TODO';
@@ -32,13 +33,18 @@ export class Solicitudes implements OnInit {
       next: (data) => {
         this.solicitudes = data;
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => this.loading = false,
+      error: () => {
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 
   get solicitudesFiltradas(): SolicitudDTO[] {
     if (this.filtroEstado === 'TODO') return this.solicitudes;
+    if (this.filtroEstado === 'EN_REVISION') return this.solicitudes.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA');
     return this.solicitudes.filter(s => s.estado === this.filtroEstado);
   }
 
@@ -56,7 +62,10 @@ export class Solicitudes implements OnInit {
 
   aprobar(sol: SolicitudDTO) {
     this.solicitudesService.revisar(sol.id, { estado: 'APROBADA', comentario: this.nuevoComentario || undefined })
-      .subscribe({ next: () => this.cargarSolicitudes() });
+      .subscribe({ next: () => {
+        this.nuevoComentario = '';
+        this.cargarSolicitudes();
+      }});
   }
 
   rechazar(sol: SolicitudDTO) {
@@ -71,6 +80,7 @@ export class Solicitudes implements OnInit {
       'EN_REVISION': 'status-badge-review',
       'APROBADA': 'status-badge-approved',
       'RECHAZADA': 'status-badge-rejected',
+      'REVISION_HUMANA': 'status-badge-review',
     };
     return map[estado] || 'status-badge-review';
   }
@@ -80,6 +90,7 @@ export class Solicitudes implements OnInit {
       'EN_REVISION': 'En revisión',
       'APROBADA': 'Aprobada',
       'RECHAZADA': 'Rechazada',
+      'REVISION_HUMANA': 'Revisión IA',
     };
     return map[estado] || estado;
   }
@@ -89,12 +100,13 @@ export class Solicitudes implements OnInit {
       'EN_REVISION': 'pi pi-clock',
       'APROBADA': 'pi pi-check-circle',
       'RECHAZADA': 'pi pi-times-circle',
+      'REVISION_HUMANA': 'pi pi-spin pi-spinner',
     };
     return map[estado] || 'pi pi-clock';
   }
 
   get totalSolicitudes(): number { return this.solicitudes.length; }
-  get pendientes(): number { return this.solicitudes.filter(s => s.estado === 'EN_REVISION').length; }
+  get pendientes(): number { return this.solicitudes.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA').length; }
   get aprobadas(): number { return this.solicitudes.filter(s => s.estado === 'APROBADA').length; }
   get rechazadas(): number { return this.solicitudes.filter(s => s.estado === 'RECHAZADA').length; }
 }

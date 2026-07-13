@@ -32,7 +32,6 @@
     "@fortawesome/fontawesome-free": "^7.3.0",
     "@primeuix/themes": "^2.0.3",
     "chart.js": "^4.5.1",
-    "html2canvas-pro": "^2.2.3",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
     "primeicons": "^7.0.0",

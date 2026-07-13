@@ -1,13 +1,15 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { combineLatest, switchMap } from 'rxjs';
 import { Auth } from '../../core/services/auth';
 import { CatalogoService } from '../../core/services/catalogo.service';
 import { SolicitudesService } from '../../core/services/solicitudes.service';
+import { DocumentosService } from '../../core/services/documentos.service';
 import { ActividadDTO } from '../../core/models/actividad';
 
 @Component({
@@ -25,7 +27,10 @@ export class NuevaSolicitud implements OnInit {
   private auth = inject(Auth);
   private catalogoService = inject(CatalogoService);
   private solicitudesService = inject(SolicitudesService);
+  private documentosService = inject(DocumentosService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   actividades: ActividadDTO[] = [];
   actividadSeleccionada: ActividadDTO | null = null;
@@ -39,6 +44,7 @@ export class NuevaSolicitud implements OnInit {
   cuatrimestre = '';
   turno = '';
   tutor = '';
+  datosPrecargados = false;
 
   nombreActividad = '';
   fecha = '';
@@ -48,11 +54,16 @@ export class NuevaSolicitud implements OnInit {
   materiaRelacionada = '';
   descripcion = '';
   reflexion = '';
+  actividadPrecargada = false;
 
   nombreResponsable = '';
   cargoResponsable = '';
   telefonoResponsable = '';
   correoResponsable = '';
+
+  archivoSeleccionado: File | null = null;
+
+  actividadIdPendiente: string | null = null;
 
   ngOnInit() {
     const user = this.auth.usuario();
@@ -60,7 +71,37 @@ export class NuevaSolicitud implements OnInit {
       this.nombre = `${user.nombre} ${user.apellidos || ''}`;
       this.matricula = user.matricula || '';
     }
-    this.catalogoService.listarActivas().subscribe(data => this.actividades = data);
+
+    const profile = this.auth.getStudentProfile();
+    if (profile) {
+      this.datosPrecargados = true;
+      this.division = profile.division || '';
+      this.programa = profile.programa || '';
+      this.grupo = profile.grupo || '';
+      this.cuatrimestre = profile.cuatrimestre || '';
+      this.turno = profile.turno || '';
+      this.tutor = profile.tutor || '';
+    }
+
+    combineLatest([
+      this.catalogoService.listarActivas(),
+      this.route.queryParamMap,
+    ]).subscribe(([actividades, params]) => {
+      this.actividades = actividades;
+
+      const nuevaId = params.get('actividadId');
+      if (nuevaId && nuevaId !== this.actividadIdPendiente) {
+        this.actividadIdPendiente = nuevaId;
+        this.actividadSeleccionada = null;
+      }
+
+      if (this.actividadIdPendiente && !this.actividadSeleccionada) {
+        const act = this.actividades.find(a => a.id === this.actividadIdPendiente);
+        if (act) this.seleccionarActividad(act);
+      }
+
+      this.cdr.detectChanges();
+    });
   }
 
   get actividadesFiltradas(): ActividadDTO[] {
@@ -79,8 +120,24 @@ export class NuevaSolicitud implements OnInit {
 
   seleccionarActividad(act: ActividadDTO) {
     this.actividadSeleccionada = act;
-    this.nombreActividad = act.titulo;
     this.mostrarSelector = false;
+    this.actividadPrecargada = true;
+    this.tipoFormulario = 'EVIDENCIA';
+    this.nombreActividad = act.titulo;
+    this.descripcion = act.descripcion || '';
+    if (act.periodicidad === 'UNICA' && act.fechaInicio) {
+      this.fecha = act.fechaInicio;
+    } else {
+      this.fecha = '';
+    }
+  }
+
+  limpiarActividad() {
+    this.actividadSeleccionada = null;
+    this.actividadPrecargada = false;
+    this.nombreActividad = '';
+    this.descripcion = '';
+    this.fecha = '';
   }
 
   volverAlSelector() {
@@ -92,11 +149,19 @@ export class NuevaSolicitud implements OnInit {
   }
 
   irAMisSolicitudes() {
-    this.router.navigate(['/alumno/solicitudes']);
+    this.router.navigate(['/alumno/mis-solicitudes']);
   }
 
   cambiarTipo(tipo: string): void {
     this.tipoFormulario = tipo;
+
+    if (tipo === 'PREVIA') {
+      this.nombreActividad = '';
+      this.descripcion = '';
+    } else if (tipo === 'EVIDENCIA' && this.actividadSeleccionada) {
+      this.nombreActividad = this.actividadSeleccionada.titulo;
+      this.descripcion = this.actividadSeleccionada.descripcion || '';
+    }
   }
 
   seleccionarDivision(val: string) { this.division = val; }
@@ -107,7 +172,8 @@ export class NuevaSolicitud implements OnInit {
     const element = event.currentTarget as HTMLInputElement;
     const fileList = element.files;
     if (fileList && fileList.length > 0) {
-      console.log('Archivo seleccionado:', fileList[0].name, 'Tamaño:', fileList[0].size);
+      this.archivoSeleccionado = fileList[0];
+      console.log('Archivo seleccionado:', fileList[0].name, 'Tamano:', fileList[0].size);
     }
   }
 
@@ -135,10 +201,18 @@ export class NuevaSolicitud implements OnInit {
       cargoResponsable: this.cargoResponsable || undefined,
       telefonoResponsable: this.telefonoResponsable || undefined,
       correoResponsable: this.correoResponsable || undefined,
-    }).subscribe({
+    }).pipe(
+      switchMap(solicitud => {
+        if (this.archivoSeleccionado) {
+          return this.documentosService.subirArchivo(solicitud.id, this.archivoSeleccionado)
+            .pipe(switchMap(() => this.solicitudesService.analizarIA(solicitud.id)));
+        }
+        return [solicitud];
+      })
+    ).subscribe({
       next: () => {
-        this.success = true;
         this.loading = false;
+        this.router.navigate(['/alumno/mis-solicitudes']);
       },
       error: (err) => {
         this.error = err.error?.message || 'Error al enviar solicitud';
