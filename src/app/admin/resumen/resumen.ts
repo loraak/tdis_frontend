@@ -112,7 +112,7 @@ export class Resumen implements OnInit {
   maxPuntosEje = 1;
 
   ngOnInit() {
-    //this.cargarDatos();
+    this.cargarDatos();
   }
 
   cargarDatos() {
@@ -178,9 +178,9 @@ export class Resumen implements OnInit {
     try {
       await this.reporteService.generarReporteAlumnos(
         this.alumnos,
-        //this.resumenData?.distribucionNiveles ?? {},
-        //this.resumenData?.puntosPorEje ?? {}
-        DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
+        this.resumenData?.distribucionNiveles ?? {},
+        this.resumenData?.puntosPorEje ?? {}
+        //DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
       );
     } finally {
       this.generandoReporte = false;
