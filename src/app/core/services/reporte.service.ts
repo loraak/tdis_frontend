@@ -22,8 +22,15 @@ export class ReporteService {
     const doc = new jsPDF();
     let y = 18;
 
-    doc.setFontSize(16);
-    doc.text('Reporte completo', 14, y);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Reporte de Actividades', 14, y);
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100);
+    y += 6;
+    doc.text(`Generado el: ${new Date().toLocaleDateString()} | Total Alumnos: ${alumnos.length}`, 14, y);
     y += 12;
 
     const imgNiveles = await generarGraficoNiveles(distribucionNiveles);
@@ -39,11 +46,11 @@ export class ReporteService {
     autoTable(doc, {
       startY: y,
       head: [['#', 'Matrícula', 'Nivel', 'Personal', 'Social', 'Dep.', 'Trasc.', 'Total']],
-      body: alumnos.map((a, i) => [i + 1, a.matricula, a.nivel, a.cult, a.social, a.dep, a.trasc, a.total]),
+      body: alumnos.map((a, i) => [i + 1, a.matricula, a.nivel, a.personal, a.social, a.dep, a.trasc, a.total]),
       styles: { fontSize: 8 },
     });
 
-    doc.save(`reporte-completo-${Date.now()}.pdf`);
+    doc.save(`reporte-alumnos-${Date.now()}.pdf`);
   }
 
   async generarReporteActividades(data: ReporteActividadesData): Promise<void> {

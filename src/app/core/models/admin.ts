@@ -14,7 +14,7 @@ export interface AlumnoResumenDTO {
   nombre: string;
   apellidos: string;
   nivel: string;
-  cult: number;
+  personal: number;
   social: number;
   dep: number;
   trasc: number;

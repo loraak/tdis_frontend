@@ -28,13 +28,13 @@ export class Resumen implements OnInit {
   actividades: ActividadDTO[] = [];
   /*
   alumnos: AlumnoResumenDTO[] = [
-    { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: 'Embajador', cult: 320, social: 280, dep: 210, trasc: 290, total: 1100, createdAt: new Date('2026-06-20') },
-    { id: '2', matricula: '20231002', nombre: 'Diego', apellidos: 'Hernández Cruz', nivel: 'Embajador', cult: 300, social: 260, dep: 240, trasc: 250, total: 1050, createdAt: new Date('2026-05-14') },
-    { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: 'Líder', cult: 180, social: 150, dep: 160, trasc: 140, total: 630, createdAt: new Date('2026-07-08') },
-    { id: '4', matricula: '20231004', nombre: 'Emiliano', apellidos: 'Gómez Rivas', nivel: 'Líder', cult: 170, social: 160, dep: 130, trasc: 150, total: 610, createdAt: new Date('2026-07-05') },
-    { id: '5', matricula: '20231005', nombre: 'Camila', apellidos: 'Sánchez Ortiz', nivel: 'Líder', cult: 160, social: 140, dep: 150, trasc: 155, total: 605, createdAt: new Date('2026-06-28') },
-    { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: 'Promotor', cult: 90, social: 85, dep: 80, trasc: 75, total: 330, createdAt: new Date('2026-07-09') },
-    { id: '7', matricula: '20231007', nombre: 'Regina', apellidos: 'Castillo Vega', nivel: 'Promotor', cult: 85, social: 90, dep: 70, trasc: 65, total: 310, createdAt: new Date('2026-07-10') }
+    { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: 'Embajador', personal: 320, social: 280, dep: 210, trasc: 290, total: 1100, createdAt: new Date('2026-06-20') },
+    { id: '2', matricula: '20231002', nombre: 'Diego', apellidos: 'Hernández Cruz', nivel: 'Embajador', personal: 300, social: 260, dep: 240, trasc: 250, total: 1050, createdAt: new Date('2026-05-14') },
+    { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: 'Líder', personal: 180, social: 150, dep: 160, trasc: 140, total: 630, createdAt: new Date('2026-07-08') },
+    { id: '4', matricula: '20231004', nombre: 'Emiliano', apellidos: 'Gómez Rivas', nivel: 'Líder', personal: 170, social: 160, dep: 130, trasc: 150, total: 610, createdAt: new Date('2026-07-05') },
+    { id: '5', matricula: '20231005', nombre: 'Camila', apellidos: 'Sánchez Ortiz', nivel: 'Líder', personal: 160, social: 140, dep: 150, trasc: 155, total: 605, createdAt: new Date('2026-06-28') },
+    { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: 'Promotor', personal: 90, social: 85, dep: 80, trasc: 75, total: 330, createdAt: new Date('2026-07-09') },
+    { id: '7', matricula: '20231007', nombre: 'Regina', apellidos: 'Castillo Vega', nivel: 'Promotor', personal: 85, social: 90, dep: 70, trasc: 65, total: 310, createdAt: new Date('2026-07-10') }
   ];
   actividades: ActividadDTO[] = [
     {
