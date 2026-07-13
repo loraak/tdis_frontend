@@ -16,7 +16,7 @@
 
     @for (sol of solicitudes; track sol.id) {
     <p-card styleClass="custom-card-container">
-        <div class="card-inner-padding">
+        <div class="card-inner-padding" [ngClass]="cardBorderClass(sol.estado)">
 
             <div class="request-card-header" [style.border-bottom]="!isExpanded(sol.id) ? 'none' : '1px solid #f1f5f9'"
                 [style.margin-bottom]="!isExpanded(sol.id) ? '0' : '1.5rem'">
@@ -25,9 +25,15 @@
                     <div class="request-meta-info">
                         <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
                         @if (sol.nombreArchivo) {
-                        <span class="meta-item"><i class="pi pi-file-pdf"></i> {{ sol.nombreArchivo }}</span>
+                        <span class="meta-item"><i class="pi pi-image"></i> {{ sol.nombreArchivo }}</span>
                         }
                         <span class="meta-item">Enviada: {{ sol.createdAt | date:'short' }}</span>
+                        @if (sol.actividadPuntos) {
+                        <span class="meta-item points-item"><i class="pi pi-star-fill"></i> {{ sol.actividadPuntos }} pts</span>
+                        }
+                        @if (sol.actividadEje) {
+                        <span class="meta-item"><i class="pi pi-directions"></i> {{ sol.actividadEje }}</span>
+                        }
                     </div>
                 </div>
                 <div class="header-actions-group">
@@ -84,16 +90,33 @@
                 <p class="text-block-content">{{ sol.reflexion }}</p>
                 }
 
-                @if (sol.comentarioRechazo) {
-                <span class="text-block-title" style="color:#ef4444;">Motivo de rechazo</span>
-                <p class="text-block-content" style="color:#ef4444;">{{ sol.comentarioRechazo }}</p>
+                @if (sol.aiDescripcionAnalisis) {
+                <div class="ai-analysis-box">
+                    <span class="data-section-title" style="color:#7c3aed;margin-bottom:0.5rem;">Análisis IA</span>
+                    <p class="text-block-content">{{ sol.aiDescripcionAnalisis }}</p>
+                    @if (sol.aiMotivo) {
+                    <p class="ai-motivo"><strong>Motivo:</strong> {{ sol.aiMotivo }}</p>
+                    }
+                </div>
                 }
 
-                <div class="chat-input-wrapper">
-                    <textarea class="custom-native-textarea"
-                        placeholder="¿Tienes alguna nota para Coordinación?"></textarea>
-                    <button class="btn-send-message"><i class="pi pi-send"></i></button>
+                @if (sol.comentarioRechazo) {
+                <div class="rejection-box">
+                    <span class="text-block-title" style="color:#ef4444;">Motivo de rechazo</span>
+                    <p class="text-block-content" style="color:#ef4444;">{{ sol.comentarioRechazo }}</p>
                 </div>
+                }
+
+                @if (sol.estado === 'RECHAZADA') {
+                <div class="rechazada-actions">
+                    <button class="btn-reenviar-evidencia" (click)="enviarNuevaEvidencia(sol)">
+                        <i class="pi pi-upload"></i> Enviar nueva evidencia
+                    </button>
+                    <button class="btn-reenviar-actividad" (click)="enviarNuevaEvidencia(sol)">
+                        <i class="pi pi-refresh"></i> Reenviar actividad
+                    </button>
+                </div>
+                }
 
             </div>
             }

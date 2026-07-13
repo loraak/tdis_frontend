@@ -36,7 +36,7 @@
                     <div class="request-meta-info">
                         <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
                         @if (sol.nombreArchivo) {
-                        <span class="meta-item"><i class="pi pi-file-pdf"></i> {{ sol.nombreArchivo }}</span>
+                        <span class="meta-item"><i class="pi pi-image"></i> {{ sol.nombreArchivo }}</span>
                         }
                         <span class="meta-item">Enviada: {{ sol.createdAt | date:'short' }}</span>
                     </div>
@@ -103,7 +103,7 @@
             </div>
             }
 
-            @if (sol.estado === 'EN_REVISION') {
+            @if (sol.estado === 'EN_REVISION' || sol.estado === 'REVISION_HUMANA') {
             <div class="buttons-request">
                 <button class="btn-action btn-green" (click)="aprobar(sol)">
                     <div class="btn-text-action">

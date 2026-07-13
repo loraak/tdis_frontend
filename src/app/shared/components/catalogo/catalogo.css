@@ -246,6 +246,14 @@
   color: #475569;
 }
 
+.info-date {
+  font-size: 0.8rem;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
 .badge-evidence-required {
   align-self: flex-start;
   background-color: #fff7ed;
@@ -257,4 +265,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+.catalog-card-alumno {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.catalog-card-alumno:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08) !important;
 }

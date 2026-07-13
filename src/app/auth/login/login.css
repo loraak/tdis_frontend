@@ -275,6 +275,23 @@
     animation: fadeIn 0.25s ease-out forwards;
 }
 
+.register-link {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #7A8B9E;
+    margin: 0;
+}
+
+.register-link a {
+    color: var(--tdis-color-light-green);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;

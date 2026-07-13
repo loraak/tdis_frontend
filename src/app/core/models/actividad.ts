@@ -4,7 +4,9 @@ export interface ActividadDTO {
   descripcion: string;
   eje: 'ENTORNO_SOCIAL' | 'PERSONAL' | 'DEPORTIVO' | 'TRASCENDENCIA';
   puntosTdi: number;
-  temporalidad: string;
+  periodicidad: 'UNICA' | 'SEMANAL' | 'MENSUAL';
+  fechaInicio: string;
+  fechaFin?: string;
   activa: boolean;
   createdAt: Date;
 }

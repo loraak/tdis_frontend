@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { LoginRequest, LoginResponse } from '../models/usuario';
+import { LoginRequest, LoginResponse, RegisterRequest } from '../models/usuario';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -12,6 +12,7 @@ import { environment } from '../../../environments/environment';
 export class Auth {
   private tokenKey = 'tdis_token';
   private userKey = 'tdis_user';
+  private profileKey = 'tdis_student_profile';
 
   usuario = signal<LoginResponse | null>(null);
   isAuthenticated = signal(false);
@@ -28,6 +29,26 @@ export class Auth {
         this.guardarSesion(res);
       })
     );
+  }
+
+  register(request: RegisterRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/register`, request).pipe(
+      tap((res) => {
+        this.guardarSesion(res);
+      })
+    );
+  }
+
+  getStudentProfile(): { division: string; programa: string; grupo: string; cuatrimestre: string; turno: string; tutor: string } | null {
+    const data = localStorage.getItem(this.profileKey);
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch {
+        return null;
+      }
+    }
+    return null;
   }
 
   logout(): void {

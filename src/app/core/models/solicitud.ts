@@ -46,9 +46,12 @@ export interface SolicitudDTO {
   telefonoResponsable?: string;
   correoResponsable?: string;
   nombreArchivo?: string;
-  estado: 'EN_REVISION' | 'APROBADA' | 'RECHAZADA';
+  estado: 'EN_REVISION' | 'APROBADA' | 'RECHAZADA' | 'REVISION_HUMANA';
   comentarioRechazo?: string;
   archivoPath?: string;
+  aiEstado?: string;
+  aiMotivo?: string;
+  aiDescripcionAnalisis?: string;
   createdAt: string;
   updatedAt?: string;
 }

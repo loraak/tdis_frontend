@@ -296,6 +296,11 @@
     font-weight: 600;
 }
 
+.pill-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .card-inner-padding {
     padding: 1.5rem;
 }
@@ -378,6 +383,11 @@
 .upload-icon-container i {
     font-size: 1.25rem;
     font-weight: bold;
+}
+
+.upload-icon-container.uploaded {
+    background-color: #dcfce7;
+    color: #22c55e;
 }
 
 .upload-text-action {

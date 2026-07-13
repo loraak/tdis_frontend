@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { Auth } from '../../core/services/auth';
@@ -9,7 +9,7 @@ type LoginView = 'select-role' | 'admin' | 'student';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, CardModule, InputTextModule],
+  imports: [CommonModule, FormsModule, CardModule, InputTextModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

@@ -36,6 +36,10 @@ export class SolicitudesService {
     return this.http.post<SolicitudDTO>(this.apiUrl, request);
   }
 
+  analizarIA(solicitudId: string): Observable<SolicitudDTO> {
+    return this.http.post<SolicitudDTO>(`${this.apiUrl}/${solicitudId}/analizar-ia`, {});
+  }
+
   revisar(id: string, request: RevisarSolicitudRequest): Observable<SolicitudDTO> {
     return this.http.put<SolicitudDTO>(`${this.apiUrl}/${id}/revisar`, request);
   }
