@@ -34,15 +34,86 @@ export class Resumen implements OnInit {
 
   resumenData: AdminResumenDTO | null = null;
   alumnos: AlumnoResumenDTO[] = [
-    { id: '1', matricula: '20231001', nombre: 'Sofía',     apellidos: 'Ramírez Torres',  nivel: 'Embajador', cult: 320, social: 280, dep: 210, trasc: 290, total: 1100, createdAt: new Date('2026-06-20') },
-  { id: '2', matricula: '20231002', nombre: 'Diego',     apellidos: 'Hernández Cruz',   nivel: 'Embajador', cult: 300, social: 260, dep: 240, trasc: 250, total: 1050, createdAt: new Date('2026-05-14') },
-  { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina',      nivel: 'Líder',      cult: 180, social: 150, dep: 160, trasc: 140, total: 630,  createdAt: new Date('2026-07-08') },
-  { id: '4', matricula: '20231004', nombre: 'Emiliano',  apellidos: 'Gómez Rivas',       nivel: 'Líder',      cult: 170, social: 160, dep: 130, trasc: 150, total: 610,  createdAt: new Date('2026-07-05') },
-  { id: '5', matricula: '20231005', nombre: 'Camila',    apellidos: 'Sánchez Ortiz',     nivel: 'Líder',      cult: 160, social: 140, dep: 150, trasc: 155, total: 605,  createdAt: new Date('2026-06-28') },
-  { id: '6', matricula: '20231006', nombre: 'Mateo',     apellidos: 'Fernández Solís',   nivel: 'Promotor',   cult: 90,  social: 85,  dep: 80,  trasc: 75,  total: 330,  createdAt: new Date('2026-07-09') },
-  { id: '7', matricula: '20231007', nombre: 'Regina',    apellidos: 'Castillo Vega',     nivel: 'Promotor',   cult: 85,  social: 90,  dep: 70,  trasc: 65,  total: 310,  createdAt: new Date('2026-07-10') }
+    { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: 'Embajador', cult: 320, social: 280, dep: 210, trasc: 290, total: 1100, createdAt: new Date('2026-06-20') },
+    { id: '2', matricula: '20231002', nombre: 'Diego', apellidos: 'Hernández Cruz', nivel: 'Embajador', cult: 300, social: 260, dep: 240, trasc: 250, total: 1050, createdAt: new Date('2026-05-14') },
+    { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: 'Líder', cult: 180, social: 150, dep: 160, trasc: 140, total: 630, createdAt: new Date('2026-07-08') },
+    { id: '4', matricula: '20231004', nombre: 'Emiliano', apellidos: 'Gómez Rivas', nivel: 'Líder', cult: 170, social: 160, dep: 130, trasc: 150, total: 610, createdAt: new Date('2026-07-05') },
+    { id: '5', matricula: '20231005', nombre: 'Camila', apellidos: 'Sánchez Ortiz', nivel: 'Líder', cult: 160, social: 140, dep: 150, trasc: 155, total: 605, createdAt: new Date('2026-06-28') },
+    { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: 'Promotor', cult: 90, social: 85, dep: 80, trasc: 75, total: 330, createdAt: new Date('2026-07-09') },
+    { id: '7', matricula: '20231007', nombre: 'Regina', apellidos: 'Castillo Vega', nivel: 'Promotor', cult: 85, social: 90, dep: 70, trasc: 65, total: 310, createdAt: new Date('2026-07-10') }
   ];
-  actividades: ActividadDTO[] = [];
+  actividades: ActividadDTO[] = [
+    {
+      id: "01",
+      titulo: "Voluntariado en Comedor Comunitario",
+      descripcion: "Participación activa en la preparación y distribución de alimentos para personas en situación de vulnerabilidad.",
+      eje: "ENTORNO_SOCIAL",
+      puntosTdi: 5,
+      temporalidad: "Mensual",
+      activa: true,
+      createdAt: new Date("2026-07-01")
+    },
+    {
+      id: "02",
+      titulo: "Taller de Manejo del Tiempo y Productividad",
+      descripcion: "Curso práctico sobre técnicas de organización como Pomodoro y bloques de tiempo para mejorar el rendimiento diario.",
+      eje: "PERSONAL",
+      puntosTdi: 3,
+      temporalidad: "Única vez",
+      activa: true,
+      createdAt: new Date("2026-07-02")
+    },
+    {
+      id: "03",
+      titulo: "Torneo de Fútbol Intercolegial",
+      descripcion: "Inscripción y participación en el torneo de fútbol de la liga interna del campus.",
+      eje: "DEPORTIVO",
+      puntosTdi: 2,
+      temporalidad: "Semestral",
+      activa: true,
+      createdAt: new Date("2026-07-02")
+    },
+    {
+      id: "04",
+      titulo: "Retiro de Reflexión y Propósito de Vida",
+      descripcion: "Espacio de introspección guiada para la definición de metas a largo plazo y valores fundamentales.",
+      eje: "TRASCENDENCIA",
+      puntosTdi: 5,
+      temporalidad: "Anual",
+      activa: true,
+      createdAt: new Date("2026-07-03")
+    },
+    {
+      id: "05",
+      titulo: "Campaña de Reforestación Urbana",
+      descripcion: "Plantación de árboles nativos en zonas designadas de la ciudad para mejorar los espacios verdes.",
+      eje: "ENTORNO_SOCIAL",
+      puntosTdi: 5,
+      temporalidad: "Única vez",
+      activa: false,
+      createdAt: new Date("2026-07-04")
+    },
+    {
+      id: "06",
+      titulo: "Club de Lectura Semanal",
+      descripcion: "Sesiones de discusión sobre literatura contemporánea y desarrollo de habilidades críticas.",
+      eje: "PERSONAL",
+      puntosTdi: 4,
+      temporalidad: "Semanal",
+      activa: true,
+      createdAt: new Date("2026-07-04")
+    },
+    {
+      id: "07",
+      titulo: "Rutina Diaria de Cardio y Fuerza",
+      descripcion: "Seguimiento y registro de actividad física en el gimnasio institucional.",
+      eje: "DEPORTIVO",
+      puntosTdi: 3,
+      temporalidad: "Diaria",
+      activa: true,
+      createdAt: new Date("2026-07-08")
+    }
+  ];
   maxPuntosEje = 1;
 
   generandoReporte = false;
@@ -71,7 +142,7 @@ export class Resumen implements OnInit {
       this.maxPuntosEje = Math.max(1, ...Object.values(data.puntosPorEje));
       this.cd.markForCheck();
     });
-    this.actividades = [];
+    //this.actividades = [];
   }
 
   get totalAlumnos(): number { return this.resumenData?.totalAlumnos ?? 0; }
@@ -130,6 +201,30 @@ export class Resumen implements OnInit {
         this.resumenData?.puntosPorEje ?? {}
         //DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
       );
+    } finally {
+      this.generandoReporte = false;
+    }
+  }
+
+  async onGenerarReporteActividades(): Promise<void> {
+    this.generandoReporte = true;
+    try {
+      const distribucionEjes = this.actividades.reduce((acc, act) => {
+        acc[act.eje] = (acc[act.eje] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      const distribucionTemporalidad = this.actividades.reduce((acc, act) => {
+        acc[act.temporalidad] = (acc[act.temporalidad] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      await this.reporteService.generarReporteActividades({
+        actividades: this.actividades,
+        distribucionEjes,
+        distribucionTemporalidad
+      });
+
     } finally {
       this.generandoReporte = false;
     }
