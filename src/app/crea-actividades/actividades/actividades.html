@@ -1,1 +1,89 @@
-<p>actividades works!</p>
+<div class="my-activities-container">
+
+    <div class="page-header-flex">
+        <div>
+            <h1 class="page-title">Mis actividades</h1>
+            <p class="page-subtitle">{{ totalActividades }} actividad{{ totalActividades !== 1 ? 'es' : '' }} · {{ enRevision }} en revisión</p>
+        </div>
+        <button type="button" class="btn-nueva-actividad" (click)="nuevaActividad()">+ Nueva actividad</button>
+    </div>
+
+    <!--@if (loading) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">Cargando actividades...</div>
+    </p-card>
+}-->
+
+    @for (act of actividades; track act.id) {
+        <p-card styleClass="custom-card-container">
+            <div class="card-inner-padding" [ngClass]="cardBorderClass(act.activa)">
+
+                <div class="activities-card-header" [style.border-bottom]="!isExpanded(act.id) ? 'none' : '1px solid #f1f5f9'"
+                    [style.margin-bottom]="!isExpanded(act.id) ? '0' : '1.5rem'">
+                    <div class="activities-title-block">
+                        <h3>{{ act.titulo }}</h3>
+                        <div class="activities-meta-info">
+                            <span class="meta-item"><i class="pi pi-calendar"></i> {{ act.fechaInicio | date:'shortDate' }}</span>
+                            @if (act.fechaFin) {
+                            <span class="meta-item"><i class="pi pi-calendar-times"></i> {{ act.fechaFin | date:'shortDate' }}</span>
+                            }
+                            <span class="meta-item">Creada: {{ act.createdAt | date:'short' }}</span>
+                            <span class="meta-item points-item"><i class="pi pi-star-fill"></i> {{ act.puntosTdi }} TDI's</span>
+                            <span class="meta-item"><i class="pi pi-directions"></i> {{ ejeLabel(act.eje) }}</span>
+                            <span class="meta-item"><i class="pi pi-sync"></i> {{ periodicidadLabel(act.periodicidad) }}</span>
+                        </div>
+                    </div>
+                    <div class="header-actions-group">
+                        <p-tag [value]="activaLabel(act.activa)" [icon]="activaIcon(act.activa)" [styleClass]="activaBadgeClass(act.activa)"></p-tag>
+                        <button (click)="toggleExpand(act.id)" class="btn-toggle-view">
+                            <i class="pi" [class.pi-chevron-up]="isExpanded(act.id)" [class.pi-chevron-down]="!isExpanded(act.id)"></i>
+                            {{ isExpanded(act.id) ? 'Ocultar' : 'Ver detalle' }}
+                        </button>
+                    </div>
+                </div>
+
+                @if (isExpanded(act.id)) {
+                <div>
+                    <span class="data-section-title">Datos de la actividad</span>
+                    <div class="data-grid-layout">
+                        <span class="data-label">Eje</span>
+                        <span class="data-value">{{ ejeLabel(act.eje) }}</span>
+
+                        <span class="data-label">Periodicidad</span>
+                        <span class="data-value">{{ periodicidadLabel(act.periodicidad) }}</span>
+
+                        <span class="data-label">Puntos TDI</span>
+                        <span class="data-value">{{ act.puntosTdi }}</span>
+
+                        <span class="data-label">Fecha de inicio</span>
+                        <span class="data-value">{{ act.fechaInicio | date:'longDate' }}</span>
+
+                        <span class="data-label">Fecha de finalización</span>
+                        <span class="data-value">{{ act.fechaFin ? (act.fechaFin | date:'longDate') : '—' }}</span>
+
+                        <span class="data-label">Estado</span>
+                        <span class="data-value">{{ act.activa ? 'Activa' : 'Inactiva' }}</span>
+                    </div>
+
+                    @if (act.descripcion) {
+                    <span class="text-block-title">Descripción</span>
+                    <p class="text-block-content">{{ act.descripcion }}</p>
+                    }
+
+                </div>
+                }
+            </div>
+
+        </p-card>
+    }
+
+    @if (!loading && actividades.length === 0) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">
+            <p>No tienes actividades registradas.</p>
+            <button type="button" class="btn-nueva-actividad" (click)="nuevaActividad()">+ Nueva Actividad</button>
+        </div>
+    </p-card>
+    }
+
+</div>
