@@ -33,13 +33,13 @@ export const routes: Routes = [
         { path: 'catalogo',    component: AdminCatalogo },
         { path: '', redirectTo: 'resumen', pathMatch: 'full' }
     ]},
-    {path: 'externo', component: MainLayout, /*canActivate: [authGuard],*/ data: {role: 'externo'}, children: [
+    {path: 'externo', component: MainLayout, canActivate: [authGuard], data: {role: 'externo'}, children: [
         { path: 'nueva-actividad', component: Actividad },
         { path: 'mis-actividades', component: Actividades },
         { path: 'catalogo',    component: AdminCatalogo },
         { path: '', redirectTo: 'catalogo', pathMatch: 'full' }
     ]},
-    {path: 'interno', component: MainLayout, /*canActivate: [authGuard],*/ data: {role: 'interno'}, children: [
+    {path: 'interno', component: MainLayout, canActivate: [authGuard], data: {role: 'interno'}, children: [
         { path: 'nueva-actividad', component: Actividad },
         { path: 'mis-actividades', component: Actividades },
         { path: 'catalogo',    component: Catalogo },

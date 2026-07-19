@@ -34,7 +34,7 @@
             </div>
         }
 
-    @if(rol === 'INTERNO') {
+    @if(rolUsuario() === 'INTERNO') {
         <div class="nav-group alumno-theme">
             <a routerLink="/interno/nueva-actividad" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-plus"></i> Nueva Actividad
@@ -45,7 +45,7 @@
         </div>
     }
 
-    @if(rol === 'EXTERNO') {
+    @if(rolUsuario() === 'EXTERNO') {
         <div class="nav-group alumno-theme">
             <a routerLink="/externo/nueva-actividad" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-plus"></i> Nueva Actividad
