@@ -1,0 +1,144 @@
+<div class="login-container">
+    <header class="login-header">
+        <div class="logo-wrapper">
+            <img src="/logo-uteq.png" alt="UTEQ Logo" class="university-logo">
+        </div>
+        <p class="subtitle">UNIVERSIDAD TECNOLOGICA DE QUERETARO</p>
+        <h1 class="main-title">Tokens de Desarrollo Integral</h1>
+
+        <div class="badge-container">
+            <span class="badge badge-green">Entorno Social</span>
+            <span class="badge badge-blue">Personal</span>
+            <span class="badge badge-yellow">Deportivo</span>
+            <span class="badge badge-purple">Trascendencia</span>
+        </div>
+    </header>
+
+    @if (success()) {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <div class="success-content">
+            <i class="pi pi-check-circle success-icon"></i>
+            <h2>Cuenta creada exitosamente</h2>
+            <p>Tu cuenta ha sido registrada. Ahora puedes iniciar sesion con tu correo electronico.</p>
+            <button type="button" class="btn-submit btn-green" (click)="irALogin()">Ir a Iniciar Sesion <i class="pi pi-arrow-right"></i></button>
+        </div>
+    </p-card>
+    } @else {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <button type="button" class="btn-back" routerLink="/login">
+            <i class="pi pi-arrow-left"></i> Volver al login
+        </button>
+
+        <div class="card-header">
+            <div class="icon-avatar avatar-blue">
+                <i class="pi pi-verified user-icon"></i>
+            </div>
+            <div class="card-title-text">
+                <h2>Crear cuenta Externa</h2>
+                <p>Registra tus datos para gestionar actividades del catalogo TDI</p>
+            </div>
+        </div>
+
+        <form class="register-form" (ngSubmit)="onSubmit()">
+
+            <div class="form-section">
+                <h3 class="section-title"><i class="pi pi-users"></i> Tipo de cuenta</h3>
+
+                <div class="tipo-selection">
+                    <button type="button" class="tipo-card" [class.selected]="tipo === 'PERSONA'" (click)="seleccionarTipo('PERSONA')">
+                        <i class="pi pi-user tipo-icon"></i>
+                        <span class="tipo-label">Persona</span>
+                        <span class="tipo-desc">Individual</span>
+                    </button>
+                    <button type="button" class="tipo-card" [class.selected]="tipo === 'ORGANIZACION'" (click)="seleccionarTipo('ORGANIZACION')">
+                        <i class="pi pi-building tipo-icon"></i>
+                        <span class="tipo-label">Organizacion</span>
+                        <span class="tipo-desc">Empresa o institucion</span>
+                    </button>
+                </div>
+                @if (submitted && !tipo) {
+                    <span class="field-error">Selecciona tu tipo de cuenta</span>
+                }
+            </div>
+
+            @if (tipo) {
+            <div class="form-section">
+                <h3 class="section-title"><i class="pi pi-user"></i> {{ tipo === 'ORGANIZACION' ? 'Datos de la organizacion' : 'Datos personales' }}</h3>
+
+                @if (tipo === 'PERSONA') {
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>NOMBRE *</label>
+                        <input pInputText type="text" [(ngModel)]="nombre" name="nombre"
+                            placeholder="Nombre(s)" autocomplete="off">
+                        @if (submitted && !nombre.trim()) {
+                            <span class="field-error">Requerido</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>APELLIDOS *</label>
+                        <input pInputText type="text" [(ngModel)]="apellidos" name="apellidos"
+                            placeholder="Apellido(s)" autocomplete="off">
+                        @if (submitted && !apellidos.trim()) {
+                            <span class="field-error">Requerido</span>
+                        }
+                    </div>
+                </div>
+                }
+
+                @if (tipo === 'ORGANIZACION') {
+                <div class="form-group">
+                    <label>NOMBRE DE LA ORGANIZACION *</label>
+                    <input pInputText type="text" [(ngModel)]="nombre" name="nombre"
+                        placeholder="Ej. Empresa XYZ S.A. de C.V." autocomplete="off">
+                    @if (submitted && !nombre.trim()) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+                }
+
+                <div class="form-group">
+                    <label>CORREO ELECTRONICO *</label>
+                    <input pInputText type="email" [(ngModel)]="email" name="email"
+                        placeholder="ejemplo@correo.com">
+                    @if (submitted && !email.trim()) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>CONTRASENA *</label>
+                        <input pInputText type="password" [(ngModel)]="password" name="password"
+                            placeholder="Minimo 6 caracteres">
+                        @if (submitted && !password.trim()) {
+                            <span class="field-error">Requerido</span>
+                        } @else if (submitted && password.length < 6) {
+                            <span class="field-error">Minimo 6 caracteres</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>REPETIR CONTRASENA *</label>
+                        <input pInputText type="password" [(ngModel)]="confirmPassword" name="confirmPassword"
+                            placeholder="Repite tu contrasena">
+                        @if (submitted && !confirmPassword.trim()) {
+                            <span class="field-error">Requerido</span>
+                        } @else if (submitted && password !== confirmPassword) {
+                            <span class="field-error">Las contrasenas no coinciden</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (error()) {
+                <div class="error-msg">{{ error() }}</div>
+            }
+
+            <button type="submit" class="btn-submit btn-blue" [disabled]="loading()">
+                {{ loading() ? 'Creando cuenta...' : 'Crear cuenta' }} <i class="pi pi-arrow-right"></i>
+            </button>
+            }
+        </form>
+    </p-card>
+    }
+</div>

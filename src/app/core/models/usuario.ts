@@ -10,7 +10,7 @@ export interface LoginResponse {
   email?: string;
   nombre: string;
   apellidos: string;
-  tipoUsuario: 'ALUMNO' | 'ADMINISTRADOR';
+  tipoUsuario: 'ALUMNO' | 'ADMINISTRADOR' | 'EXTERNO';
 }
 
 export interface RegisterRequest {
@@ -21,12 +21,20 @@ export interface RegisterRequest {
   apellidos: string;
 }
 
+export interface RegisterExternoRequest {
+  tipo: 'PERSONA' | 'ORGANIZACION';
+  nombre: string;
+  apellidos: string;
+  email: string;
+  password: string;
+}
+
 export interface UsuarioDTO {
   id: string;
   matricula?: string;
   email?: string;
   nombre: string;
   apellidos: string;
-  tipoUsuario: 'ALUMNO' | 'ADMINISTRADOR';
+  tipoUsuario: 'ALUMNO' | 'ADMINISTRADOR' | 'EXTERNO';
   activo: boolean;
 }

@@ -26,6 +26,7 @@ export class Navbar implements OnInit {
     ).subscribe((event: any) => {
       const url = event.urlAfterRedirects;
       if (url.includes('/admin')) this.rol = 'ADMIN';
+      else if (url.includes('/externo')) this.rol = 'EXTERNO';
       else if (url.includes('/solicitante')) this.rol = 'SOLICITANTE';
       else this.rol = 'ALUMNO';
     });

@@ -27,4 +27,20 @@ export class CatalogoService {
   obtenerPorId(id: string): Observable<ActividadDTO> {
     return this.http.get<ActividadDTO>(`${this.apiUrl}/${id}`);
   }
+
+  crear(actividad: ActividadDTO): Observable<ActividadDTO> {
+    return this.http.post<ActividadDTO>(this.apiUrl, actividad);
+  }
+
+  actualizar(id: string, actividad: ActividadDTO): Observable<ActividadDTO> {
+    return this.http.put<ActividadDTO>(`${this.apiUrl}/${id}`, actividad);
+  }
+
+  desactivar(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  activar(id: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/activar`, {});
+  }
 }

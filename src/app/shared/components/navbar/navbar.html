@@ -47,4 +47,12 @@
             </a>
         </div>
     }
+
+    @if(rolUsuario() === 'EXTERNO') {
+        <div class="nav-group externo-theme">
+            <a routerLink="/externo/catalogo" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-book"></i> Catálogo
+            </a>
+        </div>
+    }
 </nav>
