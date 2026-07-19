@@ -19,7 +19,6 @@
     <div class="error-msg">{{ error }}</div>
     }
 
-    <!-- Banner Informativo (el tipo ya no se elige manualmente, viene del rol) -->
     <div class="validation-info-banner"
         [ngClass]="{'bg-previa': tipoActividad() === 'INTERNA', 'bg-evidencia': tipoActividad() === 'EXTERNA'}">
         <span class="banner-subtitle">Registro de Actividades</span>
@@ -45,9 +44,9 @@
 
             <form class="form-grid" #actividadForm="ngForm">
                 <div class="form-field full-width">
-                    <label class="form-label">Nombre del {{ tipoActividad() === 'INTERNA' ? 'Interno' : 'Externo' }} *</label>
+                    <label class="form-label">{{ tipoActividad() === 'INTERNO' ? 'Nombre del interno' : 'Externo u organización responsable' }} *</label>
                     <input class="custom-input" type="text"
-                        placeholder="Nombre de la persona que solicita la validación" [(ngModel)]="nombreInEx"
+                        placeholder="{{ tipoActividad() === 'INTERNO' ? 'Nombre de la persona interna que sube la actividad' : 'Externo u organización que sube la actividad' }}" [(ngModel)]="nombreInEx"
                         name="nombreInEx" />
                 </div>
 
@@ -57,39 +56,34 @@
                         [(ngModel)]="correoResponsable" name="correo" />
                 </div>
 
-                <div class="form-field full-width">
-                    <label class="form-label">División académica *</label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="division === 'Industrial'"
-                            (click)="seleccionarDivision('Industrial')">Industrial</button>
-                        <button type="button" class="pill-button"
-                            [class.selected]="division === 'Económico-Administrativa'"
-                            (click)="seleccionarDivision('Económico-Administrativa')">Económico-Administrativa</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'"
-                            (click)="seleccionarDivision('Tecnologías')">Tecnologías</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'"
-                            (click)="seleccionarDivision('Idiomas')">Idiomas</button>
+                @if(tipoActividad() === 'INTERNO') {
+                    <div class="form-field full-width">
+                        <label class="form-label">División académica *</label>
+                        <div class="pill-selection-wrapper">
+                            <button type="button" class="pill-button" [class.selected]="division === 'Industrial'"
+                                (click)="seleccionarDivision('Industrial')">Industrial</button>
+                            <button type="button" class="pill-button"
+                                [class.selected]="division === 'Económico-Administrativa'"
+                                (click)="seleccionarDivision('Económico-Administrativa')">Económico-Administrativa</button>
+                            <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'"
+                                (click)="seleccionarDivision('Tecnologías')">Tecnologías</button>
+                            <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'"
+                                (click)="seleccionarDivision('Idiomas')">Idiomas</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-field">
-                    <label class="form-label">Área *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. Dirección de Carrera / Departamento"
-                        [(ngModel)]="area" name="area" />
-                </div>
+                    <div class="form-field">
+                        <label class="form-label">Área *</label>
+                        <input class="custom-input" type="text" placeholder="Ej. Dirección de Carrera / Departamento"
+                            [(ngModel)]="area" name="area" />
+                    </div>
 
-                <div class="form-field">
-                    <label class="form-label">Tutor (si aplica)</label>
-                    <input class="custom-input" type="text" placeholder="Nombre del tutor asignado" [(ngModel)]="tutor"
-                        name="tutor" />
-                </div>
-
-                <div class="form-field full-width">
-                    <label class="form-label">Otro u Organización responsable *</label>
-                    <input class="custom-input" type="text"
-                        placeholder="Nombre de la empresa, institución o instancia externa"
-                        [(ngModel)]="organizacionResponsable" name="organizacionResponsable" />
-                </div>
+                    <div class="form-field">
+                        <label class="form-label">Tutor (si aplica)</label>
+                        <input class="custom-input" type="text" placeholder="Nombre del tutor asignado" [(ngModel)]="tutor"
+                            name="tutor" />
+                    </div>
+                }
 
                 <div class="form-field full-width">
                     <label class="form-label">¿Desde qué programa académico, área o subárea se desarrolla la actividad?
@@ -132,35 +126,38 @@
             <div class="form-step-header">
                 <div class="step-bubble">2</div>
                 <div>
-                    <h3 class="step-title">Grupo y Destinatarios</h3>
+                    <h3 class="step-title">{{ tipoActividad() === 'INTERNO' ? 'Grupos y Destinatarios' : 'Destinatarios' }}</h3>
                     <p class="step-subtitle">Especifica a qué alumnos y secciones va dirigida la planeación.</p>
                 </div>
             </div>
 
+            
             <form class="form-grid">
-                <div class="form-field">
-                    <label class="form-label">Grupo(s) (Si aplica)</label>
-                    <input class="custom-input" type="text" placeholder="Ej. TI9-1, Multi-grupo..." [(ngModel)]="grupo"
-                        name="grupo" />
-                </div>
-
-                <div class="form-field">
-                    <label class="form-label">Cuatrimestre (Si aplica)</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 9no Cuatrimestre"
-                        [(ngModel)]="cuatrimestre" name="cuatrimestre" />
-                </div>
-
-                <div class="form-field full-width">
-                    <label class="form-label">Turno *</label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'"
-                            (click)="seleccionarTurno('Matutino')">Matutino</button>
-                        <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'"
-                            (click)="seleccionarTurno('Vespertino')">Vespertino</button>
-                        <button type="button" class="pill-button" [class.selected]="turno === 'Mixto'"
-                            (click)="seleccionarTurno('Mixto')">Mixto</button>
+                @if(tipoActividad() === 'INTERNO') {
+                    <div class="form-field">
+                        <label class="form-label">Grupo(s) (Si aplica)</label>
+                        <input class="custom-input" type="text" placeholder="Ej. TI9-1, Multi-grupo..." [(ngModel)]="grupo"
+                            name="grupo" />
                     </div>
-                </div>
+
+                    <div class="form-field">
+                        <label class="form-label">Cuatrimestre (Si aplica)</label>
+                        <input class="custom-input" type="text" placeholder="Ej. 9no Cuatrimestre"
+                            [(ngModel)]="cuatrimestre" name="cuatrimestre" />
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label class="form-label">Turno *</label>
+                        <div class="pill-selection-wrapper">
+                            <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'"
+                                (click)="seleccionarTurno('Matutino')">Matutino</button>
+                            <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'"
+                                (click)="seleccionarTurno('Vespertino')">Vespertino</button>
+                            <button type="button" class="pill-button" [class.selected]="turno === 'Mixto'"
+                                (click)="seleccionarTurno('Mixto')">Mixto</button>
+                        </div>
+                    </div>
+                }
 
                 <div class="form-field full-width">
                     <label class="form-label">Selecciona a quién está dirigida la actividad <small>(múltiple)</small>
@@ -312,20 +309,22 @@
                         [(ngModel)]="origenActividad" name="origenActividad"></textarea>
                 </div>
 
-                <div class="form-field full-width">
-                    <label class="form-label">¿Cón que asignatura de Formación Integral puede tener relación?
-                        <small>(múltiple)</small> *</label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button">1ro Desarrollo Humano y Valores</button>
-                        <button type="button" class="pill-button">2do Habilidades Socioemocionales</button>
-                        <button type="button" class="pill-button">3ra. Desarrollo del Pensamiento Crítico, 4to. Ética y
-                            Valores</button>
-                        <button type="button" class="pill-button">4to. Ética y Valores</button>
-                        <button type="button" class="pill-button">5to. Liderazgo de Equipos de Alto Desempeño</button>
-                        <button type="button" class="pill-button">7to. Habilidades Gerenciales</button>
-                        <button type="button" class="pill-button">Otro</button>
+                @if(tipoActividad() === 'INTERNO'){
+                    <div class="form-field full-width">
+                        <label class="form-label">¿Cón que asignatura de Formación Integral puede tener relación?
+                            <small>(múltiple)</small> *</label>
+                        <div class="pill-selection-wrapper">
+                            <button type="button" class="pill-button">1ro Desarrollo Humano y Valores</button>
+                            <button type="button" class="pill-button">2do Habilidades Socioemocionales</button>
+                            <button type="button" class="pill-button">3ra. Desarrollo del Pensamiento Crítico, 4to. Ética y
+                                Valores</button>
+                            <button type="button" class="pill-button">4to. Ética y Valores</button>
+                            <button type="button" class="pill-button">5to. Liderazgo de Equipos de Alto Desempeño</button>
+                            <button type="button" class="pill-button">7to. Habilidades Gerenciales</button>
+                            <button type="button" class="pill-button">Otro</button>
+                        </div>
                     </div>
-                </div>
+                }
 
                 <div class="form-field">
                     <label class="form-label">Asistencia esperada de Alumnos</label>

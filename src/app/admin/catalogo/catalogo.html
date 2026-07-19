@@ -45,7 +45,7 @@
                         </select>
                     </div>
                     <div class="form-field">
-                        <label class="form-label">Puntos TDI *</label>
+                        <label class="form-label">TDI's *</label>
                         <input class="custom-input" type="number" [(ngModel)]="form.puntosTdi" min="1" max="10" />
                     </div>
                 </div>
@@ -90,7 +90,7 @@
             <div class="activity-tags">
                 <span class="badge-eje" [ngClass]="act.eje">{{ ejeLabel(act.eje) }}</span>
                 <span class="badge-periodicidad">{{ periodicidadLabel(act.periodicidad) }}</span>
-                <span class="badge-points"><i class="pi pi-star-fill"></i> {{ act.puntosTdi }} pts</span>
+                <span class="badge-points"><i class="pi pi-star-fill"></i> {{ act.puntosTdi }} TDI's</span>
                 @if (!act.activa) {
                 <span class="badge-inactive">Inactiva</span>
                 }
