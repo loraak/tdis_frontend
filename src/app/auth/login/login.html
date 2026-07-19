@@ -43,7 +43,17 @@
                     <i class="pi pi-verified role-icon"></i>
                 </div>
                 <h2>Externo</h2>
-                <p class="role-desc">Gestionar actividades del catalogo</p>
+                <p class="role-desc">Gestionar actividades para la UTEQ</p>
+            </div>
+        </p-card>
+
+        <p-card class="role-card-wrapper" (click)="setView('interno')">
+            <div class="card-content-layout">
+                <div class="icon-avatar avatar-purple">
+                    <i class="pi pi-users role-icon"></i>
+                </div>
+                <h2>Interno</h2>
+                <p class="role-desc">Gestionar actividades dentro de la UTEQ</p>
             </div>
         </p-card>
 
@@ -156,6 +166,42 @@
             </button>
 
             <p class="register-link">No tienes cuenta? <a routerLink="/register-externo">Crear cuenta</a></p>
+        </form>
+    </p-card>
+    }
+
+    @if (currentView() === 'interno') {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <button type="button" class="btn-back" (click)="setView('select-role')">
+            <i class="pi pi-arrow-left"></i> Volver
+        </button>
+
+        <div class="card-header">
+            <div class="icon-avatar avatar-blue">
+                <i class="pi pi-verified user-icon"></i>
+            </div>
+            <div class="card-title-text">
+                <h2>Portal Interno</h2>
+                <p>Gestion de actividades del catalogo TDI</p>
+            </div>
+        </div>
+
+        <form class="login-form" (ngSubmit)="onExternoSubmit()">
+            <div class="form-group">
+                <label>CORREO ELECTRONICO</label>
+                <input pInputText type="email" [(ngModel)]="email" name="email" placeholder="ejemplo@correo.com">
+            </div>
+            <div class="form-group">
+                <label>CONTRASENA</label>
+                <input pInputText type="password" [(ngModel)]="password" name="password" placeholder="••••••••">
+            </div>
+
+            @if (error()) {
+                <div class="error-msg">{{ error() }}</div>
+            }
+
+            <button type="submit" class="btn-submit btn-blue" [disabled]="loading()">Iniciar Sesion <i class="pi pi-arrow-right"></i>
+            </button>
         </form>
     </p-card>
     }

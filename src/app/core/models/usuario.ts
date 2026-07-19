@@ -10,7 +10,7 @@ export interface LoginResponse {
   email?: string;
   nombre: string;
   apellidos: string;
-  tipoUsuario: 'ALUMNO' | 'ADMINISTRADOR' | 'EXTERNO';
+  tipoUsuario: 'ALUMNO' | 'ADMINISTRADOR' | 'EXTERNO' | 'INTERNO';
 }
 
 export interface RegisterRequest {

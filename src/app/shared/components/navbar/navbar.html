@@ -34,24 +34,24 @@
             </div>
         }
 
-    @if(rolUsuario() === 'SOLICITANTE') {
+    @if(rol === 'INTERNO') {
         <div class="nav-group alumno-theme">
-            <a routerLink="/solicitante/nueva-actividad" routerLinkActive="active" class="nav-item">
+            <a routerLink="/interno/nueva-actividad" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-plus"></i> Nueva Actividad
             </a>
-            <a routerLink="/solicitante/mis-actividades" routerLinkActive="active" class="nav-item">
+            <a routerLink="/interno/mis-actividades" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-copy"></i> Mis Actividades
-            </a>
-            <a routerLink="/solicitante/catalogo" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-book"></i> Catálogo
             </a>
         </div>
     }
 
-    @if(rolUsuario() === 'EXTERNO') {
-        <div class="nav-group externo-theme">
-            <a routerLink="/externo/catalogo" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-book"></i> Catálogo
+    @if(rol === 'EXTERNO') {
+        <div class="nav-group alumno-theme">
+            <a routerLink="/externo/nueva-actividad" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-plus"></i> Nueva Actividad
+            </a>
+            <a routerLink="/externo/mis-actividades" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-copy"></i> Mis Actividades
             </a>
         </div>
     }

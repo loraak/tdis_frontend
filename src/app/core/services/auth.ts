@@ -18,6 +18,7 @@ export class Auth {
   isAuthenticated = signal(false);
   isAdmin = signal(false);
   isExterno = signal(false);
+  isInterno = signal(false);
   rol = signal<string | null>(null);
 
   constructor(private http: HttpClient, private router: Router) {
@@ -67,6 +68,7 @@ export class Auth {
     this.isAuthenticated.set(false);
     this.isAdmin.set(false);
     this.isExterno.set(false);
+    this.isInterno.set(false);
     this.rol = signal<string | null>(null);
     this.router.navigate(['/login']);
   }
@@ -82,6 +84,7 @@ export class Auth {
     this.isAuthenticated.set(true);
     this.isAdmin.set(res.tipoUsuario === 'ADMINISTRADOR');
     this.isExterno.set(res.tipoUsuario === 'EXTERNO');
+    this.isInterno.set(res.tipoUsuario === 'INTERNO');
     this.rol.set(res.tipoUsuario);
   }
 
@@ -95,6 +98,7 @@ export class Auth {
         this.isAuthenticated.set(true);
         this.isAdmin.set(user.tipoUsuario === 'ADMINISTRADOR');
         this.isExterno.set(user.tipoUsuario === 'EXTERNO');
+        this.isInterno.set(user.tipoUsuario === 'INTERNO');
         this.rol.set(user.tipoUsuario);
       } catch {
         this.logout();
