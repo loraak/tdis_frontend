@@ -13,12 +13,29 @@ export const authGuard: CanActivateFn = (route) => {
 
   const requiredRole = route.data?.['role'];
   if (requiredRole === 'admin' && !auth.isAdmin()) {
-    router.navigate(['/alumno/progreso']);
+    if (auth.isExterno()) {
+      router.navigate(['/externo/catalogo']);
+    } else {
+      router.navigate(['/alumno/progreso']);
+    }
     return false;
   }
 
-  if (requiredRole === 'alumno' && auth.isAdmin()) {
-    router.navigate(['/admin/resumen']);
+  if (requiredRole === 'alumno' && (auth.isAdmin() || auth.isExterno())) {
+    if (auth.isExterno()) {
+      router.navigate(['/externo/catalogo']);
+    } else {
+      router.navigate(['/admin/resumen']);
+    }
+    return false;
+  }
+
+  if (requiredRole === 'externo' && !auth.isExterno()) {
+    if (auth.isAdmin()) {
+      router.navigate(['/admin/resumen']);
+    } else {
+      router.navigate(['/alumno/progreso']);
+    }
     return false;
   }
 
