@@ -51,6 +51,20 @@
 
     </div>
 
+    <p-card class="custom-card-container">
+        <div class="">
+            <div class="table-title-area">
+                <i class="pi pi-file-pdf table-title-icon"></i>
+                <span>Generar reportes</span>
+            </div>
+        </div>
+        <!--
+        <div class="reportes-actions">
+            <button type="submit" class="btn-report alumnos" (click)="onGenerarReporteAlumnos()">Reporte de Alumnos</button>
+            <button type="submit" class="btn-report actividades" (click)="onGenerarReporteActividades()">Reporte de Actividades</button>
+        </div>-->
+    </p-card>
+
     <div class="cards-grafics">
         <p-card styleClass="custom-card-container">
             <div class="card-inner-padding">
@@ -122,7 +136,7 @@
                     <th>#</th>
                     <th>Matricula</th>
                     <th>Nivel</th>
-                    <th>Cult.</th>
+                    <th>Personal</th>
                     <th>Social</th>
                     <th>Dep.</th>
                     <th>Trasc.</th>
@@ -139,7 +153,7 @@
                             <span>{{item.nivel}}</span>
                         </div>
                     </td>
-                    <td class="cell-tdis">{{item.cult}}</td>
+                    <td class="cell-tdis">{{item.personal}}</td>
                     <td class="cell-tdis">{{item.social}}</td>
                     <td class="cell-tdis">{{item.dep}}</td>
                     <td class="cell-tdis">{{item.trasc}}</td>
