@@ -8,7 +8,7 @@
                 @for (act of actividadesFiltradas; track act.id) {
                 <div class="actividad-select-item" (click)="seleccionarActividad(act)" style="cursor:pointer;padding:0.75rem;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:0.5rem;">
                     <strong>{{ act.titulo }}</strong>
-                    <span style="display:block;font-size:0.85rem;color:#64748b;">{{ ejeLabel(act.eje) }} · +{{ act.puntosTdi }} pts</span>
+                    <span style="display:block;font-size:0.85rem;color:#64748b;">{{ ejeLabel(act.eje) }} · +{{ act.puntosTdi }} TDI's</span>
                 </div>
                 }
             </div>

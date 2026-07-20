@@ -61,6 +61,15 @@
     background-color: #10b981; 
 }
 
+.externo-theme .nav-item:hover,
+.externo-theme .nav-item.active {
+    color: #00B4D8;
+}
+
+.externo-theme .nav-item::after {
+    background-color: #00B4D8;
+}
+
 .badge-count {
     font-size: 0.9rem;
     font-weight: 500;

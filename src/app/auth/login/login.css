@@ -76,7 +76,7 @@
     display: flex;
     gap: 1.5rem;
     width: 100%;
-    max-width: 720px;
+    max-width: 880px;
     justify-content: center;
 }
 
@@ -135,6 +135,18 @@
     background-color: rgba(0, 194, 122, 0.1);
     color: var(--tdis-color-light-green);
     border: 1px solid rgba(0, 194, 122, 0.2);
+}
+
+.avatar-blue {
+    background-color: rgba(0, 180, 216, 0.1);
+    color: var(--tdis-color-light-blue);
+    border: 1px solid rgba(0, 180, 216, 0.2);
+}
+
+.avatar-purple {
+    background-color: rgba(0, 180, 216, 0.1);
+    color: var(--tdis-color-light-purple);
+    border: 1px solid rgba(0, 180, 216, 0.2);
 }
 
 .role-icon,
@@ -246,6 +258,11 @@
 .btn-yellow {
     background-color: var(--tdis-color-yellow);
     box-shadow: 0 4px 12px rgba(245, 166, 35, 0.2);
+}
+
+.btn-blue {
+    background-color: var(--tdis-color-light-blue);
+    box-shadow: 0 4px 12px rgba(0, 180, 216, 0.2);
 }
 
 .btn-submit:hover {

@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { Auth } from '../../core/services/auth';
-type LoginView = 'select-role' | 'admin' | 'student';
+type LoginView = 'select-role' | 'admin' | 'student' | 'externo' | 'interno';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +26,15 @@ export class Login implements OnInit {
 
   ngOnInit() {
     if (this.auth.isAuthenticated()) {
-      this.router.navigate([this.auth.isAdmin() ? '/admin/resumen' : '/alumno/progreso']);
+      if (this.auth.isAdmin()) {
+        this.router.navigate(['/admin/resumen']);
+      } else if (this.auth.isExterno()) {
+        this.router.navigate(['/externo/catalogo']);
+      } else if (this.auth.isInterno()) {
+        this.router.navigate(['/interno/catalogo']);
+      } else {
+        this.router.navigate(['/alumno/progreso']);
+      }
     }
   }
 
@@ -60,6 +68,31 @@ export class Login implements OnInit {
     this.auth.login({ credencial: this.email.trim(), password: this.password }).subscribe({
       next: () => {
         this.router.navigate(['/admin/resumen']);
+      },
+      error: (err) => {
+        this.error.set(err.error?.message || 'Credenciales inválidas');
+        this.loading.set(false);
+      },
+      complete: () => this.loading.set(false),
+    });
+  }
+
+  onExternoSubmit() {
+    if (!this.email.trim() || !this.password.trim()) return;
+    this.loading.set(true);
+    this.error.set('');
+
+    this.auth.login({ credencial: this.email.trim(), password: this.password }).subscribe({
+      next: (res) => {
+        if (res.tipoUsuario === 'EXTERNO') {
+          this.router.navigate(['/externo/catalogo']);
+        } else if (res.tipoUsuario === 'INTERNO') {
+          this.router.navigate(['/interno/catalogo']);
+        } else {
+          this.error.set('Esta cuenta no es de tipo Externo');
+          this.auth.logout();
+          this.loading.set(false);
+        }
       },
       error: (err) => {
         this.error.set(err.error?.message || 'Credenciales inválidas');

@@ -4,11 +4,12 @@ export interface NivelDef {
     icon: string;
 }
 
+export const PUNTOS_MAXIMOS = 65;
 export const NIVELES: NivelDef[] = [
-    { nombre: 'EXPLORADOR', minPuntos: 0, icon: 'fa-solid fa-leaf'},
-    { nombre: 'PROMOTOR', minPuntos: 301, icon: 'pi pi-bolt'},
-    { nombre: 'LÍDER', minPuntos: 601, icon: 'pi pi-check-circle'},
-    { nombre: 'EMBAJADOR', minPuntos: 1000, icon: 'pi pi-trophy'},
+    { nombre: 'EXPLORADOR', minPuntos: 0,   icon: 'fa-solid fa-leaf' },
+    { nombre: 'PROMOTOR',   minPuntos: 21,  icon: 'pi pi-bolt' },
+    { nombre: 'LÍDER',      minPuntos: 42, icon: 'pi pi-check-circle' },
+    { nombre: 'EMBAJADOR',  minPuntos: 65, icon: 'pi pi-trophy' },
 ];
 
 export const NIVEL_COLOR: Record<string, string> = {

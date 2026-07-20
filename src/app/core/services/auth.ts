@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { LoginRequest, LoginResponse, RegisterRequest } from '../models/usuario';
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterExternoRequest } from '../models/usuario';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -17,6 +17,8 @@ export class Auth {
   usuario = signal<LoginResponse | null>(null);
   isAuthenticated = signal(false);
   isAdmin = signal(false);
+  isExterno = signal(false);
+  isInterno = signal(false);
   rol = signal<string | null>(null);
 
   constructor(private http: HttpClient, private router: Router) {
@@ -33,6 +35,14 @@ export class Auth {
 
   register(request: RegisterRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/register`, request).pipe(
+      tap((res) => {
+        this.guardarSesion(res);
+      })
+    );
+  }
+
+  registerExterno(request: RegisterExternoRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/register-externo`, request).pipe(
       tap((res) => {
         this.guardarSesion(res);
       })
@@ -57,6 +67,8 @@ export class Auth {
     this.usuario.set(null);
     this.isAuthenticated.set(false);
     this.isAdmin.set(false);
+    this.isExterno.set(false);
+    this.isInterno.set(false);
     this.rol = signal<string | null>(null);
     this.router.navigate(['/login']);
   }
@@ -71,6 +83,8 @@ export class Auth {
     this.usuario.set(res);
     this.isAuthenticated.set(true);
     this.isAdmin.set(res.tipoUsuario === 'ADMINISTRADOR');
+    this.isExterno.set(res.tipoUsuario === 'EXTERNO');
+    this.isInterno.set(res.tipoUsuario === 'INTERNO');
     this.rol.set(res.tipoUsuario);
   }
 
@@ -83,6 +97,8 @@ export class Auth {
         this.usuario.set(user);
         this.isAuthenticated.set(true);
         this.isAdmin.set(user.tipoUsuario === 'ADMINISTRADOR');
+        this.isExterno.set(user.tipoUsuario === 'EXTERNO');
+        this.isInterno.set(user.tipoUsuario === 'INTERNO');
         this.rol.set(user.tipoUsuario);
       } catch {
         this.logout();

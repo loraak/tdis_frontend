@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -37,13 +37,13 @@ export class Actividad {
   tutor = '';
 
   nombreActividad = '';
-  tipoActividad: string = 'EXTERNA';
+  tipoActividad = computed(() => this.auth.rol() || '');
   descripcion = '';
   reflexion = '';
 
   nombreResponsable = '';
   correoResponsable = '';
-  nombreSolicitante: any;
+  nombreInEx: any;
   area: any;
   organizacionResponsable: any;
   origenActividad: any;
@@ -82,7 +82,7 @@ export class Actividad {
     this.router.navigate(['/alumno/solicitudes']);
   }
   
-  cambiarTipoActividad(tipo: string): void {
+  cambiarTipoActividad(tipo: any): void {
     this.tipoActividad = tipo;
   }
 
@@ -99,7 +99,7 @@ export class Actividad {
       tipoSolicitud: this.tipoFormulario,
       descripcion: this.descripcion || undefined,
       reflexion: this.reflexion || undefined,
-      tipoActividad: this.tipoActividad || undefined,
+      tipoActividad: '',
       division: this.division || undefined,
       grupo: this.grupo || undefined,
       cuatrimestre: this.cuatrimestre || undefined,

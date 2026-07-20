@@ -11,6 +11,9 @@
             <a routerLink="/admin/solicitudes" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: false }">
                 <i class="pi pi-file"></i> Solicitudes <span class="badge-solicitud">3</span>
             </a>
+            <a routerLink="/admin/revision-actividades" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: false }">
+                <i class="pi pi-check-square"></i> Gestión Actividades <span class="badge-solicitud">3</span>
+            </a>
             <a routerLink="/admin/catalogo" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{ exact: false }">
                 <i class="pi pi-book"></i> Catálogo
             </a>
@@ -34,16 +37,24 @@
             </div>
         }
 
-    @if(rolUsuario() === 'SOLICITANTE') {
+    @if(rolUsuario() === 'INTERNO') {
         <div class="nav-group alumno-theme">
-            <a routerLink="/solicitante/nueva-actividad" routerLinkActive="active" class="nav-item">
+            <a routerLink="/interno/nueva-actividad" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-plus"></i> Nueva Actividad
             </a>
-            <a routerLink="/solicitante/mis-actividades" routerLinkActive="active" class="nav-item">
+            <a routerLink="/interno/mis-actividades" routerLinkActive="active" class="nav-item">
                 <i class="pi pi-copy"></i> Mis Actividades
             </a>
-            <a routerLink="/solicitante/catalogo" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-book"></i> Catálogo
+        </div>
+    }
+
+    @if(rolUsuario() === 'EXTERNO') {
+        <div class="nav-group alumno-theme">
+            <a routerLink="/externo/nueva-actividad" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-plus"></i> Nueva Actividad
+            </a>
+            <a routerLink="/externo/mis-actividades" routerLinkActive="active" class="nav-item">
+                <i class="pi pi-copy"></i> Mis Actividades
             </a>
         </div>
     }

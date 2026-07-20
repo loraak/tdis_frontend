@@ -1,17 +1,18 @@
-import { NIVELES, NivelDef } from '../models/nivel';
+import { NIVELES, NivelDef, PUNTOS_MAXIMOS } from '../models/nivel';
 
 export interface ProgresoNivel {
     nivelActual: string;
     siguienteNivel: string | null;
     puntosFaltantes: number;
     porcentaje: number;
+    graduado: boolean;
 }
 
 export function calcularProgresoNivel(totalPuntos: number): ProgresoNivel {
     const ordenados = [...NIVELES].sort((a, b) => a.minPuntos - b.minPuntos);
 
     let actual = ordenados[0];
-    let siguiente: NivelDef | null = null;
+    let siguiente: (typeof ordenados)[0] | null = null;
 
     for (let i = 0; i < ordenados.length; i++) {
         if (totalPuntos >= ordenados[i].minPuntos) {
@@ -20,18 +21,18 @@ export function calcularProgresoNivel(totalPuntos: number): ProgresoNivel {
         }
     }
 
-    if (!siguiente) {
-        return { nivelActual: actual.nombre, siguienteNivel: null, puntosFaltantes: 0, porcentaje: 100 };
-    }
+    const graduado = totalPuntos >= PUNTOS_MAXIMOS;
 
-    const rango = siguiente.minPuntos - actual.minPuntos;
+    const topeSiguiente = siguiente ? siguiente.minPuntos : PUNTOS_MAXIMOS;
+    const rango = topeSiguiente - actual.minPuntos;
     const avance = totalPuntos - actual.minPuntos;
-    const porcentaje = Math.min(100, Math.max(0, (avance / rango) * 100));
+    const porcentaje = graduado ? 100 : Math.min(100, Math.max(0, (avance / rango) * 100));
 
     return {
         nivelActual: actual.nombre,
-        siguienteNivel: siguiente.nombre,
-        puntosFaltantes: siguiente.minPuntos - totalPuntos,
+        siguienteNivel: siguiente?.nombre ?? (graduado ? null : 'Nivel máximo'),
+        puntosFaltantes: Math.max(0, topeSiguiente - totalPuntos),
         porcentaje,
+        graduado,
     };
 }
