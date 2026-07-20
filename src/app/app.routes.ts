@@ -14,6 +14,7 @@ import { Actividad } from './crea-actividades/actividad/actividad';
 import { Actividades } from './crea-actividades/actividades/actividades';
 import { authGuard } from './core/guards/auth.guard';
 import { ProgresoAlumno } from './shared/components/progreso-alumno/progreso-alumno';
+import { RevisionActividad } from './admin/revision-actividad/revision-actividad';
 
 export const routes: Routes = [
     {path: 'login', component: Login},
@@ -30,6 +31,7 @@ export const routes: Routes = [
         { path: 'resumen',     component: Resumen },
         { path: 'alumnos',     component: Alumnos },
         { path: 'solicitudes', component: Solicitudes },
+        { path: 'revision-actividades', component: RevisionActividad},
         { path: 'catalogo',    component: AdminCatalogo },
         { path: '', redirectTo: 'resumen', pathMatch: 'full' }
     ]},

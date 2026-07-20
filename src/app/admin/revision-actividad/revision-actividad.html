@@ -1,0 +1,107 @@
+<div class="requests-container">
+
+    <div class="page-header-flex">
+        <div>
+            <h1 class="page-title">Actividades</h1>
+            <p class="page-subtitle">{{ totalActividades }} actividades · {{ activas }} activas</p>
+        </div>
+        <div class="categories-btn">
+            <button type="button" class="btn-nueva-solicitud" [class.btn-select]="filtroEstado === 'TODO'" (click)="setFiltro('TODO')">Todo</button>
+            <button type="button" class="btn-nueva-solicitud" [class.btn-select]="filtroEstado === 'ACTIVA'" (click)="setFiltro('ACTIVA')">Activas ({{ activas }})</button>
+            <button type="button" class="btn-nueva-solicitud" [class.btn-select]="filtroEstado === 'INACTIVA'" (click)="setFiltro('INACTIVA')">Inactivas ({{ inactivas }})</button>
+        </div>
+    </div>
+
+    <!--@if (loading) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">Cargando actividades...</div>
+    </p-card>
+}-->
+
+    @for (act of actividadesFiltradas; track act.id) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+
+            <div class="request-card-header"
+                [style.border-bottom]="!isExpanded(act.id) ? 'none' : '1px solid #f1f5f9'"
+                [style.margin-bottom]="!isExpanded(act.id) ? '0' : '1.5rem'">
+
+                <div class="request-title-block">
+                    <h3>{{ act.titulo }}</h3>
+                    <div class="request-meta-info">
+                        <span class="meta-item"><i class="pi pi-calendar"></i> {{ act.fechaInicio | date:'shortDate' }}</span>
+                        @if (act.fechaFin) {
+                        <span class="meta-item"><i class="pi pi-calendar-times"></i> {{ act.fechaFin | date:'shortDate' }}</span>
+                        }
+                        <span class="meta-item">Creada: {{ act.createdAt | date:'short' }}</span>
+                        <span class="meta-item points-item"><i class="pi pi-star-fill"></i> {{ act.puntosTdi }} TDI's</span>
+                    </div>
+                </div>
+                <div class="header-actions-group">
+                    <p-tag [value]="activaLabel(act.activa)" [icon]="activaIcon(act.activa)" [styleClass]="activaBadgeClass(act.activa)"></p-tag>
+                    <button (click)="toggleExpand(act.id)" class="btn-toggle-view">
+                        <i class="pi" [class.pi-chevron-up]="isExpanded(act.id)" [class.pi-chevron-down]="!isExpanded(act.id)"></i>
+                        {{ isExpanded(act.id) ? 'Ocultar' : 'Ver detalle' }}
+                    </button>
+                </div>
+            </div>
+
+            @if (isExpanded(act.id)) {
+            <div>
+                <span class="data-section-title">Datos de la actividad</span>
+                <div class="data-grid-layout">
+                    <span class="data-label">Eje</span>
+                    <span class="data-value">{{ ejeLabel(act.eje) }}</span>
+
+                    <span class="data-label">Periodicidad</span>
+                    <span class="data-value">{{ periodicidadLabel(act.periodicidad) }}</span>
+
+                    <span class="data-label">Puntos TDI</span>
+                    <span class="data-value">{{ act.puntosTdi }}</span>
+
+                    <span class="data-label">Fecha de inicio</span>
+                    <span class="data-value">{{ act.fechaInicio | date:'longDate' }}</span>
+
+                    <span class="data-label">Fecha de finalización</span>
+                    <span class="data-value">{{ act.fechaFin ? (act.fechaFin | date:'longDate') : '—' }}</span>
+                </div>
+
+                @if (act.descripcion) {
+                <span class="text-block-title">Descripción</span>
+                <p class="text-block-content">{{ act.descripcion }}</p>
+                }
+            </div>
+            }
+
+            @if (!act.activa) {
+            <div class="buttons-request">
+                <button class="btn-action btn-green" (click)="activar(act)">
+                    <div class="btn-text-action">
+                    <i class="pi pi-check-circle icon-btn"></i>
+                    <span>Activar</span>
+                    </div>
+                </button>
+            </div>
+            } @else {
+            <div class="buttons-request">
+                <button class="btn-action btn-red" (click)="desactivar(act)">
+                    <div class="btn-text-action">
+                    <i class="pi pi-times-circle icon-btn"></i>
+                    <span>Desactivar</span>
+                    </div>
+                </button>
+            </div>
+            }
+
+        </div>
+
+    </p-card>
+    }
+
+    @if (!loading && actividadesFiltradas.length === 0) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">No hay actividades {{ filtroEstado === 'TODO' ? '' : 'en este estado' }}.</div>
+    </p-card>
+    }
+
+</div>
