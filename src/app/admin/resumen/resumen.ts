@@ -34,6 +34,9 @@ export class Resumen implements OnInit {
   resumenData: AdminResumenDTO | null = null;
   //alumnos: AlumnoResumenDTO[] = [];
   //actividades: ActividadDTO[] = [];
+
+  tutores: string[] = [];
+  tutorSeleccionado: string | null = null;
   
   alumnos: AlumnoResumenDTO[] = [
     { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: '', personal: 18, social: 16, dep: 14, trasc: 17, total: 65, createdAt: new Date('2026-06-20') },
@@ -42,8 +45,8 @@ export class Resumen implements OnInit {
     { id: '9', matricula: '20231009', nombre: 'Ximena', apellidos: 'Reyes Ibarra', nivel: '', personal: 5, social: 4, dep: 4, trasc: 4, total: 17, createdAt: new Date('2026-07-11') },
     { id: '11', matricula: '20231012', nombre: 'Bruno', apellidos: 'Delgado Rosales', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-06-25') },
     { id: '12', matricula: '20231012', nombre: 'Penélope', apellidos: 'Martinez Rangel', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-02-25') },
-    { id: '20', matricula: '20231020', nombre: 'Ariadna', apellidos: 'Puente Salcedo', nivel: '', personal: 30, social: 12, dep: 5, trasc: 3, total: 50, createdAt: new Date('2026-06-01'),},
-    { id: '21', matricula: '20231021', nombre: 'Joaquín', apellidos: 'Estrada Villanueva', nivel: '', personal: 14, social: 14, dep: 14, trasc: 14, total: 56, createdAt: new Date('2026-06-15'),},
+    { id: '20', matricula: '20231020', nombre: 'Ariadna', apellidos: 'Puente Salcedo', nivel: '', personal: 30, social: 12, dep: 5, trasc: 3, total: 50, createdAt: new Date('2026-06-01'), tutor: 'Ing. Patricia Morales'},
+    { id: '21', matricula: '20231021', nombre: 'Joaquín', apellidos: 'Estrada Villanueva', nivel: '', personal: 14, social: 14, dep: 14, trasc: 14, total: 56, createdAt: new Date('2026-06-15'), tutor: 'Ing. Patricia Morales'},
 
   ];
   actividades: ActividadDTO[] = [
@@ -138,15 +141,23 @@ export class Resumen implements OnInit {
 
   ngOnInit() {
     this.cargarDatos();
+    this.tutores = [...new Set(
+      this.alumnos.filter(a => a.tutor).map(a => a.tutor!)
+    )];
+  }
+
+  get alumnosFiltrados(): AlumnoResumenDTO[] {
+    if (!this.tutorSeleccionado) return this.alumnos;
+    return this.alumnos.filter(a => a.tutor === this.tutorSeleccionado);
   }
 
   cargarDatos() {
-    /*this.adminService.obtenerResumen().subscribe((data) => {
+    this.adminService.obtenerResumen().subscribe((data) => {
       this.resumenData = data;
       this.alumnos = data.topAlumnos;
       this.maxPuntosEje = Math.max(1, ...Object.values(data.puntosPorEje));
       this.cd.markForCheck();
-    });*/
+    });
     //this.actividades = [];
   }
 
@@ -201,10 +212,10 @@ export class Resumen implements OnInit {
     this.generandoReporte = true;
     try {
       await this.reporteService.generarReporteAlumnos(
-        this.alumnos,
-        /*this.resumenData?.distribucionNiveles ?? {},
-        this.resumenData?.puntosPorEje ?? {} */
-        DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
+        this.alumnosFiltrados,
+        this.resumenData?.distribucionNiveles ?? {},
+        this.resumenData?.puntosPorEje ?? {} 
+        //DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
       );
     } finally {
       this.generandoReporte = false;
