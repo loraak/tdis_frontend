@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AlumnoResumenDTO } from '../models/admin';
-//import { generarGraficoAlumnosRecientes, generarGraficoNiveles, generarGraficoEjes, generarGraficoActividadesRecientes, generarGraficoTemporalidad } from '../utils/reporte-charts.utils';
+import { generarGraficoAlumnosRecientes, generarGraficoNiveles, generarGraficoEjes, generarGraficoActividadesRecientes, generarGraficoTemporalidad } from '../utils/reporte-charts.utils';
 import { ActividadDTO } from '../models/actividad';
 
 const EJE_LABEL: Record<string, string> = {
@@ -14,12 +14,11 @@ const EJE_LABEL: Record<string, string> = {
 export interface ReporteActividadesData {
   actividades: ActividadDTO[];
   distribucionEjes: Record<string, number>;
-  distribucionTemporalidad: Record<string, number>;
+  distribucionPeriodicidad: Record<string, number>;
 }
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
 
-  /*
   async generarReporteAlumnos(
     alumnos: AlumnoResumenDTO[],
     distribucionNiveles: Record<string, number>,
@@ -115,7 +114,7 @@ export class ReporteService {
     const imgEjes = await generarGraficoEjes(data.distribucionEjes);
     doc.addImage(imgEjes, 'PNG', 14, y, 85, 60);
 
-    const imgTemporalidad = await generarGraficoTemporalidad(data.distribucionTemporalidad);
+    const imgTemporalidad = await generarGraficoTemporalidad(data.distribucionPeriodicidad);
     doc.addImage(imgTemporalidad, 'PNG', 105, y, 90, 60);
     y += 68;
 
@@ -136,7 +135,7 @@ export class ReporteService {
         act.id,
         act.titulo,
         EJE_LABEL[act.eje] || act.eje,
-        act.temporalidad,
+        act.periodicidad,
         act.puntosTdi.toString(),
         act.activa ? 'Activa' : 'Inactiva'
       ]),
@@ -145,5 +144,4 @@ export class ReporteService {
 
     doc.save(`reporte-actividades-${Date.now()}.pdf`);
   }
-  */
 }

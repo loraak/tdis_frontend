@@ -1,5 +1,5 @@
 import { ChartConfiguration } from 'chart.js/auto';
-//import { generarImagenGrafico } from './chart-image.utils';
+import { generarImagenGrafico } from './chart-image.utils';
 import { NIVEL_COLOR } from '../models/nivel';
 
 const EJE_COLOR: Record<string, string> = {
@@ -16,7 +16,6 @@ const EJE_LABEL: Record<string, string> = {
     TRASCENDENCIA: 'Trascendencia',
 };
 
-/*
 export async function generarGraficoNiveles(distribucion: Record<string, number>): Promise<string> {
     const labels = Object.keys(distribucion);
     const data = Object.values(distribucion);
@@ -213,4 +212,4 @@ export async function generarGraficoActividadesRecientes(
     };
 
     return generarImagenGrafico(config, 900, 300);
-}*/
+}
