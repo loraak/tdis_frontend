@@ -20,4 +20,5 @@ export interface AlumnoResumenDTO {
   trasc: number;
   total: number;
   createdAt: Date;
+  tutor?: string;
 }

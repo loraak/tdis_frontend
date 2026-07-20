@@ -5,16 +5,24 @@ import { TableModule } from 'primeng/table';
 import { AdminService } from '../../core/services/admin.service';
 import { AdminResumenDTO, AlumnoResumenDTO } from '../../core/models/admin';
 import { ActividadDTO } from '../../core/models/actividad';
+import { ReporteService } from '../../core/services/reporte.service';
+import { listarCuatrimestres, Periodo } from '../../core/utils/periodo.utils';
+import { SelectModule } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-resumen',
-  imports: [CommonModule, CardModule, TableModule],
+  imports: [CommonModule, CardModule, TableModule, SelectModule, FormsModule],
   templateUrl: './resumen.html',
   styleUrl: './resumen.css',
 })
 export class Resumen implements OnInit {
   private adminService = inject(AdminService);
   private cd = inject(ChangeDetectorRef);
+
+  constructor(
+    private reporteService: ReporteService
+  ){}
 
   recompensas = [
     { nivel: 'Explorador', tdis: '20', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
@@ -24,17 +32,22 @@ export class Resumen implements OnInit {
   ];
 
   resumenData: AdminResumenDTO | null = null;
-  alumnos: AlumnoResumenDTO[] = [];
-  actividades: ActividadDTO[] = [];
-  /*
+  //alumnos: AlumnoResumenDTO[] = [];
+  //actividades: ActividadDTO[] = [];
+
+  tutores: string[] = [];
+  tutorSeleccionado: string | null = null;
+  
   alumnos: AlumnoResumenDTO[] = [
-    { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: 'Embajador', personal: 320, social: 280, dep: 210, trasc: 290, total: 1100, createdAt: new Date('2026-06-20') },
-    { id: '2', matricula: '20231002', nombre: 'Diego', apellidos: 'Hernández Cruz', nivel: 'Embajador', personal: 300, social: 260, dep: 240, trasc: 250, total: 1050, createdAt: new Date('2026-07-08') },
-    { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: 'Líder', personal: 180, social: 150, dep: 160, trasc: 140, total: 630, createdAt: new Date('2026-07-08') },
-    { id: '4', matricula: '20231004', nombre: 'Emiliano', apellidos: 'Gómez Rivas', nivel: 'Líder', personal: 170, social: 160, dep: 130, trasc: 150, total: 610, createdAt: new Date('2026-07-05') },
-    { id: '5', matricula: '20231005', nombre: 'Camila', apellidos: 'Sánchez Ortiz', nivel: 'Líder', personal: 160, social: 140, dep: 150, trasc: 155, total: 605, createdAt: new Date('2026-06-28') },
-    { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: 'Promotor', personal: 90, social: 85, dep: 80, trasc: 75, total: 330, createdAt: new Date('2026-07-09') },
-    { id: '7', matricula: '20231007', nombre: 'Regina', apellidos: 'Castillo Vega', nivel: 'Promotor', personal: 85, social: 90, dep: 70, trasc: 65, total: 310, createdAt: new Date('2026-07-10') }
+    { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: '', personal: 18, social: 16, dep: 14, trasc: 17, total: 65, createdAt: new Date('2026-06-20') },
+    { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: '', personal: 15, social: 12, dep: 13, trasc: 13, total: 53, createdAt: new Date('2026-07-08') },
+    { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: '', personal: 9, social: 8, dep: 8, trasc: 8, total: 33, createdAt: new Date('2026-07-09') },
+    { id: '9', matricula: '20231009', nombre: 'Ximena', apellidos: 'Reyes Ibarra', nivel: '', personal: 5, social: 4, dep: 4, trasc: 4, total: 17, createdAt: new Date('2026-07-11') },
+    { id: '11', matricula: '20231012', nombre: 'Bruno', apellidos: 'Delgado Rosales', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-06-25') },
+    { id: '12', matricula: '20231012', nombre: 'Penélope', apellidos: 'Martinez Rangel', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-02-25') },
+    { id: '20', matricula: '20231020', nombre: 'Ariadna', apellidos: 'Puente Salcedo', nivel: '', personal: 30, social: 12, dep: 5, trasc: 3, total: 50, createdAt: new Date('2026-06-01'), tutor: 'Ing. Patricia Morales'},
+    { id: '21', matricula: '20231021', nombre: 'Joaquín', apellidos: 'Estrada Villanueva', nivel: '', personal: 14, social: 14, dep: 14, trasc: 14, total: 56, createdAt: new Date('2026-06-15'), tutor: 'Ing. Patricia Morales'},
+
   ];
   actividades: ActividadDTO[] = [
     {
@@ -43,7 +56,9 @@ export class Resumen implements OnInit {
       descripcion: "Participación activa en la preparación y distribución de alimentos para personas en situación de vulnerabilidad.",
       eje: "ENTORNO_SOCIAL",
       puntosTdi: 5,
-      temporalidad: "Mensual",
+      periodicidad: "MENSUAL",
+      fechaInicio: '31-07-26',
+      fechaFin: '06-09-26',
       activa: true,
       createdAt: new Date("2026-07-01")
     },
@@ -53,7 +68,9 @@ export class Resumen implements OnInit {
       descripcion: "Curso práctico sobre técnicas de organización como Pomodoro y bloques de tiempo para mejorar el rendimiento diario.",
       eje: "PERSONAL",
       puntosTdi: 3,
-      temporalidad: "Única vez",
+      periodicidad: "UNICA",
+      fechaInicio: '31-07-26',
+      fechaFin: '06-09-26',
       activa: true,
       createdAt: new Date("2026-07-02")
     },
@@ -63,7 +80,9 @@ export class Resumen implements OnInit {
       descripcion: "Inscripción y participación en el torneo de fútbol de la liga interna del campus.",
       eje: "DEPORTIVO",
       puntosTdi: 2,
-      temporalidad: "Semestral",
+      periodicidad: "SEMANAL",
+      fechaInicio: '31-07-26',
+      fechaFin: '06-09-26',
       activa: true,
       createdAt: new Date("2026-07-02")
     },
@@ -73,7 +92,9 @@ export class Resumen implements OnInit {
       descripcion: "Espacio de introspección guiada para la definición de metas a largo plazo y valores fundamentales.",
       eje: "TRASCENDENCIA",
       puntosTdi: 5,
-      temporalidad: "Anual",
+      periodicidad: "MENSUAL",
+      fechaInicio: '31-07-26',
+      fechaFin: '06-09-26',
       activa: true,
       createdAt: new Date("2026-07-03")
     },
@@ -83,7 +104,9 @@ export class Resumen implements OnInit {
       descripcion: "Plantación de árboles nativos en zonas designadas de la ciudad para mejorar los espacios verdes.",
       eje: "ENTORNO_SOCIAL",
       puntosTdi: 5,
-      temporalidad: "Única vez",
+      periodicidad: "UNICA",
+      fechaInicio: '31-07-26',
+      fechaFin: '06-09-26',
       activa: false,
       createdAt: new Date("2026-07-04")
     },
@@ -93,7 +116,9 @@ export class Resumen implements OnInit {
       descripcion: "Sesiones de discusión sobre literatura contemporánea y desarrollo de habilidades críticas.",
       eje: "PERSONAL",
       puntosTdi: 4,
-      temporalidad: "Semanal",
+      periodicidad: "SEMANAL",
+      fechaInicio: '31-07-26',
+      fechaFin: '06-09-26',
       activa: true,
       createdAt: new Date("2026-07-04")
     },
@@ -103,16 +128,27 @@ export class Resumen implements OnInit {
       descripcion: "Seguimiento y registro de actividad física en el gimnasio institucional.",
       eje: "DEPORTIVO",
       puntosTdi: 3,
-      temporalidad: "Diaria",
+      periodicidad: "UNICA",
+      fechaInicio: '31-07-26',
+      fechaFin: '06-09-26',
       activa: true,
       createdAt: new Date("2026-07-08")
     }
   ];
-  */
+
   maxPuntosEje = 1;
+  generandoReporte: boolean = false;
 
   ngOnInit() {
     this.cargarDatos();
+    this.tutores = [...new Set(
+      this.alumnos.filter(a => a.tutor).map(a => a.tutor!)
+    )];
+  }
+
+  get alumnosFiltrados(): AlumnoResumenDTO[] {
+    if (!this.tutorSeleccionado) return this.alumnos;
+    return this.alumnos.filter(a => a.tutor === this.tutorSeleccionado);
   }
 
   cargarDatos() {
@@ -172,19 +208,26 @@ export class Resumen implements OnInit {
     return map[key.toUpperCase()] || key;
   }
 
-  /*
   async onGenerarReporteAlumnos(): Promise<void> {
     this.generandoReporte = true;
     try {
       await this.reporteService.generarReporteAlumnos(
-        this.alumnos,
+        this.alumnosFiltrados,
         this.resumenData?.distribucionNiveles ?? {},
-        this.resumenData?.puntosPorEje ?? {}
+        this.resumenData?.puntosPorEje ?? {} 
         //DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
       );
     } finally {
       this.generandoReporte = false;
     }
+  }
+
+  cuatrimestres: Periodo[] = listarCuatrimestres(6);
+  cuatrimestreSeleccionado: Periodo = this.cuatrimestres[0];
+
+  onGenerarReporteRiesgo(): void {
+    if (!this.alumnos.length) return;
+    this.reporteService.generarReporteRiesgo(this.alumnos, this.cuatrimestreSeleccionado);
   }
 
   async onGenerarReporteActividades(): Promise<void> {
@@ -195,20 +238,33 @@ export class Resumen implements OnInit {
         return acc;
       }, {} as Record<string, number>);
 
-      const distribucionTemporalidad = this.actividades.reduce((acc, act) => {
-        acc[act.temporalidad] = (acc[act.temporalidad] || 0) + 1;
+      const distribucionPeriodicidad = this.actividades.reduce((acc, act) => {
+        acc[act.periodicidad] = (acc[act.periodicidad] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
 
       await this.reporteService.generarReporteActividades({
         actividades: this.actividades,
         distribucionEjes,
-        distribucionTemporalidad
+        distribucionPeriodicidad
       });
 
     } finally {
       this.generandoReporte = false;
     }
   }
-    */
 }
+
+const DISTRIBUCION_NIVELES_MOCK = {
+  'Explorador': 4,
+  'Promotor': 3,
+  'Líder': 3,
+  'Embajador': 2,
+};
+
+const PUNTOS_POR_EJE_MOCK = {
+  PERSONAL: 1480,
+  ENTORNO_SOCIAL: 1320,
+  DEPORTIVO: 1178,
+  TRASCENDENCIA: 1242,
+};
