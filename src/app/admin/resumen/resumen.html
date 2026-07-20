@@ -61,6 +61,16 @@
         <div class="reportes-actions">
             <button type="submit" class="btn-report alumnos" (click)="onGenerarReporteAlumnos()">Reporte de Alumnos</button>
             <button type="submit" class="btn-report actividades" (click)="onGenerarReporteActividades()">Reporte de Actividades</button>
+            <div class="reporte-riesgo-controls">
+                <p-select
+                    [options]="cuatrimestres"
+                    optionLabel="nombre"
+                    [(ngModel)]="cuatrimestreSeleccionado"
+                    placeholder="Selecciona cuatrimestre">
+                </p-select>
+
+                <button type="submit" class="btn-report actividades" (click)="onGenerarReporteRiesgo()">Alumnos en Riesgo</button>
+            </div>
         </div>
     </p-card>
 

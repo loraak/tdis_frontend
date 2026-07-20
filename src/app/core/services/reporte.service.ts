@@ -4,12 +4,22 @@ import autoTable from 'jspdf-autotable';
 import { AlumnoResumenDTO } from '../models/admin';
 import { generarGraficoAlumnosRecientes, generarGraficoNiveles, generarGraficoEjes, generarGraficoActividadesRecientes, generarGraficoTemporalidad } from '../utils/reporte-charts.utils';
 import { ActividadDTO } from '../models/actividad';
+import { filtrarAlumnosEnRiesgo } from '../utils/riesgo.utils';
+import { obtenerCuatrimestreActual, Periodo } from '../utils/periodo.utils';
+import { calcularAlertasEje } from '../utils/eje.utils';
+import { calcularProgresoNivel } from '../utils/nivel.utils';
 
 const EJE_LABEL: Record<string, string> = {
     PERSONAL: 'Personal',
     ENTORNO_SOCIAL: 'Entorno Social',
     DEPORTIVO: 'Deportivo',
     TRASCENDENCIA: 'Trascendencia',
+};
+const CAMPO_EJE: Record<string, string> = {
+  personal: 'Personal',
+  social: 'Entorno Social',
+  dep: 'Deportivo',
+  trasc: 'Trascendencia',
 };
 export interface ReporteActividadesData {
   actividades: ActividadDTO[];
@@ -73,11 +83,100 @@ export class ReporteService {
     autoTable(doc, {
       startY: y,
       head: [['#', 'Matrícula', 'Nivel', 'Personal', 'Social', 'Dep.', 'Trasc.', 'Total']],
-      body: alumnos.map((a, i) => [i + 1, a.matricula, a.nivel, a.personal, a.social, a.dep, a.trasc, a.total]),
+      body: alumnos.map((a, i) => [i + 1, a.matricula, calcularProgresoNivel(a.total).nivelActual, a.personal, a.social, a.dep, a.trasc, a.total]),
       styles: { fontSize: 8 },
+      didParseCell: (data) => {
+        if (data.section === 'body') {
+          const columnasEje: Record<number, keyof typeof CAMPO_EJE> = {
+            4: 'personal', 5: 'social', 6: 'dep', 7: 'trasc',
+          };
+          const campoEje = columnasEje[data.column.index];
+          if (campoEje) {
+            const alumno = alumnos[data.row.index];
+            const alertas = calcularAlertasEje(alumno);
+            console.log('alertas:', alertas);
+            const alerta = alertas.find(al => al.eje === CAMPO_EJE[campoEje]);
+            if (alerta && !alerta.cumple) {
+              data.cell.styles.textColor = [200, 40, 40];
+              data.cell.styles.fontStyle = 'bold';
+            }
+          }
+        }
+      },
     });
+    const finalY = (doc as any).lastAutoTable.finalY + 6;
+    doc.setFontSize(7);
+    doc.setTextColor(150, 150, 150);
+    doc.text('*Rojo: eje por debajo del 25% mínimo requerido.', 14, finalY);
 
     doc.save(`reporte-alumnos-${Date.now()}.pdf`);
+  }
+
+  generarReporteRiesgo(alumnos: AlumnoResumenDTO[], cuatrimestre: Periodo): void {
+    const enRiesgo = filtrarAlumnosEnRiesgo(alumnos, cuatrimestre);
+
+    const doc = new jsPDF();
+    const altoCabecera = 30;
+    doc.setFillColor(7, 23, 40);
+    doc.rect(0, 0, 210, altoCabecera, 'F'); 
+
+    let y = 14; 
+
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text('REPORTE DE ALUMNOS EN RIESGO', 14, y);
+
+    y += 7;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(203, 213, 225);
+    doc.text('Tokens de Desarrollo Integral', 14, y);
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text(`FECHA: ${new Date().toLocaleDateString('es-MX')}`, 196, y - 7, { align: 'right' });
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(203, 213, 225);
+    doc.text(`Cuatrimestre: ${cuatrimestre.nombre}${cuatrimestre.esActual ? ' (en curso)' : ' (cerrado)'}`, 196, y, { align: 'right' });
+
+    y = altoCabecera + 12; 
+    doc.setTextColor(15, 23, 42);
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0);
+    doc.text('Alumnos con riesgo Leve o Crítico', 14, 36);
+    y += 5;
+
+    if (!enRiesgo.length) {
+      doc.setFontSize(11);
+      doc.text('No hay alumnos con rezago detectado en este periodo.', 14, 40);
+      doc.save(`reporte-riesgo-${cuatrimestre.id}.pdf`);
+      return;
+    }
+
+    autoTable(doc, {
+      startY: 40,
+      head: [['Matrícula', 'Alumno', 'TDI\'s actuales', 'TDI\'s esperados', 'Diferencia', 'Riesgo']],
+      body: enRiesgo.map(a => [
+        a.matricula, `${a.nombre} ${a.apellidos}`, a.total, a.puntosEsperados, a.diferencia,
+        a.nivelRiesgo === 'critico' ? 'Crítico' : 'Leve',
+      ]),
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [51, 65, 85] },
+      didParseCell: (data) => {
+        if (data.section === 'body' && data.column.index === 5) {
+          const riesgo = enRiesgo[data.row.index].nivelRiesgo;
+          data.cell.styles.textColor = riesgo === 'critico' ? [200, 40, 40] : [200, 140, 20];
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+    });
+
+    doc.save(`reporte-riesgo-${cuatrimestre.id}.pdf`);
   }
 
   async generarReporteActividades(data: ReporteActividadesData): Promise<void> {
@@ -130,7 +229,7 @@ export class ReporteService {
 
     autoTable(doc, {
       startY: y,
-      head: [['ID', 'Título', 'Eje Formativo', 'Temporalidad', 'Pts', 'Estado']],
+      head: [['ID', 'Título', 'Eje Formativo', 'Temporalidad', "TDI's", 'Estado']],
       body: data.actividades.map((act, index) => [
         act.id,
         act.titulo,

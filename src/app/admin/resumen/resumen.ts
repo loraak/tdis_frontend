@@ -6,10 +6,13 @@ import { AdminService } from '../../core/services/admin.service';
 import { AdminResumenDTO, AlumnoResumenDTO } from '../../core/models/admin';
 import { ActividadDTO } from '../../core/models/actividad';
 import { ReporteService } from '../../core/services/reporte.service';
+import { listarCuatrimestres, Periodo } from '../../core/utils/periodo.utils';
+import { SelectModule } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-resumen',
-  imports: [CommonModule, CardModule, TableModule],
+  imports: [CommonModule, CardModule, TableModule, SelectModule, FormsModule],
   templateUrl: './resumen.html',
   styleUrl: './resumen.css',
 })
@@ -33,12 +36,16 @@ export class Resumen implements OnInit {
   //actividades: ActividadDTO[] = [];
   
   alumnos: AlumnoResumenDTO[] = [
-  { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: '', personal: 18, social: 16, dep: 14, trasc: 17, total: 65, createdAt: new Date('2026-06-20') }, // graduada
-  { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: '', personal: 15, social: 12, dep: 13, trasc: 13, total: 53, createdAt: new Date('2026-07-08') }, // Embajador, casi
-  { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: '', personal: 9, social: 8, dep: 8, trasc: 8, total: 33, createdAt: new Date('2026-07-09') }, // Líder justo
-  { id: '9', matricula: '20231009', nombre: 'Ximena', apellidos: 'Reyes Ibarra', nivel: '', personal: 5, social: 4, dep: 4, trasc: 4, total: 17, createdAt: new Date('2026-07-11') }, // Promotor
-  { id: '12', matricula: '20231012', nombre: 'Bruno', apellidos: 'Delgado Rosales', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-06-25') }, // Explorador
-];
+    { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: '', personal: 18, social: 16, dep: 14, trasc: 17, total: 65, createdAt: new Date('2026-06-20') },
+    { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: '', personal: 15, social: 12, dep: 13, trasc: 13, total: 53, createdAt: new Date('2026-07-08') },
+    { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: '', personal: 9, social: 8, dep: 8, trasc: 8, total: 33, createdAt: new Date('2026-07-09') },
+    { id: '9', matricula: '20231009', nombre: 'Ximena', apellidos: 'Reyes Ibarra', nivel: '', personal: 5, social: 4, dep: 4, trasc: 4, total: 17, createdAt: new Date('2026-07-11') },
+    { id: '11', matricula: '20231012', nombre: 'Bruno', apellidos: 'Delgado Rosales', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-06-25') },
+    { id: '12', matricula: '20231012', nombre: 'Penélope', apellidos: 'Martinez Rangel', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-02-25') },
+    { id: '20', matricula: '20231020', nombre: 'Ariadna', apellidos: 'Puente Salcedo', nivel: '', personal: 30, social: 12, dep: 5, trasc: 3, total: 50, createdAt: new Date('2026-06-01'),},
+    { id: '21', matricula: '20231021', nombre: 'Joaquín', apellidos: 'Estrada Villanueva', nivel: '', personal: 14, social: 14, dep: 14, trasc: 14, total: 56, createdAt: new Date('2026-06-15'),},
+
+  ];
   actividades: ActividadDTO[] = [
     {
       id: "01",
@@ -134,12 +141,12 @@ export class Resumen implements OnInit {
   }
 
   cargarDatos() {
-    this.adminService.obtenerResumen().subscribe((data) => {
+    /*this.adminService.obtenerResumen().subscribe((data) => {
       this.resumenData = data;
       this.alumnos = data.topAlumnos;
       this.maxPuntosEje = Math.max(1, ...Object.values(data.puntosPorEje));
       this.cd.markForCheck();
-    });
+    });*/
     //this.actividades = [];
   }
 
@@ -195,13 +202,21 @@ export class Resumen implements OnInit {
     try {
       await this.reporteService.generarReporteAlumnos(
         this.alumnos,
-        this.resumenData?.distribucionNiveles ?? {},
-        this.resumenData?.puntosPorEje ?? {} 
-        //DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
+        /*this.resumenData?.distribucionNiveles ?? {},
+        this.resumenData?.puntosPorEje ?? {} */
+        DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
       );
     } finally {
       this.generandoReporte = false;
     }
+  }
+
+  cuatrimestres: Periodo[] = listarCuatrimestres(6);
+  cuatrimestreSeleccionado: Periodo = this.cuatrimestres[0];
+
+  onGenerarReporteRiesgo(): void {
+    if (!this.alumnos.length) return;
+    this.reporteService.generarReporteRiesgo(this.alumnos, this.cuatrimestreSeleccionado);
   }
 
   async onGenerarReporteActividades(): Promise<void> {
@@ -228,7 +243,7 @@ export class Resumen implements OnInit {
     }
   }
 }
-/*
+
 const DISTRIBUCION_NIVELES_MOCK = {
   'Explorador': 4,
   'Promotor': 3,
@@ -242,4 +257,3 @@ const PUNTOS_POR_EJE_MOCK = {
   DEPORTIVO: 1178,
   TRASCENDENCIA: 1242,
 };
-*/
