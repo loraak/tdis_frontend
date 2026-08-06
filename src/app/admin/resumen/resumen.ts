@@ -9,6 +9,7 @@ import { ReporteService } from '../../core/services/reporte.service';
 import { listarCuatrimestres, Periodo } from '../../core/utils/periodo.utils';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
+import { CatalogoService } from '../../core/services/catalogo.service';
 
 @Component({
   selector: 'app-resumen',
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class Resumen implements OnInit {
   private adminService = inject(AdminService);
+  private catalogoService = inject(CatalogoService);
   private cd = inject(ChangeDetectorRef);
 
   constructor(
@@ -32,118 +34,18 @@ export class Resumen implements OnInit {
   ];
 
   resumenData: AdminResumenDTO | null = null;
-  //alumnos: AlumnoResumenDTO[] = [];
-  //actividades: ActividadDTO[] = [];
 
-  tutores: string[] = [];
+  tutores: { label: string; value: string | null }[] = [];
   tutorSeleccionado: string | null = null;
-  
-  alumnos: AlumnoResumenDTO[] = [
-    { id: '1', matricula: '20231001', nombre: 'Sofía', apellidos: 'Ramírez Torres', nivel: '', personal: 18, social: 16, dep: 14, trasc: 17, total: 65, createdAt: new Date('2026-06-20') },
-    { id: '3', matricula: '20231003', nombre: 'Valentina', apellidos: 'López Medina', nivel: '', personal: 15, social: 12, dep: 13, trasc: 13, total: 53, createdAt: new Date('2026-07-08') },
-    { id: '6', matricula: '20231006', nombre: 'Mateo', apellidos: 'Fernández Solís', nivel: '', personal: 9, social: 8, dep: 8, trasc: 8, total: 33, createdAt: new Date('2026-07-09') },
-    { id: '9', matricula: '20231009', nombre: 'Ximena', apellidos: 'Reyes Ibarra', nivel: '', personal: 5, social: 4, dep: 4, trasc: 4, total: 17, createdAt: new Date('2026-07-11') },
-    { id: '11', matricula: '20231012', nombre: 'Bruno', apellidos: 'Delgado Rosales', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-06-25') },
-    { id: '12', matricula: '20231012', nombre: 'Penélope', apellidos: 'Martinez Rangel', nivel: '', personal: 2, social: 1, dep: 1, trasc: 0, total: 4, createdAt: new Date('2026-02-25') },
-    { id: '20', matricula: '20231020', nombre: 'Ariadna', apellidos: 'Puente Salcedo', nivel: '', personal: 30, social: 12, dep: 5, trasc: 3, total: 50, createdAt: new Date('2026-06-01'), tutor: 'Ing. Patricia Morales'},
-    { id: '21', matricula: '20231021', nombre: 'Joaquín', apellidos: 'Estrada Villanueva', nivel: '', personal: 14, social: 14, dep: 14, trasc: 14, total: 56, createdAt: new Date('2026-06-15'), tutor: 'Ing. Patricia Morales'},
 
-  ];
-  actividades: ActividadDTO[] = [
-    {
-      id: "01",
-      titulo: "Voluntariado en Comedor Comunitario",
-      descripcion: "Participación activa en la preparación y distribución de alimentos para personas en situación de vulnerabilidad.",
-      eje: "ENTORNO_SOCIAL",
-      puntosTdi: 5,
-      periodicidad: "MENSUAL",
-      fechaInicio: '31-07-26',
-      fechaFin: '06-09-26',
-      activa: true,
-      createdAt: new Date("2026-07-01")
-    },
-    {
-      id: "02",
-      titulo: "Taller de Manejo del Tiempo y Productividad",
-      descripcion: "Curso práctico sobre técnicas de organización como Pomodoro y bloques de tiempo para mejorar el rendimiento diario.",
-      eje: "PERSONAL",
-      puntosTdi: 3,
-      periodicidad: "UNICA",
-      fechaInicio: '31-07-26',
-      fechaFin: '06-09-26',
-      activa: true,
-      createdAt: new Date("2026-07-02")
-    },
-    {
-      id: "03",
-      titulo: "Torneo de Fútbol Intercolegial",
-      descripcion: "Inscripción y participación en el torneo de fútbol de la liga interna del campus.",
-      eje: "DEPORTIVO",
-      puntosTdi: 2,
-      periodicidad: "SEMANAL",
-      fechaInicio: '31-07-26',
-      fechaFin: '06-09-26',
-      activa: true,
-      createdAt: new Date("2026-07-02")
-    },
-    {
-      id: "04",
-      titulo: "Retiro de Reflexión y Propósito de Vida",
-      descripcion: "Espacio de introspección guiada para la definición de metas a largo plazo y valores fundamentales.",
-      eje: "TRASCENDENCIA",
-      puntosTdi: 5,
-      periodicidad: "MENSUAL",
-      fechaInicio: '31-07-26',
-      fechaFin: '06-09-26',
-      activa: true,
-      createdAt: new Date("2026-07-03")
-    },
-    {
-      id: "05",
-      titulo: "Campaña de Reforestación Urbana",
-      descripcion: "Plantación de árboles nativos en zonas designadas de la ciudad para mejorar los espacios verdes.",
-      eje: "ENTORNO_SOCIAL",
-      puntosTdi: 5,
-      periodicidad: "UNICA",
-      fechaInicio: '31-07-26',
-      fechaFin: '06-09-26',
-      activa: false,
-      createdAt: new Date("2026-07-04")
-    },
-    {
-      id: "06",
-      titulo: "Club de Lectura Semanal",
-      descripcion: "Sesiones de discusión sobre literatura contemporánea y desarrollo de habilidades críticas.",
-      eje: "PERSONAL",
-      puntosTdi: 4,
-      periodicidad: "SEMANAL",
-      fechaInicio: '31-07-26',
-      fechaFin: '06-09-26',
-      activa: true,
-      createdAt: new Date("2026-07-04")
-    },
-    {
-      id: "07",
-      titulo: "Rutina Diaria de Cardio y Fuerza",
-      descripcion: "Seguimiento y registro de actividad física en el gimnasio institucional.",
-      eje: "DEPORTIVO",
-      puntosTdi: 3,
-      periodicidad: "UNICA",
-      fechaInicio: '31-07-26',
-      fechaFin: '06-09-26',
-      activa: true,
-      createdAt: new Date("2026-07-08")
-    }
-  ];
+  alumnos: AlumnoResumenDTO[] = [];
+  actividades: ActividadDTO[] = [];
 
   maxPuntosEje = 1;
   generandoReporte: boolean = false;
 
   ngOnInit() {
     this.cargarDatos();
-    this.tutores = [...new Set(
-      this.alumnos.filter(a => a.tutor).map(a => a.tutor!)
-    )];
   }
 
   get alumnosFiltrados(): AlumnoResumenDTO[] {
@@ -158,7 +60,19 @@ export class Resumen implements OnInit {
       this.maxPuntosEje = Math.max(1, ...Object.values(data.puntosPorEje));
       this.cd.markForCheck();
     });
-    //this.actividades = [];
+
+    this.adminService.listarTutores().subscribe((tutores) => {
+      this.tutores = [
+        { label: 'Todos los tutores', value: null },
+        ...tutores.map(t => ({ label: t, value: t })),
+      ];
+      this.cd.markForCheck();
+    });
+
+    this.catalogoService.listarTodas().subscribe((acts) => {
+      this.actividades = acts.filter(a => a.estadoRevision === 'APROBADA');
+      this.cd.markForCheck();
+    });
   }
 
   get totalAlumnos(): number { return this.resumenData?.totalAlumnos ?? 0; }
@@ -202,7 +116,7 @@ export class Resumen implements OnInit {
     const map: Record<string, string> = {
       'EXPLORADOR': 'Explorador',
       'PROMOTOR': 'Promotor',
-      'LÍDER': 'Líder',
+      'LIDER': 'Líder',
       'EMBAJADOR': 'Embajador',
     };
     return map[key.toUpperCase()] || key;
@@ -214,8 +128,7 @@ export class Resumen implements OnInit {
       await this.reporteService.generarReporteAlumnos(
         this.alumnosFiltrados,
         this.resumenData?.distribucionNiveles ?? {},
-        this.resumenData?.puntosPorEje ?? {} 
-        //DISTRIBUCION_NIVELES_MOCK, PUNTOS_POR_EJE_MOCK
+        this.resumenData?.puntosPorEje ?? {}
       );
     } finally {
       this.generandoReporte = false;
@@ -254,17 +167,3 @@ export class Resumen implements OnInit {
     }
   }
 }
-
-const DISTRIBUCION_NIVELES_MOCK = {
-  'Explorador': 4,
-  'Promotor': 3,
-  'Líder': 3,
-  'Embajador': 2,
-};
-
-const PUNTOS_POR_EJE_MOCK = {
-  PERSONAL: 1480,
-  ENTORNO_SOCIAL: 1320,
-  DEPORTIVO: 1178,
-  TRASCENDENCIA: 1242,
-};

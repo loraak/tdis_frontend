@@ -44,16 +44,16 @@ export class Login implements OnInit {
   }
 
   onStudentSubmit() {
-    if (!this.matricula.trim()) return;
+    if (!this.matricula.trim() || !this.password.trim()) return;
     this.loading.set(true);
     this.error.set('');
 
-    this.auth.login({ credencial: this.matricula.trim() }).subscribe({
+    this.auth.login({ credencial: this.matricula.trim(), password: this.password }).subscribe({
       next: () => {
         this.router.navigate(['/alumno/progreso']);
       },
       error: (err) => {
-        this.error.set(err.error?.message || 'Error al consultar matrícula');
+        this.error.set(err.error?.message || 'Credenciales inválidas');
         this.loading.set(false);
       },
       complete: () => this.loading.set(false),

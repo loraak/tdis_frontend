@@ -6,7 +6,6 @@ import { CardModule } from 'primeng/card';
 import { Router } from '@angular/router';
 import { Auth } from '../../core/services/auth';
 import { CatalogoService } from '../../core/services/catalogo.service';
-import { SolicitudesService } from '../../core/services/solicitudes.service';
 import { ActividadDTO } from '../../core/models/actividad';
 
 @Component({
@@ -23,7 +22,6 @@ export class Actividad {
 
   private auth = inject(Auth);
   private catalogoService = inject(CatalogoService);
-  private solicitudesService = inject(SolicitudesService);
   private router = inject(Router);
 
   actividades: ActividadDTO[] = [];
@@ -79,9 +77,12 @@ export class Actividad {
   }
 
   irAMisSolicitudes() {
-    this.router.navigate(['/alumno/solicitudes']);
+    const rol = this.auth.rol();
+    if (rol === 'INTERNO') this.router.navigate(['/interno/mis-actividades']);
+    else if (rol === 'EXTERNO') this.router.navigate(['/externo/mis-actividades']);
+    else this.router.navigate(['/alumno/mis-solicitudes']);
   }
-  
+
   cambiarTipoActividad(tipo: any): void {
     this.tipoActividad = tipo;
   }
@@ -89,31 +90,63 @@ export class Actividad {
   seleccionarDivision(val: string) { this.division = val; }
   seleccionarTurno(val: string) { this.turno = val; }
 
+  private mapearEje(eje: string): ActividadDTO['eje'] | null {
+    const map: Record<string, ActividadDTO['eje']> = {
+      'Identidad': 'PERSONAL',
+      'Social': 'ENTORNO_SOCIAL',
+      'Fisico': 'DEPORTIVO',
+      'Trascendencia': 'TRASCENDENCIA',
+    };
+    return map[eje] ?? null;
+  }
+
+  private mapearPuntos(nivel: string): number {
+    const map: Record<string, number> = {
+      'Explorador': 5,
+      'Promotor': 10,
+      'Líder': 15,
+      'Embajador': 20,
+    };
+    return map[nivel] ?? 5;
+  }
+
   onSubmit() {
-    if (!this.actividadSeleccionada) return;
+    if (!this.actividadSeleccionada && !this.nombreActividad) return;
     this.loading = true;
     this.error = '';
 
-    this.solicitudesService.crear({
-      actividadId: this.actividadSeleccionada.id,
-      tipoSolicitud: this.tipoFormulario,
-      descripcion: this.descripcion || undefined,
-      reflexion: this.reflexion || undefined,
-      tipoActividad: '',
-      division: this.division || undefined,
-      grupo: this.grupo || undefined,
-      cuatrimestre: this.cuatrimestre || undefined,
-      turno: this.turno || undefined,
-      tutor: this.tutor || undefined,
-      nombreResponsable: this.nombreResponsable || undefined,
-      correoResponsable: this.correoResponsable || undefined,
-    }).subscribe({
+    const user = this.auth.usuario();
+    const rol = this.auth.rol();
+
+    const eje = this.mapearEje(this.ejeSeleccionado);
+    if (!eje) {
+      this.error = 'Selecciona un eje de desarrollo integral';
+      this.loading = false;
+      return;
+    }
+
+    const actividad: ActividadDTO = {
+      id: '',
+      titulo: this.nombreActividad,
+      descripcion: this.descripcion || this.origenActividad || '',
+      eje,
+      puntosTdi: this.mapearPuntos(this.nivel),
+      periodicidad: (this.periodicidad as ActividadDTO['periodicidad']) || 'UNICA',
+      fechaInicio: this.fechaInicio || '',
+      fechaFin: this.fechaFin || undefined,
+      activa: false,
+      creadorId: user?.usuarioId,
+      creadorTipo: rol as ActividadDTO['creadorTipo'],
+      createdAt: new Date(),
+    };
+
+    this.catalogoService.crear(actividad).subscribe({
       next: () => {
         this.success = true;
         this.loading = false;
       },
       error: (err) => {
-        this.error = err.error?.message || 'Error al enviar solicitud';
+        this.error = err.error?.message || 'Error al registrar actividad';
         this.loading = false;
       },
     });

@@ -72,7 +72,7 @@
             </div>
             <div class="card-title-text">
                 <h2>Portal Alumno</h2>
-                <p>Ingresa tu matrícula para ver tu progreso</p>
+                <p>Ingresa tu matrícula y contraseña para ver tu progreso</p>
             </div>
         </div>
 
@@ -82,6 +82,12 @@
                 <input pInputText type="text" id="matricula" name="matricula" [(ngModel)]="matricula"
                     placeholder="Ej. 2026191005" autocomplete="off">
                 <span class="form-examples">Ejemplos: 2024396177 · 2026191005</span>
+            </div>
+
+            <div class="form-group">
+                <label for="student-password">CONTRASEÑA</label>
+                <input pInputText type="password" id="student-password" name="student-password" [(ngModel)]="password"
+                    placeholder="••••••••" autocomplete="current-password">
             </div>
 
             @if (error()) {

@@ -8,5 +8,11 @@ export interface ActividadDTO {
   fechaInicio: string;
   fechaFin?: string;
   activa: boolean;
+  estadoRevision?: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+  creadorId?: string;
+  creadorNombre?: string;
+  creadorTipo?: 'INTERNO' | 'EXTERNO' | 'ADMINISTRADOR' | 'ALUMNO';
+  comentarioRevision?: string;
   createdAt: Date;
+  updatedAt?: Date;
 }
