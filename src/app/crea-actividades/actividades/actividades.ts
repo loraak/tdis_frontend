@@ -4,6 +4,7 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { Router } from '@angular/router';
 import { Auth } from '../../core/services/auth';
+import { CatalogoService } from '../../core/services/catalogo.service';
 import { ActividadDTO } from '../../core/models/actividad';
 
 @Component({
@@ -14,112 +15,53 @@ import { ActividadDTO } from '../../core/models/actividad';
 })
 export class Actividades {
   private router = inject(Router);
-  private pollingInterval: ReturnType<typeof setInterval> | null = null;
+  private catalogoService = inject(CatalogoService);
+  private auth = inject(Auth);
+  private cdr = inject(ChangeDetectorRef);
 
   expandedId: string | null = null;
   loading = true;
-  enRevision: number = 0;
-  //actividades: ActividadDTO[] = [];
-  actividades: ActividadDTO[] = [
-    {
-      id: '1',
-      titulo: 'Jornada de Reforestación Campus UTEQ',
-      descripcion: 'Actividad de plantación de árboles nativos en las áreas verdes del campus, con el objetivo de fomentar la conciencia ambiental entre los estudiantes.',
-      eje: 'ENTORNO_SOCIAL',
-      puntosTdi: 50,
-      periodicidad: 'UNICA',
-      fechaInicio: '2026-08-15',
-      fechaFin: undefined,
-      activa: true,
-      createdAt: new Date('2026-07-01')
-    },
-    {
-      id: '2',
-      titulo: 'Taller de Inteligencia Emocional',
-      descripcion: 'Serie de sesiones semanales orientadas al desarrollo de habilidades de autoconocimiento, manejo del estrés y regulación emocional.',
-      eje: 'PERSONAL',
-      puntosTdi: 30,
-      periodicidad: 'SEMANAL',
-      fechaInicio: '2026-08-03',
-      fechaFin: '2026-09-25',
-      activa: true,
-      createdAt: new Date('2026-07-10')
-    },
-    {
-      id: '3',
-      titulo: 'Liga Interna de Fútbol Rápido',
-      descripcion: 'Torneo deportivo entre grupos de las diferentes divisiones académicas, promoviendo el trabajo en equipo y la actividad física.',
-      eje: 'DEPORTIVO',
-      puntosTdi: 40,
-      periodicidad: 'MENSUAL',
-      fechaInicio: '2026-08-10',
-      fechaFin: '2026-11-10',
-      activa: true,
-      createdAt: new Date('2026-07-05')
-    },
-    {
-      id: '4',
-      titulo: 'Voluntariado en Asilo de Ancianos',
-      descripcion: 'Visitas periódicas a un asilo local para realizar actividades recreativas y de acompañamiento con adultos mayores.',
-      eje: 'TRASCENDENCIA',
-      puntosTdi: 60,
-      periodicidad: 'MENSUAL',
-      fechaInicio: '2026-08-20',
-      fechaFin: '2027-01-20',
-      activa: true,
-      createdAt: new Date('2026-07-12')
-    },
-    {
-      id: '6',
-      titulo: 'Colecta de Alimentos para Comunidades Vulnerables',
-      descripcion: 'Campaña de recolección y distribución de despensas básicas en colonias cercanas a la institución.',
-      eje: 'ENTORNO_SOCIAL',
-      puntosTdi: 45,
-      periodicidad: 'UNICA',
-      fechaInicio: '2026-09-12',
-      fechaFin: undefined,
-      activa: true,
-      createdAt: new Date('2026-07-18')
-    },
-    {
-      id: '7',
-      titulo: 'Torneo de Ajedrez Universitario',
-      descripcion: 'Competencia individual y por equipos que busca fomentar el pensamiento estratégico y la sana competencia.',
-      eje: 'DEPORTIVO',
-      puntosTdi: 25,
-      periodicidad: 'UNICA',
-      fechaInicio: '2026-09-20',
-      fechaFin: undefined,
-      activa: false,
-      createdAt: new Date('2026-06-28')
-    },
-    {
-      id: '10',
-      titulo: 'Rally Deportivo Multidisciplinario',
-      descripcion: 'Evento que combina distintas disciplinas deportivas en formato de circuito, dirigido a todas las divisiones académicas.',
-      eje: 'DEPORTIVO',
-      puntosTdi: 35,
-      periodicidad: 'UNICA',
-      fechaInicio: '2026-11-08',
-      fechaFin: undefined,
-      activa: true,
-      createdAt: new Date('2026-07-16')
-    }
-  ];
-  totalActividades: number = 7;
+  actividades: ActividadDTO[] = [];
 
   ngOnInit() {
-  }
-
-  ngOnDestroy() {
-    this.detenerPolling();
-  }
-
-  private detenerPolling() {
-    if (this.pollingInterval) {
-      clearInterval(this.pollingInterval);
-      this.pollingInterval = null;
+    const user = this.auth.usuario();
+    if (user?.usuarioId) {
+      this.catalogoService.listarPorCreador(user.usuarioId).subscribe({
+        next: (data) => {
+          this.actividades = data;
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.actividades = [];
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+      });
+    } else {
+      this.actividades = [];
+      this.loading = false;
     }
+  }
+
+  get totalActividades(): number {
+    return this.actividades.length;
+  }
+
+  get activas(): number {
+    return this.actividades.filter(a => a.activa).length;
+  }
+
+  get enRevision(): number {
+    return this.actividades.filter(a => a.estadoRevision === 'PENDIENTE').length;
+  }
+
+  get aprobadas(): number {
+    return this.actividades.filter(a => a.estadoRevision === 'APROBADA').length;
+  }
+
+  get rechazadas(): number {
+    return this.actividades.filter(a => a.estadoRevision === 'RECHAZADA').length;
   }
 
   toggleExpand(id: string) {
@@ -130,34 +72,31 @@ export class Actividades {
     return this.expandedId === id;
   }
 
-  estadoBadgeClass(estado: string): string {
+  estadoRevisionLabel(estado?: string): string {
     const map: Record<string, string> = {
-      'EN_REVISION': 'status-badge-review',
-      'APROBADA': 'status-badge-approved',
-      'RECHAZADA': 'status-badge-rejected',
-      'REVISION_HUMANA': 'status-badge-review',
-    };
-    return map[estado] || 'status-badge-review';
-  }
-
-  estadoLabel(estado: string): string {
-    const map: Record<string, string> = {
-      'EN_REVISION': 'En revisión',
+      'PENDIENTE': 'En revisión',
       'APROBADA': 'Aprobada',
       'RECHAZADA': 'Rechazada',
-      'REVISION_HUMANA': 'En revisión',
     };
-    return map[estado] || estado;
+    return map[estado || ''] || '—';
   }
 
-  estadoIcon(estado: string): string {
+  estadoRevisionBadgeClass(estado?: string): string {
     const map: Record<string, string> = {
-      'EN_REVISION': 'pi pi-clock',
+      'PENDIENTE': 'status-badge-review',
+      'APROBADA': 'status-badge-approved',
+      'RECHAZADA': 'status-badge-rejected',
+    };
+    return map[estado || ''] || 'status-badge-review';
+  }
+
+  estadoRevisionIcon(estado?: string): string {
+    const map: Record<string, string> = {
+      'PENDIENTE': 'pi pi-clock',
       'APROBADA': 'pi pi-check-circle',
       'RECHAZADA': 'pi pi-times-circle',
-      'REVISION_HUMANA': 'pi pi-clock',
     };
-    return map[estado] || 'pi pi-clock';
+    return map[estado || ''] || 'pi pi-clock';
   }
 
   cardBorderClass(activa: boolean): string {
@@ -165,7 +104,10 @@ export class Actividades {
   }
 
   nuevaActividad() {
-    this.router.navigate(['/nueva-actividad']);
+    const rol = this.auth.rol();
+    if (rol === 'INTERNO') this.router.navigate(['/interno/nueva-actividad']);
+    else if (rol === 'EXTERNO') this.router.navigate(['/externo/nueva-actividad']);
+    else this.router.navigate(['/']);
   }
 
   ejeLabel(eje: ActividadDTO['eje']): string {
@@ -198,5 +140,4 @@ export class Actividades {
   activaBadgeClass(activa: boolean): string {
     return activa ? 'badge-success' : 'badge-inactive';
   }
-
 }
