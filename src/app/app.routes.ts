@@ -38,14 +38,12 @@ export const routes: Routes = [
     {path: 'externo', component: MainLayout, canActivate: [authGuard], data: {role: 'externo'}, children: [
         { path: 'nueva-actividad', component: Actividad },
         { path: 'mis-actividades', component: Actividades },
-        { path: 'catalogo',    component: AdminCatalogo },
-        { path: '', redirectTo: 'catalogo', pathMatch: 'full' }
+        { path: '', redirectTo: 'mis-actividades', pathMatch: 'full' }
     ]},
     {path: 'interno', component: MainLayout, canActivate: [authGuard], data: {role: 'interno'}, children: [
         { path: 'nueva-actividad', component: Actividad },
         { path: 'mis-actividades', component: Actividades },
-        { path: 'catalogo',    component: Catalogo },
-        { path: '', redirectTo: 'catalogo', pathMatch: 'full' }
+        { path: '', redirectTo: 'mis-actividades', pathMatch: 'full' }
     ]},
     {path: '', redirectTo: 'login', pathMatch: 'full'}
 ];

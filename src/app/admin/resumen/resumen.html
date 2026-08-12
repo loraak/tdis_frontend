@@ -52,33 +52,44 @@
     </div>
 
     <p-card class="custom-card-container">
-        <div class="">
-            <div class="table-title-area">
-                <i class="pi pi-file-pdf table-title-icon"></i>
-                <span>Generar reportes</span>
-            </div>
+        <div class="table-title-area">
+            <i class="pi pi-file-pdf table-title-icon"></i>
+            <span>Generar reportes</span>
         </div>
-        <div class="reportes-actions">
-            <button type="submit" class="btn-report alumnos" (click)="onGenerarReporteAlumnos()">Reporte de Alumnos</button>
-            <button type="submit" class="btn-report actividades" (click)="onGenerarReporteActividades()">Reporte de Actividades</button>
-            <div class="reporte-riesgo-controls">
-                <p-select
-                    [options]="cuatrimestres"
-                    optionLabel="nombre"
-                    [(ngModel)]="cuatrimestreSeleccionado"
-                    placeholder="Selecciona cuatrimestre">
-                </p-select>
 
-                <button type="submit" class="btn-report actividades" (click)="onGenerarReporteRiesgo()">Alumnos en Riesgo</button>
+        <div class="reportes-actions">
+            <div class="direct-reports-group">
+                <button type="button" class="btn-report alumnos" (click)="onGenerarReporteAlumnos()">
+                    Reporte de Alumnos
+                </button>
+                <button type="button" class="btn-report actividades" (click)="onGenerarReporteActividades()">
+                    Reporte de Actividades
+                </button>
             </div>
-            <p-select
-            [options]="tutores"
-            [(ngModel)]="tutorSeleccionado"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Todos los tutores"
-            [showClear]="true">
-            </p-select>
+
+            <hr class="section-divider" />
+
+            <div class="filtered-report-card">
+                <div class="filter-instruction">
+                    <i class="pi pi-info-circle"></i>
+                    <span>Selecciona el cuatrimestre y el tutor para generar el reporte de alumnos en riesgo:</span>
+                </div>
+
+                <div class="input-button-pair">
+                    <p-select [options]="cuatrimestres" optionLabel="nombre" [(ngModel)]="cuatrimestreSeleccionado"
+                        placeholder="- Selecciona cuatrimestre -" appendTo="body" class="custom-select">
+                    </p-select>
+
+                    <p-select [options]="tutores" [(ngModel)]="tutorSeleccionado" optionLabel="label"
+                        optionValue="value" placeholder="Todos los tutores" appendTo="body" class="custom-select">
+                    </p-select>
+
+                    <button type="button" class="btn-report riesgo"
+                        (click)="onGenerarReporteRiesgo()">
+                        Alumnos en Riesgo
+                    </button>
+                </div>
+            </div>
         </div>
     </p-card>
 
@@ -123,8 +134,10 @@
 
                     @for (eje of barEjes; track eje) {
                     <div class="bar-column-wrapper">
-                        <span class="bar-value-top" [style.color]="puntosEje(eje) > 0 ? '#334155' : '#cbd5e1'">{{ puntosEje(eje) }}</span>
-                        <div class="bar-pillar" [class]="'bar-' + (eje | lowercase)" [style.height.%]="alturaEje(eje)"></div>
+                        <span class="bar-value-top" [style.color]="puntosEje(eje) > 0 ? '#334155' : '#cbd5e1'">{{
+                            puntosEje(eje) }}</span>
+                        <div class="bar-pillar" [class]="'bar-' + (eje | lowercase)" [style.height.%]="alturaEje(eje)">
+                        </div>
                     </div>
                     }
                 </div>
