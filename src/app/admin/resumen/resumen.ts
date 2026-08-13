@@ -41,7 +41,7 @@ export class Resumen implements OnInit {
   alumnos: AlumnoResumenDTO[] = [];
   actividades: ActividadDTO[] = [];
 
-  maxPuntosEje = 1;
+  maxPuntosEje = 100;
   generandoReporte: boolean = false;
 
   ngOnInit() {
@@ -103,7 +103,7 @@ export class Resumen implements OnInit {
   ejeLabel(key: string): string {
     const map: Record<string, string> = {
       'PERSONAL': 'Personal',
-      'ENTORNO_SOCIAL': 'Entorno Social',
+      'ENTORNO-SOCIAL': 'Entorno Social',
       'DEPORTIVO': 'Deportivo',
       'TRASCENDENCIA': 'Trascendencia',
     };
@@ -111,7 +111,7 @@ export class Resumen implements OnInit {
   }
 
   get barEjes(): string[] {
-    return ['PERSONAL', 'ENTORNO_SOCIAL', 'DEPORTIVO', 'TRASCENDENCIA'];
+    return ['PERSONAL', 'ENTORNO-SOCIAL', 'DEPORTIVO', 'TRASCENDENCIA'];
   }
 
   nivelLabel(key: string): string {
