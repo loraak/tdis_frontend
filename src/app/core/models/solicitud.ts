@@ -1,5 +1,6 @@
 export interface CrearSolicitudRequest {
-  actividadId: string;
+  actividadId?: string;
+  nombreActividad?: string;
   tipoSolicitud?: string;
   descripcion?: string;
   reflexion?: string;
@@ -17,6 +18,18 @@ export interface CrearSolicitudRequest {
   cargoResponsable?: string;
   telefonoResponsable?: string;
   correoResponsable?: string;
+  // Solicitud Previa
+  dimensionesFormacion?: string;
+  nivelImpacto?: string;
+  publicoObjetivo?: string;
+  asignaturasRelacionadas?: string;
+  competenciasReforzar?: string;
+  evidenciasRequeridas?: string;
+  justificacionPersonal?: string;
+  impactoAcademico?: string;
+  asistenciaEsperada?: string;
+  alumnosGeneranTdi?: string;
+  horasEstimadas?: string;
 }
 
 export interface SolicitudDTO {
@@ -25,7 +38,8 @@ export interface SolicitudDTO {
   alumnoMatricula?: string;
   alumnoNombre?: string;
   tipoSolicitud?: string;
-  actividadId: string;
+  actividadId?: string;
+  nombreActividad?: string;
   actividadTitulo?: string;
   actividadEje?: string;
   actividadPuntos?: number;
@@ -52,6 +66,17 @@ export interface SolicitudDTO {
   aiEstado?: string;
   aiMotivo?: string;
   aiDescripcionAnalisis?: string;
+  dimensionesFormacion?: string;
+  nivelImpacto?: string;
+  publicoObjetivo?: string;
+  asignaturasRelacionadas?: string;
+  competenciasReforzar?: string;
+  evidenciasRequeridas?: string;
+  justificacionPersonal?: string;
+  impactoAcademico?: string;
+  asistenciaEsperada?: string;
+  alumnosGeneranTdi?: string;
+  horasEstimadas?: string;
   createdAt: string;
   updatedAt?: string;
 }

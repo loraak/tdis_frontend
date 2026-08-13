@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject, computed } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -7,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { ChartModule } from 'primeng/chart';
 import { ProgresoService } from '../../../core/services/progreso.service';
+import { SolicitudesService } from '../../../core/services/solicitudes.service';
 import { ProgresoDTO } from '../../../core/models/progreso';
 import { Auth } from '../../../core/services/auth';
 import { Router } from '@angular/router';
@@ -26,7 +28,9 @@ interface NivelDef {
 export class ProgresoAlumno implements OnInit, OnChanges {
   private auth = inject(Auth);
   private progresoService = inject(ProgresoService);
+  private solicitudesService = inject(SolicitudesService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   nivelLabels: Record<string, string> = {
     EXPLORADOR: 'Explorador',
@@ -37,18 +41,18 @@ export class ProgresoAlumno implements OnInit, OnChanges {
 
   niveles: NivelDef[] = [
     { nombre: 'Explorador', minPuntos: 0, icon: 'fa-solid fa-leaf' },
-    { nombre: 'Promotor', minPuntos: 301, icon: 'pi pi-bolt' },
-    { nombre: 'Líder', minPuntos: 601, icon: 'pi pi-check-circle' },
-    { nombre: 'Embajador', minPuntos: 1000, icon: 'pi pi-trophy' },
+    { nombre: 'Promotor', minPuntos: 21, icon: 'pi pi-bolt' },
+    { nombre: 'Líder', minPuntos: 42, icon: 'pi pi-check-circle' },
+    { nombre: 'Embajador', minPuntos: 65, icon: 'pi pi-trophy' },
   ];
 
-  puntosPersonal = 2;
-  puntosSocial = 2;
-  puntosDeportivo = 1;
+  puntosPersonal = 0;
+  puntosSocial = 0;
+  puntosDeportivo = 0;
   puntosTrascendencia = 0;
 
   get totalPuntos(): number {
-    return this.puntosPersonal + this.puntosSocial + this.puntosDeportivo + this.puntosTrascendencia;
+    return this.puntosTotales;
   }
 
   get nivelActual(): NivelDef {
@@ -73,9 +77,9 @@ export class ProgresoAlumno implements OnInit, OnChanges {
 
   recompensas = [
     { nivel: 'Explorador', tdis: '0', recompensa: 'Reconocimiento oficial', icon: 'fa-solid fa-leaf', iconColor: 'var(--tdis-color-light-green)', isCurrent: true },
-    { nivel: 'Promotor', tdis: '<301', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
-    { nivel: 'Líder', tdis: '<601', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
-    { nivel: 'Embajador', tdis: '+1000', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
+    { nivel: 'Promotor', tdis: '<21', recompensa: 'Playera UTEQ + Reconocimiento', icon: 'pi pi-bolt', iconColor: 'var(--tdis-color-light-blue)', isCurrent: false },
+    { nivel: 'Líder', tdis: '<42', recompensa: 'Termo + Playera + Libreta + Reconocimiento Público', icon: 'pi pi-check-circle', iconColor: 'var(--tdis-color-navy-blue)', isCurrent: false },
+    { nivel: 'Embajador', tdis: '+65', recompensa: 'Chamarra UTEQ + Playera + Libreta + Certificado/Diploma curricular', icon: 'pi pi-trophy', iconColor: 'var(--tdis-color-yellow)', isCurrent: false }
   ];
 
   radarData: any;
@@ -104,25 +108,62 @@ export class ProgresoAlumno implements OnInit, OnChanges {
       return;
     }
 
+    if (this._cargandoProgreso) return;
+    this._cargandoProgreso = true;
+
     if (usuario.matricula) {
       this.matriculaAlumno = usuario.matricula;
       this.progresoService.obtenerPorMatricula(usuario.matricula).subscribe({
-        next: (data) => this.procesarProgreso(data),
-        error: () => this.router.navigate(['/login']),
+        next: (data) => {
+          this.procesarProgreso(data);
+          this._cargandoProgreso = false;
+        },
+        error: () => {
+          this._cargandoProgreso = false;
+          this.router.navigate(['/login']);
+        },
       });
     } else {
       this.progresoService.obtenerPorId(usuario.usuarioId).subscribe({
-        next: (data) => this.procesarProgreso(data),
-        error: () => this.router.navigate(['/login']),
+        next: (data) => {
+          this.procesarProgreso(data);
+          this._cargandoProgreso = false;
+        },
+        error: () => {
+          this._cargandoProgreso = false;
+          this.router.navigate(['/login']);
+        },
       });
     }
+
+    this.solicitudesService.listarPorAlumno(usuario.usuarioId).subscribe({
+      next: (solicitudes) => {
+        this.actividades_data = solicitudes.map((s: any) => ({
+          fecha: s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '',
+          nombre: s.actividadTitulo || 'Sin título',
+          p_personal: s.actividadEje === 'PERSONAL' ? (s.actividadPuntos || 0) : 0,
+          p_soc: s.actividadEje === 'ENTORNO_SOCIAL' ? (s.actividadPuntos || 0) : 0,
+          p_dep: s.actividadEje === 'DEPORTIVO' ? (s.actividadPuntos || 0) : 0,
+          p_tras: s.actividadEje === 'TRASCENDENCIA' ? (s.actividadPuntos || 0) : 0,
+          estado: s.estado,
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.warn('Error cargando historial:', err),
+    });
   }
 
   private procesarProgreso(data: ProgresoDTO) {
-    this.puntosTotales = data.puntosTotales;
-    this.actividades = data.actividadesCompletadas;
+    this.puntosTotales = data.puntosTotales ?? 0;
+    this.actividades = data.actividadesCompletadas ?? 0;
     this.nivelDesarrollo = this.nivelLabels[data.nivelActual] || data.nivelActual;
     this.matriculaAlumno = data.alumnoMatricula || this.matriculaAlumno;
+
+    const puntosPorEje = data.puntosPorEje || {};
+    this.puntosPersonal = puntosPorEje['PERSONAL'] || 0;
+    this.puntosSocial = puntosPorEje['ENTORNO_SOCIAL'] || 0;
+    this.puntosDeportivo = puntosPorEje['DEPORTIVO'] || 0;
+    this.puntosTrascendencia = puntosPorEje['TRASCENDENCIA'] || 0;
 
     this.recompensas = this.recompensas.map((r) => ({
       ...r,
@@ -130,6 +171,7 @@ export class ProgresoAlumno implements OnInit, OnChanges {
     }));
 
     this.actualizarChartEjes(data.puntosPorEje);
+    this.cdr.detectChanges();
   }
 
   private actualizarChartEjes(puntosPorEje: { [key: string]: number }) {
@@ -196,6 +238,8 @@ export class ProgresoAlumno implements OnInit, OnChanges {
   }
 
   @Input() matriculaAlumno!: string;
+  private _matriculaEnCurso: string | null = null;
+  private _cargandoProgreso = false;
 
   rolUsuario = computed(() => this.auth.rol() || '');
 
@@ -213,12 +257,18 @@ export class ProgresoAlumno implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['matriculaAlumno'] && !changes['matriculaAlumno'].firstChange) {
-      this.cargarDatos();
+      const newVal = changes['matriculaAlumno'].currentValue;
+      const oldVal = changes['matriculaAlumno'].previousValue;
+      if (newVal && newVal !== oldVal) {
+        this.cargarDatos();
+      }
     }
   }
 
   cargarDatos() {
     if (!this.matriculaAlumno) return;
+    if (this._matriculaEnCurso === this.matriculaAlumno) return;
+    this._matriculaEnCurso = this.matriculaAlumno;
 
     this.progresoService.obtenerPorMatricula(this.matriculaAlumno).subscribe({
       next: (data) => this.procesarProgreso(data),

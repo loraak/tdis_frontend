@@ -5,6 +5,47 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+.tabs-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 0;
+}
+
+.tab-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border: none;
+    background: transparent;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: -2px;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-button:hover {
+    color: #334155;
+    background: #f8fafc;
+}
+
+.tab-button.active {
+    color: #1e293b;
+    border-bottom: 2px solid #F5A623;
+    background: #fffbeb;
+}
+
+.tab-count {
+    font-weight: 500;
+    color: #94a3b8;
+}
+
 .custom-card-container {
     background: #ffffff;
     border-radius: 16px;

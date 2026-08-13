@@ -18,6 +18,7 @@ export class Solicitudes implements OnInit {
 
   solicitudes: SolicitudDTO[] = [];
   filtroEstado: string = 'TODO';
+  filtroActivo: 'EVIDENCIA' | 'PREVIA' = 'EVIDENCIA';
   expandedId: string | null = null;
   loading = true;
 
@@ -43,14 +44,24 @@ export class Solicitudes implements OnInit {
   }
 
   get solicitudesFiltradas(): SolicitudDTO[] {
-    if (this.filtroEstado === 'TODO') return this.solicitudes;
-    if (this.filtroEstado === 'EN_REVISION') return this.solicitudes.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA');
-    return this.solicitudes.filter(s => s.estado === this.filtroEstado);
+    let resultado = this.solicitudes.filter(s => s.tipoSolicitud === this.filtroActivo);
+    if (this.filtroEstado === 'TODO') return resultado;
+    if (this.filtroEstado === 'EN_REVISION') return resultado.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA');
+    return resultado.filter(s => s.estado === this.filtroEstado);
   }
 
   setFiltro(estado: string) {
     this.filtroEstado = estado;
   }
+
+  cambiarFiltroTipo(filtro: 'EVIDENCIA' | 'PREVIA') {
+    this.filtroActivo = filtro;
+    this.expandedId = null;
+    this.cdr.detectChanges();
+  }
+
+  get totalEvidencias(): number { return this.solicitudes.filter(s => s.tipoSolicitud === 'EVIDENCIA').length; }
+  get totalPrevias(): number { return this.solicitudes.filter(s => s.tipoSolicitud === 'PREVIA').length; }
 
   toggleExpand(id: string) {
     this.expandedId = this.expandedId === id ? null : id;
@@ -105,8 +116,8 @@ export class Solicitudes implements OnInit {
     return map[estado] || 'pi pi-clock';
   }
 
-  get totalSolicitudes(): number { return this.solicitudes.length; }
-  get pendientes(): number { return this.solicitudes.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA').length; }
-  get aprobadas(): number { return this.solicitudes.filter(s => s.estado === 'APROBADA').length; }
-  get rechazadas(): number { return this.solicitudes.filter(s => s.estado === 'RECHAZADA').length; }
+  get totalSolicitudes(): number { return this.solicitudesFiltradas.length; }
+  get pendientes(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA').length; }
+  get aprobadas(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'APROBADA').length; }
+  get rechazadas(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'RECHAZADA').length; }
 }

@@ -23,6 +23,7 @@ export class MisSolicitudes implements OnInit, OnDestroy {
   solicitudes: SolicitudDTO[] = [];
   expandedId: string | null = null;
   loading = true;
+  filtroActivo: 'EVIDENCIA' | 'PREVIA' = 'EVIDENCIA';
 
   ngOnInit() {
     this.cargarSolicitudes();
@@ -145,8 +146,21 @@ export class MisSolicitudes implements OnInit, OnDestroy {
     this.router.navigate(['/alumno/nueva-solicitud']);
   }
 
-  get totalSolicitudes(): number { return this.solicitudes.length; }
-  get enRevision(): number { return this.solicitudes.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA').length; }
-  get aprobadas(): number { return this.solicitudes.filter(s => s.estado === 'APROBADA').length; }
-  get rechazadas(): number { return this.solicitudes.filter(s => s.estado === 'RECHAZADA').length; }
+  get totalSolicitudes(): number { return this.solicitudesFiltradas.length; }
+  get enRevision(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA').length; }
+  get aprobadas(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'APROBADA').length; }
+  get rechazadas(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'RECHAZADA').length; }
+
+  get solicitudesFiltradas(): SolicitudDTO[] {
+    return this.solicitudes.filter(s => s.tipoSolicitud === this.filtroActivo);
+  }
+
+  get totalEvidencias(): number { return this.solicitudes.filter(s => s.tipoSolicitud === 'EVIDENCIA').length; }
+  get totalPrevias(): number { return this.solicitudes.filter(s => s.tipoSolicitud === 'PREVIA').length; }
+
+  cambiarFiltro(filtro: 'EVIDENCIA' | 'PREVIA') {
+    this.filtroActivo = filtro;
+    this.expandedId = null;
+    this.cdr.detectChanges();
+  }
 }

@@ -136,7 +136,7 @@
                     <div class="bar-column-wrapper">
                         <span class="bar-value-top" [style.color]="puntosEje(eje) > 0 ? '#334155' : '#cbd5e1'">{{
                             puntosEje(eje) }}</span>
-                        <div class="bar-pillar" [class]="'bar-' + (eje | lowercase)" [style.height.%]="alturaEje(eje)">
+                        <div class="bar-pillar" [class]="'bar-' + (eje | lowercase)" [style.height.px]="(alturaEje(eje) / 100) * 160">
                         </div>
                     </div>
                     }

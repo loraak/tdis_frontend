@@ -8,20 +8,29 @@
         <button type="button" class="btn-nueva-solicitud" (click)="nuevaSolicitud()">+ Nueva solicitud</button>
     </div>
 
+    <div class="tabs-wrapper">
+        <button type="button" class="tab-button" [class.active]="filtroActivo === 'EVIDENCIA'" (click)="cambiarFiltro('EVIDENCIA')">
+            <i class="pi pi-check-square"></i> Evidencias <span class="tab-count">({{ totalEvidencias }})</span>
+        </button>
+        <button type="button" class="tab-button" [class.active]="filtroActivo === 'PREVIA'" (click)="cambiarFiltro('PREVIA')">
+            <i class="pi pi-clone"></i> Solicitudes Previas <span class="tab-count">({{ totalPrevias }})</span>
+        </button>
+    </div>
+
     @if (loading) {
     <p-card styleClass="custom-card-container">
         <div class="card-inner-padding" style="text-align:center;padding:2rem;">Cargando solicitudes...</div>
     </p-card>
     }
 
-    @for (sol of solicitudes; track sol.id) {
+    @for (sol of solicitudesFiltradas; track sol.id) {
     <p-card styleClass="custom-card-container">
         <div class="card-inner-padding" [ngClass]="cardBorderClass(sol.estado)">
 
             <div class="request-card-header" [style.border-bottom]="!isExpanded(sol.id) ? 'none' : '1px solid #f1f5f9'"
                 [style.margin-bottom]="!isExpanded(sol.id) ? '0' : '1.5rem'">
                 <div class="request-title-block">
-                    <h3>{{ sol.actividadTitulo }}</h3>
+                    <h3>{{ sol.actividadTitulo || sol.nombreActividad }}</h3>
                     <div class="request-meta-info">
                         <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
                         @if (sol.nombreArchivo) {
@@ -107,6 +116,13 @@
                 </div>
                 }
 
+                @if (sol.estado === 'RECHAZADA' && sol.aiMotivo && !sol.comentarioRechazo) {
+                <div class="rejection-box">
+                    <span class="text-block-title" style="color:#ef4444;">Motivo de rechazo (IA)</span>
+                    <p class="text-block-content" style="color:#ef4444;">{{ sol.aiMotivo }}</p>
+                </div>
+                }
+
                 @if (sol.estado === 'RECHAZADA') {
                 <div class="rechazada-actions">
                     <button class="btn-reenviar-evidencia" (click)="enviarNuevaEvidencia(sol)">
@@ -125,10 +141,10 @@
     </p-card>
     }
 
-    @if (!loading && solicitudes.length === 0) {
+    @if (!loading && solicitudesFiltradas.length === 0) {
     <p-card styleClass="custom-card-container">
         <div class="card-inner-padding" style="text-align:center;padding:2rem;">
-            <p>No tienes solicitudes registradas.</p>
+            <p>No tienes {{ filtroActivo === 'EVIDENCIA' ? 'evidencias' : 'solicitudes previas' }} registradas.</p>
             <button type="button" class="btn-nueva-solicitud" (click)="nuevaSolicitud()">+ Nueva solicitud</button>
         </div>
     </p-card>

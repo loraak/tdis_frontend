@@ -13,6 +13,15 @@
         </div>
     </div>
 
+    <div class="tabs-wrapper">
+        <button type="button" class="tab-button" [class.active]="filtroActivo === 'EVIDENCIA'" (click)="cambiarFiltroTipo('EVIDENCIA')">
+            <i class="pi pi-check-square"></i> Evidencias <span class="tab-count">({{ totalEvidencias }})</span>
+        </button>
+        <button type="button" class="tab-button" [class.active]="filtroActivo === 'PREVIA'" (click)="cambiarFiltroTipo('PREVIA')">
+            <i class="pi pi-clone"></i> Solicitudes Previas <span class="tab-count">({{ totalPrevias }})</span>
+        </button>
+    </div>
+
     @if (loading) {
     <p-card styleClass="custom-card-container">
         <div class="card-inner-padding" style="text-align:center;padding:2rem;">Cargando solicitudes...</div>
@@ -32,7 +41,7 @@
                 [style.margin-bottom]="!isExpanded(sol.id) ? '0' : '1.5rem'">
 
                 <div class="request-title-block">
-                    <h3>{{ sol.actividadTitulo }}</h3>
+                    <h3>{{ sol.actividadTitulo || sol.nombreActividad }}</h3>
                     <div class="request-meta-info">
                         <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
                         @if (sol.nombreArchivo) {
