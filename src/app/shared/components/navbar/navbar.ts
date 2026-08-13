@@ -1,8 +1,11 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
+import { AdminService } from '../../../core/services/admin.service';
+import { SolicitudesService } from '../../../core/services/solicitudes.service';
+import { CatalogoService } from '../../../core/services/catalogo.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,15 +15,52 @@ import { Auth } from '../../../core/services/auth';
 })
 export class Navbar implements OnInit {
   private auth = inject(Auth);
+  private adminService = inject(AdminService);
+  private solicitudesService = inject(SolicitudesService);
+  private catalogoService = inject(CatalogoService);
+  private cdr = inject(ChangeDetectorRef);
 
   isAdmin: boolean = false;
   rolUsuario = computed(() => this.auth.rol() || '');
   isSolicitante: boolean = true;
   rol: string = 'INTERNO';
 
+  totalAlumnos = 0;
+  actividadesAprobadas = 0;
+  actividadesRechazadas = 0;
+  solicitudesPendientes = 0;
+  actividadesPendientes = 0;
+  solicitudesAlumno = 0;
+
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    const usuario = this.auth.usuario();
+    if (this.auth.isAdmin()) {
+      this.adminService.obtenerResumen().subscribe(data => {
+        this.totalAlumnos = data.totalAlumnos;
+        this.actividadesAprobadas = data.actividadesAprobadas;
+        this.actividadesRechazadas = data.actividadesRechazadas;
+        this.cdr.detectChanges();
+      });
+      this.solicitudesService.listarPorEstado('EN_REVISION').subscribe(sols => {
+        this.solicitudesPendientes = sols.length;
+        this.cdr.detectChanges();
+      });
+      this.catalogoService.listarPorEstadoRevision('PENDIENTE').subscribe(acts => {
+        this.actividadesPendientes = acts.length;
+        this.cdr.detectChanges();
+      });
+      this.solicitudesService.listarPorEstado('RECHAZADA').subscribe(sols => {
+        // no se usa directamente, pero se puede agregar si se quiere
+      });
+    } else if (usuario && usuario.usuarioId) {
+      this.solicitudesService.listarPorAlumno(usuario.usuarioId).subscribe(sols => {
+        this.solicitudesAlumno = sols.length;
+        this.cdr.detectChanges();
+      });
+    }
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {

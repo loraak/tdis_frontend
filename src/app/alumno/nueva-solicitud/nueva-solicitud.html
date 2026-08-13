@@ -97,7 +97,7 @@
             <form class="form-grid" #solicitudForm="ngForm">
                 <div class="form-field full-width">
                     <label class="form-label">¿Cuál es tu nombre? *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre completo" [(ngModel)]="nombre" name="nombre" [disabled]="datosPrecargados" />
+                    <input class="custom-input" type="text" placeholder="Nombre completo" [(ngModel)]="nombre" name="nombre" [disabled]="datosPrecargados" [class.is-invalid]="isInvalid('nombre')" (input)="onInputChange('nombre')" />
                 </div>
 
                 <div class="form-field full-width">
@@ -107,41 +107,41 @@
 
                 <div class="form-field full-width">
                     <label class="form-label">Formo parte de la división: *</label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="division === 'Industrial'" (click)="seleccionarDivision('Industrial')" [disabled]="datosPrecargados">Industrial</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Económico-Administrativa'" (click)="seleccionarDivision('Económico-Administrativa')" [disabled]="datosPrecargados">Económico-Administrativa</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'" (click)="seleccionarDivision('Tecnologías')" [disabled]="datosPrecargados">Tecnologías</button>
-                        <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'" (click)="seleccionarDivision('Idiomas')" [disabled]="datosPrecargados">Idiomas</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('division')">
+                        <button type="button" class="pill-button" [class.selected]="division === 'Industrial'" [class.is-invalid]="isInvalid('division')" (click)="seleccionarDivision('Industrial')" [disabled]="datosPrecargados">Industrial</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Económico-Administrativa'" [class.is-invalid]="isInvalid('division')" (click)="seleccionarDivision('Económico-Administrativa')" [disabled]="datosPrecargados">Económico-Administrativa</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Tecnologías'" [class.is-invalid]="isInvalid('division')" (click)="seleccionarDivision('Tecnologías')" [disabled]="datosPrecargados">Tecnologías</button>
+                        <button type="button" class="pill-button" [class.selected]="division === 'Idiomas'" [class.is-invalid]="isInvalid('division')" (click)="seleccionarDivision('Idiomas')" [disabled]="datosPrecargados">Idiomas</button>
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu programa académico? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. Ingeniería Industrial" [(ngModel)]="programa" name="programa" [disabled]="datosPrecargados" />
+                    <input class="custom-input" type="text" placeholder="Ej. Ingeniería Industrial" [(ngModel)]="programa" name="programa" [disabled]="datosPrecargados" [class.is-invalid]="isInvalid('programa')" (input)="onInputChange('programa')" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu grupo? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. A" [(ngModel)]="grupo" name="grupo" [disabled]="datosPrecargados" />
+                    <input class="custom-input" type="text" placeholder="Ej. A" [(ngModel)]="grupo" name="grupo" [disabled]="datosPrecargados" [class.is-invalid]="isInvalid('grupo')" (input)="onInputChange('grupo')" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿En qué cuatrimestre estás? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 4" [(ngModel)]="cuatrimestre" name="cuatrimestre" [disabled]="datosPrecargados" />
+                    <input class="custom-input" type="text" placeholder="Ej. 4" [(ngModel)]="cuatrimestre" name="cuatrimestre" [disabled]="datosPrecargados" [class.is-invalid]="isInvalid('cuatrimestre')" (input)="onInputChange('cuatrimestre')" />
                 </div>
 
                 <div class="form-field">
                     <label class="form-label">¿Cuál es tu turno? *</label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'" (click)="seleccionarTurno('Matutino')" [disabled]="datosPrecargados">Matutino</button>
-                        <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'" (click)="seleccionarTurno('Vespertino')" [disabled]="datosPrecargados">Vespertino</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('turno')">
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Matutino'" [class.is-invalid]="isInvalid('turno')" (click)="seleccionarTurno('Matutino')" [disabled]="datosPrecargados">Matutino</button>
+                        <button type="button" class="pill-button" [class.selected]="turno === 'Vespertino'" [class.is-invalid]="isInvalid('turno')" (click)="seleccionarTurno('Vespertino')" [disabled]="datosPrecargados">Vespertino</button>
                     </div>
                 </div>
 
                 @if (tipoFormulario === 'EVIDENCIA') {
                 <div class="form-field full-width">
                     <label class="form-label">¿Quién es tu tutor? *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre completo (nombre y luego apellidos)" [(ngModel)]="tutor" name="tutor" [disabled]="datosPrecargados" />
+                    <input class="custom-input" type="text" placeholder="Nombre completo (nombre y luego apellidos)" [(ngModel)]="tutor" name="tutor" [disabled]="datosPrecargados" [class.is-invalid]="isInvalid('tutor')" (input)="onInputChange('tutor')" />
                 </div>
                 }
 
@@ -169,10 +169,10 @@
             <form class="form-grid">
                 <div class="form-field full-width">
                     <label class="form-label">Nombre de la actividad *</label>
-                    <input class="custom-input" type="text" placeholder="Nombre de la actividad" [(ngModel)]="nombreActividad" name="nombreActividad" [disabled]="actividadPrecargada" />
+                    <input class="custom-input" type="text" placeholder="Nombre de la actividad" [(ngModel)]="nombreActividad" name="nombreActividad" [disabled]="actividadPrecargada" [class.is-invalid]="isInvalid('nombreActividad')" (input)="onInputChange('nombreActividad')" />
                     @if (actividadPrecargada) {
                     <small style="color:#ef4444;cursor:pointer" (click)="limpiarActividad()"><i class="pi pi-times-circle"></i> Quitar actividad</small>
-                    } @else {
+                    } @else if (tipoFormulario !== 'PREVIA') {
                     <small style="color:#3b82f6;cursor:pointer" (click)="volverAlSelector()">Cambiar actividad</small>
                     }
                 </div>
@@ -183,63 +183,63 @@
                 </div>
                 <div class="form-field">
                     <label class="form-label">Horas efectivas o tiempo de participación *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." [(ngModel)]="horas" name="horas" />
+                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." [(ngModel)]="horas" name="horas" [class.is-invalid]="isInvalid('horas')" (input)="onInputChange('horas')" />
 
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Lugar en donde se llevó a cabo *</label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Interno (UTEQ)'" (click)="seleccionarLugar('Interno (UTEQ)')">Interno (UTEQ)</button>
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Externo'" (click)="seleccionarLugar('Externo')">Externo</button>
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Otro'" (click)="seleccionarLugar('Otro')">Otro</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('lugar')">
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Interno (UTEQ)'" [class.is-invalid]="isInvalid('lugar')" (click)="seleccionarLugar('Interno (UTEQ)')">Interno (UTEQ)</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Externo'" [class.is-invalid]="isInvalid('lugar')" (click)="seleccionarLugar('Externo')">Externo</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Otro'" [class.is-invalid]="isInvalid('lugar')" (click)="seleccionarLugar('Otro')">Otro</button>
                     </div>
                 </div>
 
                 @if (tipoFormulario === 'PREVIA') {
                 <div class="form-field full-width">
                     <label class="form-label">Dimensión(es) de Formación Integral * <small>(múltiple)</small></label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button">Identidad personal (Aprender a conocer)</button>
-                        <button type="button" class="pill-button">Entorno social (Aprender a convivir)</button>
-                        <button type="button" class="pill-button">Entorno físico (Aprender a Hacer)</button>
-                        <button type="button" class="pill-button">Trascendencia (Aprender a Ser)</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('dimensiones')">
+                        <button type="button" class="pill-button" [class.selected]="dimensiones.includes('Identidad personal (Aprender a conocer)')" [class.is-invalid]="isInvalid('dimensiones')" (click)="toggleDimension('Identidad personal (Aprender a conocer)')">Identidad personal (Aprender a conocer)</button>
+                        <button type="button" class="pill-button" [class.selected]="dimensiones.includes('Entorno social (Aprender a convivir)')" [class.is-invalid]="isInvalid('dimensiones')" (click)="toggleDimension('Entorno social (Aprender a convivir)')">Entorno social (Aprender a convivir)</button>
+                        <button type="button" class="pill-button" [class.selected]="dimensiones.includes('Entorno físico (Aprender a Hacer)')" [class.is-invalid]="isInvalid('dimensiones')" (click)="toggleDimension('Entorno físico (Aprender a Hacer)')">Entorno físico (Aprender a Hacer)</button>
+                        <button type="button" class="pill-button" [class.selected]="dimensiones.includes('Trascendencia (Aprender a Ser)')" [class.is-invalid]="isInvalid('dimensiones')" (click)="toggleDimension('Trascendencia (Aprender a Ser)')">Trascendencia (Aprender a Ser)</button>
                     </div>
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Nivel de impacto *</label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button">Explorador (conoce)</button>
-                        <button type="button" class="pill-button">Promotor (participa)</button>
-                        <button type="button" class="pill-button">Líder (hace)</button>
-                        <button type="button" class="pill-button">Embajador (Lidera)</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('nivelImpacto')">
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Explorador (conoce)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Explorador (conoce)')">Explorador (conoce)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Promotor (participa)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Promotor (participa)')">Promotor (participa)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Líder (hace)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Líder (hace)')">Líder (hace)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Embajador (Lidera)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Embajador (Lidera)')">Embajador (Lidera)</button>
                     </div>
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Público objetivo * <small>(múltiple)</small></label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button">Solo alumnas</button>
-                        <button type="button" class="pill-button">Solo alumnos</button>
-                        <button type="button" class="pill-button">Solo División Industrial</button>
-                        <button type="button" class="pill-button">Solo División Económica-Administrativa</button>
-                        <button type="button" class="pill-button">Solo División Tecnologías</button>
-                        <button type="button" class="pill-button">Solo División Idiomas</button>
-                        <button type="button" class="pill-button">Todas las divisiones</button>
-                        <button type="button" class="pill-button">Otro</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('publicoObjetivo')">
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Solo alumnas')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Solo alumnas')">Solo alumnas</button>
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Solo alumnos')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Solo alumnos')">Solo alumnos</button>
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Solo División Industrial')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Solo División Industrial')">Solo División Industrial</button>
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Solo División Económica-Administrativa')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Solo División Económica-Administrativa')">Solo División Económica-Administrativa</button>
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Solo División Tecnologías')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Solo División Tecnologías')">Solo División Tecnologías</button>
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Solo División Idiomas')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Solo División Idiomas')">Solo División Idiomas</button>
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Todas las divisiones')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Todas las divisiones')">Todas las divisiones</button>
+                        <button type="button" class="pill-button" [class.selected]="publicoObjetivo.includes('Otro')" [class.is-invalid]="isInvalid('publicoObjetivo')" (click)="togglePublico('Otro')">Otro</button>
                     </div>
                 </div>
                 } @else {
                 <div class="form-field full-width">
                     <label class="form-label">Tipo de actividad *</label>
                     <input type="text" class="custom-input"
-                        placeholder="Ej. Taller, Conferencia, Voluntariado, Torneo..." [(ngModel)]="tipoActividad" name="tipoActividad" />
+                        placeholder="Ej. Taller, Conferencia, Voluntariado, Torneo..." [(ngModel)]="tipoActividad" name="tipoActividad" [class.is-invalid]="isInvalid('tipoActividad')" (input)="onInputChange('tipoActividad')" />
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Materia con la que se relaciona tu actividad *</label>
-                    <input type="text" class="custom-input" [(ngModel)]="materiaRelacionada" name="materiaRelacionada" />
+                    <input type="text" class="custom-input" [(ngModel)]="materiaRelacionada" name="materiaRelacionada" [class.is-invalid]="isInvalid('materiaRelacionada')" (input)="onInputChange('materiaRelacionada')" />
                 </div>
                 }
 
@@ -252,18 +252,18 @@
                     <label class="form-label">Descripción breve de la actividad *</label>
                     <label class="form-label-small">¿Qué hiciste, con quién, para qué?</label>
                     }
-                    <textarea class="custom-input" name="descripcion" id="descripcion" [(ngModel)]="descripcion" [disabled]="actividadPrecargada"></textarea>
-                    <label class="form-numbers">0 / 20 mín.</label>
+                    <textarea class="custom-input" name="descripcion" id="descripcion" [(ngModel)]="descripcion" [disabled]="actividadPrecargada" [class.is-invalid]="isInvalid('descripcion')" (input)="onInputChange('descripcion')"></textarea>
+                    <label class="form-numbers">{{ descripcion?.length || 0 }} / 20 mín.</label>
                 </div>
 
                 @if (tipoFormulario === 'PREVIA') {
                 <div class="form-field">
                     <label class="form-label">Asistencia esperada (núm. de alumnos) *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 80" />
+                    <input class="custom-input" type="text" placeholder="Ej. 80" [(ngModel)]="asistenciaEsperada" name="asistenciaEsperada" [class.is-invalid]="isInvalid('asistenciaEsperada')" (input)="onInputChange('asistenciaEsperada')" />
                 </div>
                 <div class="form-field">
                     <label class="form-label">¿Cuántos generarán TDI's? *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 50" />
+                    <input class="custom-input" type="text" placeholder="Ej. 50" [(ngModel)]="alumnosGeneranTdi" name="alumnosGeneranTdi" [class.is-invalid]="isInvalid('alumnosGeneranTdi')" (input)="onInputChange('alumnosGeneranTdi')" />
 
                 </div>
                 <div class="custom-card-data full-width">
@@ -294,42 +294,42 @@
                     <label class="form-label">Impacto académico *</label>
                     <label class="form-label-small">¿Cómo apoya esta actividad la formación o alguna asignatura de
                         Formación Integral?</label>
-                    <textarea class="custom-input" name="text-input" id="text-input"
-                        placeholder="Describe el impacto académico esperado…"></textarea>
+                    <textarea class="custom-input" name="impactoAcademico" id="impactoAcademico" [(ngModel)]="impactoAcademico"
+                        placeholder="Describe el impacto académico esperado…" [class.is-invalid]="isInvalid('impactoAcademico')" (input)="onInputChange('impactoAcademico')"></textarea>
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Asignaturas de Formación Integral relacionadas *
                         <small>(múltiple)</small></label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button selected">1ro Desarrollo Humano y Valores</button>
-                        <button type="button" class="pill-button">2do Habilidades Socioemocionales</button>
-                        <button type="button" class="pill-button">3ra Desarrollo del Pensamiento Crítico</button>
-                        <button type="button" class="pill-button">4to Ética y Valores</button>
-                        <button type="button" class="pill-button">5to Liderazgo de Equipos de Alto Desempeño</button>
-                        <button type="button" class="pill-button">7mo Habilidades Gerenciales</button>
-                        <button type="button" class="pill-button">Otro</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('asignaturasRelacionadas')">
+                        <button type="button" class="pill-button" [class.selected]="asignaturasRelacionadas.includes('1ro Desarrollo Humano y Valores')" (click)="toggleAsignatura('1ro Desarrollo Humano y Valores')">1ro Desarrollo Humano y Valores</button>
+                        <button type="button" class="pill-button" [class.selected]="asignaturasRelacionadas.includes('2do Habilidades Socioemocionales')" (click)="toggleAsignatura('2do Habilidades Socioemocionales')">2do Habilidades Socioemocionales</button>
+                        <button type="button" class="pill-button" [class.selected]="asignaturasRelacionadas.includes('3ra Desarrollo del Pensamiento Crítico')" (click)="toggleAsignatura('3ra Desarrollo del Pensamiento Crítico')">3ra Desarrollo del Pensamiento Crítico</button>
+                        <button type="button" class="pill-button" [class.selected]="asignaturasRelacionadas.includes('4to Ética y Valores')" (click)="toggleAsignatura('4to Ética y Valores')">4to Ética y Valores</button>
+                        <button type="button" class="pill-button" [class.selected]="asignaturasRelacionadas.includes('5to Liderazgo de Equipos de Alto Desempeño')" (click)="toggleAsignatura('5to Liderazgo de Equipos de Alto Desempeño')">5to Liderazgo de Equipos de Alto Desempeño</button>
+                        <button type="button" class="pill-button" [class.selected]="asignaturasRelacionadas.includes('7mo Habilidades Gerenciales')" (click)="toggleAsignatura('7mo Habilidades Gerenciales')">7mo Habilidades Gerenciales</button>
+                        <button type="button" class="pill-button" [class.selected]="asignaturasRelacionadas.includes('Otro')" (click)="toggleAsignatura('Otro')">Otro</button>
                     </div>
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Competencias a reforzar * <small>(múltiple)</small></label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button selected">Comunicación efectiva</button>
-                        <button type="button" class="pill-button">Trabajo en equipo</button>
-                        <button type="button" class="pill-button">Liderazgo</button>
-                        <button type="button" class="pill-button">Pensamiento crítico</button>
-                        <button type="button" class="pill-button">Responsabilidad y ética</button>
-                        <button type="button" class="pill-button">Toma de decisiones</button>
-                        <button type="button" class="pill-button">Autogestión y disciplina</button>
-                        <button type="button" class="pill-button">Participación social</button>
-                        <button type="button" class="pill-button">Otro</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('competenciasReforzar')">
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Comunicación efectiva')" (click)="toggleCompetencia('Comunicación efectiva')">Comunicación efectiva</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Trabajo en equipo')" (click)="toggleCompetencia('Trabajo en equipo')">Trabajo en equipo</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Liderazgo')" (click)="toggleCompetencia('Liderazgo')">Liderazgo</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Pensamiento crítico')" (click)="toggleCompetencia('Pensamiento crítico')">Pensamiento crítico</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Responsabilidad y ética')" (click)="toggleCompetencia('Responsabilidad y ética')">Responsabilidad y ética</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Toma de decisiones')" (click)="toggleCompetencia('Toma de decisiones')">Toma de decisiones</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Autogestión y disciplina')" (click)="toggleCompetencia('Autogestión y disciplina')">Autogestión y disciplina</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Participación social')" (click)="toggleCompetencia('Participación social')">Participación social</button>
+                        <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Otro')" (click)="toggleCompetencia('Otro')">Otro</button>
                     </div>
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Horas estimadas *</label>
-                    <input type="text" class="custom-input" placeholder="Ej. 4" />
+                    <input type="text" class="custom-input" placeholder="Ej. 4" [(ngModel)]="horasEstimadas" name="horasEstimadas" [class.is-invalid]="isInvalid('horasEstimadas')" (input)="onInputChange('horasEstimadas')" />
                 </div>
                 } @else {
                 <div class="form-field full-width">
@@ -337,7 +337,7 @@
                     <label class="form-label-reflexion">La reflexión es un componente esencial del sistema TDI's.
                         Analiza lo aprendido, cómo te sentiste y de qué manera la actividad aportó a tu desarrollo
                         integral. <strong>Escribe entre 5 y 10 líneas.</strong></label>
-                    <textarea class="custom-input" name="reflexion" id="reflexion" [(ngModel)]="reflexion"></textarea>
+                    <textarea class="custom-input" name="reflexion" id="reflexion" [(ngModel)]="reflexion" [class.is-invalid]="isInvalid('reflexion')" (input)="onInputChange('reflexion')"></textarea>
                     <label class="form-numbers">0 palabras</label>
                 </div>
                 }
@@ -361,13 +361,12 @@
             <form class="form-grid">
                 <div class="form-field full-width">
                     <label class="form-label">Tipo de evidencia requerida * <small>(múltiple)</small></label>
-                    <div class="pill-selection-wrapper">
-                        <button type="button" class="pill-button">Lista de Asistencia firmada por el
-                            responsable</button>
-                        <button type="button" class="pill-button">Fotografía + reflexión escrita</button>
-                        <button type="button" class="pill-button">Constancia / documento</button>
-                        <button type="button" class="pill-button">Producto o reporte elaborado</button>
-                        <button type="button" class="pill-button">Otro</button>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('evidenciasRequeridas')">
+                        <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Lista de Asistencia firmada por el responsable')" (click)="toggleEvidencia('Lista de Asistencia firmada por el responsable')">Lista de Asistencia firmada por el responsable</button>
+                        <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Fotografía + reflexión escrita')" (click)="toggleEvidencia('Fotografía + reflexión escrita')">Fotografía + reflexión escrita</button>
+                        <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Constancia / documento')" (click)="toggleEvidencia('Constancia / documento')">Constancia / documento</button>
+                        <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Producto o reporte elaborado')" (click)="toggleEvidencia('Producto o reporte elaborado')">Producto o reporte elaborado</button>
+                        <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Otro')" (click)="toggleEvidencia('Otro')">Otro</button>
                     </div>
                 </div>
             </form>
@@ -389,9 +388,9 @@
             <form class="form-grid">
                 <div class="form-field full-width">
                     <label class="form-label">Justificación personal *</label>
-                    <textarea class="custom-input" name="text-input" id="text-input"
-                        placeholder="Explica la importancia de esta actividad para tu formación integral…"></textarea>
-                    <label class="form-numbers">0 / 20 mín.</label>
+                    <textarea class="custom-input" name="justificacionPersonal" id="justificacionPersonal" [(ngModel)]="justificacionPersonal"
+                        placeholder="Explica la importancia de esta actividad para tu formación integral…" [class.is-invalid]="isInvalid('justificacionPersonal')" (input)="onInputChange('justificacionPersonal')"></textarea>
+                    <label class="form-numbers">{{ justificacionPersonal?.length || 0 }} / 20 mín.</label>
                 </div>
             </form>
         </div>
@@ -433,7 +432,7 @@
 
                 <span class="upload-field-label">Adjunta tu evidencia de imagen *</span>
 
-                <div class="file-dropzone" (click)="fileInput.click()">
+                <div class="file-dropzone" (click)="fileInput.click()" [class.is-invalid]="isInvalid('archivoSeleccionado')">
 
                     <input #fileInput type="file" accept=".png,.jpg,.jpeg" style="display: none;" (change)="onFileSelected($event)" />
 

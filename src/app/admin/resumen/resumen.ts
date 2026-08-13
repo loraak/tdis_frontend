@@ -95,7 +95,9 @@ export class Resumen implements OnInit {
   }
 
   alturaEje(eje: string): number {
-    return (this.puntosEje(eje) / this.maxPuntosEje) * 100;
+    const val = this.puntosEje(eje);
+    const altura = (val / this.maxPuntosEje) * 100;
+    return val > 0 ? Math.max(altura, 5) : 0;
   }
 
   ejeLabel(key: string): string {

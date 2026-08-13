@@ -252,6 +252,25 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.custom-input.ng-invalid.ng-touched,
+.custom-input.is-invalid,
+.custom-input[style*="border-color: #ef4444"],
+.custom-input.is-invalid:focus {
+    border-color: #ef4444 !important;
+    background-color: #fff5f5 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.pill-button.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: #fff5f5 !important;
+    color: #ef4444 !important;
+}
+
+.pill-selection-wrapper.has-error .pill-button {
+    border-color: #ef4444 !important;
+}
+
 .custom-input:disabled {
     background-color: #f1f5f9;
     color: #94a3b8;
@@ -427,6 +446,11 @@
 .btn-yellow {
     background-color: var(--tdis-color-yellow);
     box-shadow: 0 4px 12px rgba(245, 166, 35, 0.2);
+}
+
+.file-dropzone.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: #fff5f5 !important;
 }
 
 .btn-submit:hover {

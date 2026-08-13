@@ -11,7 +11,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     margin-bottom: 1.5rem;
     border: none;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .custom-card-container,
@@ -440,12 +440,17 @@
     height: 100%;
     width: 60px;
     z-index: 1;
+    position: relative;
 }
 
 .bar-value-top {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 0.75rem;
     font-weight: 700;
-    margin-bottom: 0.25rem;
+    white-space: nowrap;
 }
 
 .bar-value-top.Personal {
@@ -460,6 +465,7 @@
     width: 32px;
     border-radius: 6px 6px 0 0;
     transition: height 0.5s ease-in-out;
+    min-height: 8px;
 }
 
 .bar-pillar.bar-personal {
