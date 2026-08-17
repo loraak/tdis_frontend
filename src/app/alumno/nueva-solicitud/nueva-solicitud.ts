@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Router, ActivatedRoute } from '@angular/router';
-import { combineLatest, switchMap } from 'rxjs';
+import { combineLatest, switchMap, of, catchError } from 'rxjs';
 import { Auth } from '../../core/services/auth';
 import { CatalogoService } from '../../core/services/catalogo.service';
 import { SolicitudesService } from '../../core/services/solicitudes.service';
@@ -172,7 +172,7 @@ export class NuevaSolicitud implements OnInit {
     this.fechaInicio = '';
     this.fechaFin = '';
     this.lugar = '';
-    this.horas = '';
+    this.horasEfectivas = null;
     this.materiaRelacionada = '';
   }
 
@@ -197,7 +197,6 @@ export class NuevaSolicitud implements OnInit {
       this.descripcion = '';
       this.actividadPrecargada = false;
       this.lugar = '';
-      this.horas = '';
       this.horasEfectivas = null;
       this.materiaRelacionada = '';
       this.periodicidad = '';
@@ -210,7 +209,7 @@ export class NuevaSolicitud implements OnInit {
       this.periodicidad = this.actividadSeleccionada.periodicidad || '';
       this.fechaInicio = this.actividadSeleccionada.fechaInicio || '';
       this.fechaFin = this.actividadSeleccionada.fechaFin || '';
-      this.horas = this.actividadSeleccionada.horasEfectivas ? String(this.actividadSeleccionada.horasEfectivas) : '';
+      this.horasEfectivas = this.actividadSeleccionada.horasEfectivas ?? null;
       
       // Precargar y bloquear: Lugar
       if (this.actividadSeleccionada.lugar === 'INTERNO') {
@@ -280,21 +279,17 @@ export class NuevaSolicitud implements OnInit {
     if (!this.turno) { errores.push('El turno es requerido'); camposInvalidos.push('turno'); }
 
     if (!this.nombreActividad || !this.nombreActividad.trim()) { errores.push('El nombre de la actividad es requerido'); camposInvalidos.push('nombreActividad'); }
-    if (this.tipoFormulario === 'EVIDENCIA' && this.actividadPrecargada) {
-      // Saltar validación de lugar y materiaRelacionada si vienen precargados
-    } else if (!this.lugar) { 
-      errores.push('El lugar es requerido'); 
-      camposInvalidos.push('lugar'); 
-    }
     if (this.tipoFormulario === 'PREVIA') {
       if (!this.periodicidad) { errores.push('La periodicidad es requerida'); camposInvalidos.push('periodicidad'); }
       if (!this.fechaInicio || !this.fechaInicio.trim()) { errores.push('La fecha de inicio es requerida'); camposInvalidos.push('fechaInicio'); }
-    }
-    if (this.tipoFormulario === 'EVIDENCIA' && this.actividadPrecargada) {
-      // Saltar validación de horas si viene precargado
-    } else if (!this.horas || !this.horas.trim()) { 
-      errores.push('Las horas son requeridas'); 
-      camposInvalidos.push('horas'); 
+      if (!this.lugar) { 
+        errores.push('El lugar es requerido'); 
+        camposInvalidos.push('lugar'); 
+      }
+      if (!this.horasEfectivas || this.horasEfectivas < 1) { 
+        errores.push('Las horas efectivas son requeridas'); 
+        camposInvalidos.push('horasEfectivas'); 
+      }
     }
 
     if (this.tipoFormulario === 'EVIDENCIA') {
@@ -374,7 +369,7 @@ onSubmit() {
       descripcion: this.descripcion || undefined,
       reflexion: this.reflexion || undefined,
       lugar: this.lugar || undefined,
-      horas: this.horas || undefined,
+      horas: this.horasEfectivas ? String(this.horasEfectivas) : undefined,
       periodicidad: this.periodicidad || undefined,
       fechaInicio: this.fechaInicio || undefined,
       fechaFin: this.fechaFin || undefined,
@@ -407,13 +402,34 @@ onSubmit() {
       tipoLugar: this.tipoFormulario === 'PREVIA' ? (this.lugar === 'Externo' ? 'EXTERNO' : 'INTERNO') : undefined,
     }).pipe(
       switchMap(solicitud => {
+        console.log('✅ Solicitud creada:', solicitud.id);
         // Evidencia: subir archivo y analizar con webhook de IA
         // Solicitud Previa: solo crear la solicitud, sin evidencia
         if (this.tipoFormulario === 'EVIDENCIA' && this.archivoSeleccionado) {
           return this.documentosService.subirArchivo(solicitud.id, this.archivoSeleccionado)
-            .pipe(switchMap(() => this.solicitudesService.analizarIA(solicitud.id)));
+            .pipe(
+              switchMap((response: { nombreAlmacenado: string; nombreOriginal: string }) => {
+                console.log('✅ Archivo subido:', response);
+                const nombreOriginal = response.nombreOriginal;
+                return this.solicitudesService.actualizarNombreArchivo(solicitud.id, nombreOriginal)
+                  .pipe(
+                    switchMap((updatedSolicitud) => {
+                      console.log('✅ Nombre archivo actualizado:', updatedSolicitud.nombreArchivo);
+                      return this.solicitudesService.analizarIA(solicitud.id);
+                    })
+                  );
+              }),
+              catchError(err => {
+                console.error('❌ Error en upload/actualizar/analizar:', err);
+                throw err;
+              })
+            );
         }
-        return [solicitud];
+        return of(solicitud);
+      }),
+      catchError(err => {
+        console.error('❌ Error en crear solicitud:', err);
+        throw err;
       })
     ).subscribe({
       next: () => {
@@ -421,6 +437,7 @@ onSubmit() {
         this.router.navigate(['/alumno/mis-solicitudes']);
       },
       error: (err) => {
+        console.error('❌ Error final:', err);
         this.error = err.error?.message || 'Error al enviar solicitud';
         this.loading = false;
       },
