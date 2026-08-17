@@ -1,0 +1,114 @@
+<div class="login-container">
+    <header class="login-header">
+        <div class="logo-wrapper">
+            <img src="/logo-uteq.png" alt="UTEQ Logo" class="university-logo">
+        </div>
+        <p class="subtitle">UNIVERSIDAD TECNOLÓGICA DE QUERÉTARO</p>
+        <h1 class="main-title">Tokens de Desarrollo Integral</h1>
+
+        <div class="badge-container">
+            <span class="badge badge-green">Entorno Social</span>
+            <span class="badge badge-blue">Personal</span>
+            <span class="badge badge-yellow">Deportivo</span>
+            <span class="badge badge-purple">Trascendencia</span>
+        </div>
+    </header>
+
+    @if (success()) {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <div class="success-content">
+            <i class="pi pi-check-circle success-icon"></i>
+            <h2>Cuenta creada exitosamente</h2>
+            <p>Tu cuenta ha sido registrada. Ahora puedes iniciar sesión con tu correo electrónico.</p>
+            <button type="button" class="btn-submit btn-green" (click)="irALogin()">Ir a Iniciar Sesión <i class="pi pi-arrow-right"></i></button>
+        </div>
+    </p-card>
+    } @else {
+    <p-card class="login-card-wrapper animate-fade-in">
+        <button type="button" class="btn-back" routerLink="/login">
+            <i class="pi pi-arrow-left"></i> Volver al login
+        </button>
+
+        <div class="card-header">
+            <div class="icon-avatar avatar-purple">
+                <i class="pi pi-users user-icon"></i>
+            </div>
+            <div class="card-title-text">
+                <h2>Crear cuenta Interna</h2>
+                <p>Registra tus datos para gestionar actividades dentro de la UTEQ</p>
+            </div>
+        </div>
+
+        <form class="register-form" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>MATRÍCULA *</label>
+                    <input pInputText type="text" [(ngModel)]="matricula" name="matricula"
+                        placeholder="Ej. 2026191005" autocomplete="off">
+                    @if (submitted && (!matricula.trim() || matricula.trim().length < 8)) {
+                        <span class="field-error">La matrícula debe tener al menos 8 dígitos</span>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>CORREO INSTITUCIONAL *</label>
+                    <input pInputText type="email" [(ngModel)]="email" name="email"
+                        placeholder="ejemplo@uteq.edu.mx" autocomplete="off">
+                    @if (submitted && !email.trim()) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>NOMBRE *</label>
+                    <input pInputText type="text" [(ngModel)]="nombre" name="nombre"
+                        placeholder="Nombre(s)" autocomplete="off">
+                    @if (submitted && !nombre.trim()) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>APELLIDOS *</label>
+                    <input pInputText type="text" [(ngModel)]="apellidos" name="apellidos"
+                        placeholder="Apellido(s)" autocomplete="off">
+                    @if (submitted && !apellidos.trim()) {
+                        <span class="field-error">Requerido</span>
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>CONTRASEÑA *</label>
+                    <input pInputText type="password" [(ngModel)]="password" name="password"
+                        placeholder="Mínimo 6 caracteres">
+                    @if (submitted && !password.trim()) {
+                        <span class="field-error">Requerido</span>
+                    } @else if (submitted && password.length < 6) {
+                        <span class="field-error">Mínimo 6 caracteres</span>
+                    }
+                </div>
+                <div class="form-group">
+                    <label>REPETIR CONTRASEÑA *</label>
+                    <input pInputText type="password" [(ngModel)]="confirmPassword" name="confirmPassword"
+                        placeholder="Repite tu contraseña">
+                    @if (submitted && !confirmPassword.trim()) {
+                        <span class="field-error">Requerido</span>
+                    } @else if (submitted && password !== confirmPassword) {
+                        <span class="field-error">Las contraseñas no coinciden</span>
+                    }
+                </div>
+            </div>
+
+            @if (error()) {
+                <div class="error-msg">{{ error() }}</div>
+            }
+
+            <button type="submit" class="btn-submit btn-purple" [disabled]="loading()">
+                {{ loading() ? 'Creando cuenta...' : 'Crear cuenta' }} <i class="pi pi-arrow-right"></i>
+            </button>
+        </form>
+    </p-card>
+    }
+</div>

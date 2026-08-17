@@ -78,7 +78,7 @@
 
             @if (act.estadoRevision === 'PENDIENTE') {
             <div class="buttons-request">
-                <button class="btn-action btn-green" (click)="aprobar(act)">
+                <button class="btn-action btn-green" (click)="abrirModalAprobar(act)">
                     <div class="btn-text-action">
                     <i class="pi pi-check-circle icon-btn"></i>
                     <span>Aprobar</span>
@@ -118,10 +118,176 @@
     </p-card>
     }
 
-    @if (!loading && actividadesFiltradas.length === 0) {
+    @if (loadingPrevias) {
     <p-card styleClass="custom-card-container">
-        <div class="card-inner-padding" style="text-align:center;padding:2rem;">No hay actividades {{ filtroEstado === 'TODO' ? '' : 'en este estado' }}.</div>
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">Cargando solicitudes previas...</div>
     </p-card>
     }
+
+    @if (!loadingPrevias && solicitudesPrevias.length > 0) {
+    <h2 style="margin:2rem 0 1rem;font-size:1.25rem;color:#1e293b;">Solicitudes Previas — Gestión de Actividades</h2>
+    @for (sol of solicitudesPreviasFiltradas; track sol.id) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding">
+            <div class="data-alumno">
+                <span class="data-matricula">{{ sol.alumnoMatricula }}</span>
+                <span class="data-nombre">{{ sol.alumnoNombre }}</span>
+                <span class="data-fecha">· {{ sol.createdAt | date:'short' }}</span>
+            </div>
+            <div class="request-card-header" [style.border-bottom]="!isExpanded(sol.id) ? 'none' : '1px solid #f1f5f9'" [style.margin-bottom]="!isExpanded(sol.id) ? '0' : '1.5rem'">
+                <div class="request-title-block">
+                    <h3>{{ sol.actividadTitulo || sol.nombreActividad }}</h3>
+                    <div class="request-meta-info">
+                        <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
+                        <span class="meta-item">Enviada: {{ sol.createdAt | date:'short' }}</span>
+                    </div>
+                </div>
+                <div class="header-actions-group">
+                    <p-tag [value]="estadoSolicitudLabel(sol.estado)" [icon]="estadoSolicitudIcon(sol.estado)" [styleClass]="estadoSolicitudBadgeClass(sol.estado)"></p-tag>
+                    <button (click)="toggleExpand(sol.id)" class="btn-toggle-view">
+                        <i class="pi" [class.pi-chevron-up]="isExpanded(sol.id)" [class.pi-chevron-down]="!isExpanded(sol.id)"></i>
+                        {{ isExpanded(sol.id) ? 'Ocultar' : 'Ver detalle' }}
+                    </button>
+                </div>
+            </div>
+
+            @if (isExpanded(sol.id)) {
+            <div>
+                <span class="data-section-title">Datos del estudiante</span>
+                <div class="data-grid-layout">
+                    <span class="data-label">Nombre</span>
+                    <span class="data-value">{{ sol.alumnoNombre }}</span>
+                    <span class="data-label">División</span>
+                    <span class="data-value">{{ sol.division || '—' }}</span>
+                    <span class="data-label">Programa</span>
+                    <span class="data-value">{{ sol.programa || '—' }}</span>
+                    <span class="data-label">Grupo · Cuatrimestre · Turno</span>
+                    <span class="data-value">{{ sol.grupo || '—' }} · {{ sol.cuatrimestre || '—' }} · {{ sol.turno || '—' }}</span>
+                    <span class="data-label">Tutor</span>
+                    <span class="data-value">{{ sol.tutor || '—' }}</span>
+                    <span class="data-label">Responsable</span>
+                    <span class="data-value">{{ sol.nombreResponsable || '—' }}</span>
+                    <span class="data-label">Cargo responsable</span>
+                    <span class="data-value">{{ sol.cargoResponsable || '—' }}</span>
+                    <span class="data-label">Tel. responsable</span>
+                    <span class="data-value">{{ sol.telefonoResponsable || '—' }}</span>
+                </div>
+
+                <span class="data-section-title space-top">Datos de Solicitud Previa</span>
+                <div class="data-grid-layout">
+                    <span class="data-label">Dimensiones</span>
+                    <span class="data-value">{{ sol.dimensionesFormacion || '—' }}</span>
+                    <span class="data-label">Nivel impacto</span>
+                    <span class="data-value">{{ sol.nivelImpacto || '—' }}</span>
+                    <span class="data-label">Público objetivo</span>
+                    <span class="data-value">{{ sol.publicoObjetivo || '—' }}</span>
+                    <span class="data-label">Asistencia esperada</span>
+                    <span class="data-value">{{ sol.asistenciaEsperada || '—' }}</span>
+                    <span class="data-label">Alumnos TDI</span>
+                    <span class="data-value">{{ sol.alumnosGeneranTdi || '—' }}</span>
+                    <span class="data-label">Asignaturas</span>
+                    <span class="data-value">{{ sol.asignaturasRelacionadas || '—' }}</span>
+                    <span class="data-label">Competencias</span>
+                    <span class="data-value">{{ sol.competenciasReforzar || '—' }}</span>
+                    <span class="data-label">Evidencias requeridas</span>
+                    <span class="data-value">{{ sol.evidenciasRequeridas || '—' }}</span>
+                    <span class="data-label">Horas estimadas</span>
+                    <span class="data-value">{{ sol.horasEstimadas || '—' }}</span>
+                    <span class="data-label">Periodicidad</span>
+                    <span class="data-value">{{ periodicidadLabel(sol.periodicidad) }}</span>
+                    <span class="data-label">Fecha de inicio</span>
+                    <span class="data-value">{{ sol.fechaInicio || '—' }}</span>
+                    <span class="data-label">Fecha de finalización</span>
+                    <span class="data-value">{{ sol.fechaFin || '—' }}</span>
+                </div>
+
+                @if (sol.impactoAcademico) {
+                <span class="text-block-title">Impacto académico</span>
+                <p class="text-block-content">{{ sol.impactoAcademico }}</p>
+                }
+
+                @if (sol.justificacionPersonal) {
+                <span class="text-block-title">Justificación personal</span>
+                <p class="text-block-content">{{ sol.justificacionPersonal }}</p>
+                }
+
+                @if (sol.descripcion) {
+                <span class="text-block-title">Descripción</span>
+                <p class="text-block-content">{{ sol.descripcion }}</p>
+                }
+
+                @if (sol.estado === 'EN_REVISION' || sol.estado === 'REVISION_HUMANA') {
+                <div class="buttons-request">
+                    <button class="btn-action btn-green" (click)="aprobarPrevia(sol)">
+                        <div class="btn-text-action">
+                        <i class="pi pi-check-circle icon-btn"></i>
+                        <span>Aprobar</span>
+                        </div>
+                    </button>
+                    <button class="btn-action btn-red" (click)="abrirModalRechazarPrevia(sol)">
+                        <div class="btn-text-action">
+                        <i class="pi pi-times-circle icon-btn"></i>
+                        <span>Rechazar</span>
+                        </div>
+                    </button>
+                </div>
+                }
+            </div>
+            }
+        </div>
+    </p-card>
+    }
+    }
+
+    @if (!loading && actividadesFiltradas.length === 0 && solicitudesPreviasFiltradas.length === 0) {
+    <p-card styleClass="custom-card-container">
+        <div class="card-inner-padding" style="text-align:center;padding:2rem;">No hay actividades ni solicitudes {{ filtroEstado === 'TODO' ? '' : 'en este estado' }}.</div>
+    </p-card>
+    }
+
+    <p-dialog header="Aprobar Actividad" [(visible)]="modalAprobarVisible" [modal]="true" [style]="{ width: '25rem' }">
+        <div style="margin-bottom: 1rem;">
+            <label for="puntos" style="display:block;font-weight:600;margin-bottom:0.25rem;">Puntos TDI *</label>
+            <input id="puntos" type="number" pInputText [(ngModel)]="puntosTDI" placeholder="Ej. 5" style="width:100%" />
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+            <label for="eje" style="display:block;font-weight:600;margin-bottom:0.25rem;">Eje *</label>
+            <select id="eje" [(ngModel)]="ejeSeleccionado" style="width:100%;padding:0.5rem;border-radius:6px;border:1px solid #cbd5e1;">
+                <option value="">Selecciona un eje</option>
+                <option value="ENTORNO_SOCIAL">Entorno Social</option>
+                <option value="PERSONAL">Personal</option>
+                <option value="DEPORTIVO">Deportivo</option>
+                <option value="TRASCENDENCIA">Trascendencia</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+            <button type="button" class="btn-action btn-red" (click)="modalAprobarVisible = false">Cancelar</button>
+            <button type="button" class="btn-action btn-green" (click)="confirmarAprobacion()">Confirmar</button>
+        </div>
+    </p-dialog>
+
+    <!-- Modal Aprobar PREVIA -->
+    <p-dialog header="Aprobar Solicitud PREVIA" [(visible)]="modalAprobarPreviaVisible" [modal]="true" [style]="{ width: '25rem' }">
+        <div style="margin-bottom: 1rem;">
+            <label for="puntosPrevia" style="display:block;font-weight:600;margin-bottom:0.25rem;">Puntos TDI *</label>
+            <input id="puntosPrevia" type="number" pInputText [(ngModel)]="puntosTDIPrevia" placeholder="Ej. 5" min="1" style="width:100%" />
+        </div>
+        <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+            <button type="button" class="btn-action btn-red" (click)="modalAprobarPreviaVisible = false">Cancelar</button>
+            <button type="button" class="btn-action btn-green" (click)="confirmarAprobarPrevia()">Confirmar</button>
+        </div>
+    </p-dialog>
+
+    <!-- Modal Rechazar PREVIA -->
+    <p-dialog header="Rechazar Solicitud PREVIA" [(visible)]="modalRechazarPreviaVisible" [modal]="true" [style]="{ width: '28rem' }">
+        <div style="margin-bottom: 1rem;">
+            <label for="motivoRechazo" style="display:block;font-weight:600;margin-bottom:0.25rem;">Motivo de rechazo *</label>
+            <textarea id="motivoRechazo" [(ngModel)]="motivoRechazoPrevia" placeholder="Escribe el motivo del rechazo..." rows="4" style="width:100%;padding:0.5rem;border-radius:6px;border:1px solid #cbd5e1;"></textarea>
+        </div>
+        <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+            <button type="button" class="btn-action btn-red" (click)="modalRechazarPreviaVisible = false">Cancelar</button>
+            <button type="button" class="btn-action btn-green" (click)="confirmarRechazarPrevia()">Rechazar</button>
+        </div>
+    </p-dialog>
 
 </div>

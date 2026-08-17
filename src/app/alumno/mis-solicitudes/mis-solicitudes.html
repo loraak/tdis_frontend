@@ -35,6 +35,12 @@
                         <span class="meta-item"><i class="pi pi-calendar"></i> {{ sol.createdAt | date:'shortDate' }}</span>
                         @if (sol.nombreArchivo) {
                         <span class="meta-item"><i class="pi pi-image"></i> {{ sol.nombreArchivo }}</span>
+                        <button class="btn-ver-evidencia" (click)="verEvidencia(sol.id)" [disabled]="cargandoImagen" title="Ver evidencia">
+                            <i class="pi pi-eye"></i>
+                            @if (cargandoImagen) {
+                                <i class="pi pi-spin pi-spinner"></i>
+                            }
+                        </button>
                         }
                         <span class="meta-item">Enviada: {{ sol.createdAt | date:'short' }}</span>
                         @if (sol.actividadPuntos) {
@@ -72,6 +78,18 @@
 
                     <span class="data-label">Tutor</span>
                     <span class="data-value">{{ sol.tutor || '—' }}</span>
+
+                    <span class="data-label">Responsable</span>
+                    <span class="data-value">{{ sol.nombreResponsable || '—' }}</span>
+
+                    <span class="data-label">Cargo responsable</span>
+                    <span class="data-value">{{ sol.cargoResponsable || '—' }}</span>
+
+                    <span class="data-label">Teléfono responsable</span>
+                    <span class="data-value">{{ sol.telefonoResponsable || '—' }}</span>
+
+                    <span class="data-label">Correo responsable</span>
+                    <span class="data-value">{{ sol.correoResponsable || '—' }}</span>
                 </div>
 
                 <span class="data-section-title space-top">Actividad</span>
@@ -92,6 +110,57 @@
                 @if (sol.descripcion) {
                 <span class="text-block-title">Descripción</span>
                 <p class="text-block-content">{{ sol.descripcion }}</p>
+                }
+
+                @if (sol.tipoSolicitud === 'PREVIA') {
+                <span class="data-section-title space-top">Datos de Solicitud Previa</span>
+                <div class="data-grid-layout">
+                    <span class="data-label">Periodicidad</span>
+                    <span class="data-value">{{ sol.periodicidad || '—' }}</span>
+
+                    <span class="data-label">Fecha de inicio</span>
+                    <span class="data-value">{{ sol.fechaInicio || '—' }}</span>
+
+                    <span class="data-label">Fecha de finalización</span>
+                    <span class="data-value">{{ sol.fechaFin || '—' }}</span>
+
+                    <span class="data-label">Dimensiones</span>
+                    <span class="data-value">{{ sol.dimensionesFormacion || '—' }}</span>
+
+                    <span class="data-label">Nivel de impacto</span>
+                    <span class="data-value">{{ sol.nivelImpacto || '—' }}</span>
+
+                    <span class="data-label">Público objetivo</span>
+                    <span class="data-value">{{ sol.publicoObjetivo || '—' }}</span>
+
+                    <span class="data-label">Asistencia esperada</span>
+                    <span class="data-value">{{ sol.asistenciaEsperada || '—' }}</span>
+
+                    <span class="data-label">Alumnos que generarán TDI</span>
+                    <span class="data-value">{{ sol.alumnosGeneranTdi || '—' }}</span>
+
+                    <span class="data-label">Asignaturas relacionadas</span>
+                    <span class="data-value">{{ sol.asignaturasRelacionadas || '—' }}</span>
+
+                    <span class="data-label">Competencias a reforzar</span>
+                    <span class="data-value">{{ sol.competenciasReforzar || '—' }}</span>
+
+                    <span class="data-label">Evidencias requeridas</span>
+                    <span class="data-value">{{ sol.evidenciasRequeridas || '—' }}</span>
+
+                    <span class="data-label">Horas estimadas</span>
+                    <span class="data-value">{{ sol.horasEstimadas || '—' }}</span>
+                </div>
+
+                @if (sol.impactoAcademico) {
+                <span class="text-block-title">Impacto académico</span>
+                <p class="text-block-content">{{ sol.impactoAcademico }}</p>
+                }
+
+                @if (sol.justificacionPersonal) {
+                <span class="text-block-title">Justificación personal</span>
+                <p class="text-block-content">{{ sol.justificacionPersonal }}</p>
+                }
                 }
 
                 @if (sol.reflexion) {
@@ -149,5 +218,22 @@
         </div>
     </p-card>
     }
+
+    <!-- Dialog para ver evidencia -->
+    <p-dialog
+        header="Evidencia"
+        [(visible)]="mostrarImagen"
+        [modal]="true"
+        [style]="{ width: '90vw', maxWidth: '800px' }"
+        [contentStyle]="{ padding: '0', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#000' }"
+        [draggable]="false"
+        [resizable]="false"
+        (onHide)="cerrarImagen()">
+        @if (cargandoImagen) {
+            <div style="color:white;padding:2rem;">Cargando imagen...</div>
+        } @else if (imagenUrl) {
+            <img [src]="imagenUrl" alt="Evidencia" style="max-width:100%;max-height:70vh;object-fit:contain;" />
+        }
+    </p-dialog>
 
 </div>

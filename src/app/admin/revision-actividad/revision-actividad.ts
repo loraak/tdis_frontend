@@ -3,27 +3,45 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
 import { CatalogoService } from '../../core/services/catalogo.service';
+import { SolicitudesService } from '../../core/services/solicitudes.service';
 import { ActividadDTO } from '../../core/models/actividad';
+import { SolicitudDTO } from '../../core/models/solicitud';
 
 @Component({
   selector: 'app-revision-actividad',
-  imports: [CommonModule, FormsModule, CardModule, TagModule],
+  imports: [CommonModule, FormsModule, CardModule, TagModule, DialogModule, InputTextModule],
   templateUrl: './revision-actividad.html',
   styleUrl: './revision-actividad.css',
 })
 export class RevisionActividad {
   private cdr = inject(ChangeDetectorRef);
   private catalogoService = inject(CatalogoService);
+  private solicitudesService = inject(SolicitudesService);
 
   expandedId: string | null = null;
   loading = true;
   nuevoComentario: string = '';
+  solicitudesPrevias: SolicitudDTO[] = [];
+  loadingPrevias = true;
   actividades: ActividadDTO[] = [];
+  modalAprobarVisible = false;
+  puntosTDI = 0;
+  ejeSeleccionado: ActividadDTO['eje'] | '' = '';
+
+  // Modals para PREVIA
+  modalAprobarPreviaVisible = false;
+  modalRechazarPreviaVisible = false;
+  previaAprobando: SolicitudDTO | null = null;
+  puntosTDIPrevia = 0;
+  motivoRechazoPrevia = '';
 
   filtroEstado: 'TODO' | 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' = 'PENDIENTE';
 
   ngOnInit() {
+    this.cargarSolicitudesPrevias();
     this.catalogoService.listarTodas().subscribe({
       next: (data) => {
         this.actividades = data;
@@ -38,20 +56,48 @@ export class RevisionActividad {
     });
   }
 
+  cargarSolicitudesPrevias() {
+    this.loadingPrevias = true;
+    this.solicitudesService.listarTodas().subscribe({
+      next: (data) => {
+        this.solicitudesPrevias = data.filter(s => s.tipoSolicitud === 'PREVIA');
+        this.loadingPrevias = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error cargando previas:', err);
+        this.solicitudesPrevias = [];
+        this.loadingPrevias = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
   get totalActividades(): number {
-    return this.actividades.length;
+    return this.solicitudesPrevias.length + this.actividades.length;
   }
 
   get pendientes(): number {
-    return this.actividades.filter(a => a.estadoRevision === 'PENDIENTE').length;
+    return this.solicitudesPrevias.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA').length + this.actividades.filter(a => a.estadoRevision === 'PENDIENTE').length;
   }
 
   get aprobadas(): number {
-    return this.actividades.filter(a => a.estadoRevision === 'APROBADA').length;
+    return this.solicitudesPrevias.filter(s => s.estado === 'APROBADA').length + this.actividades.filter(a => a.estadoRevision === 'APROBADA').length;
   }
 
   get rechazadas(): number {
-    return this.actividades.filter(a => a.estadoRevision === 'RECHAZADA').length;
+    return this.solicitudesPrevias.filter(s => s.estado === 'RECHAZADA').length + this.actividades.filter(a => a.estadoRevision === 'RECHAZADA').length;
+  }
+
+  get solicitudesPreviasFiltradas(): SolicitudDTO[] {
+    if (this.filtroEstado === 'TODO') return this.solicitudesPrevias;
+    const mapEstado: Record<string, string[]> = {
+      'PENDIENTE': ['EN_REVISION', 'REVISION_HUMANA'],
+      'APROBADA': ['APROBADA'],
+      'RECHAZADA': ['RECHAZADA'],
+    };
+    const estados = mapEstado[this.filtroEstado] || [];
+    return this.solicitudesPrevias.filter(s => estados.includes(s.estado));
   }
 
   get actividadesFiltradas(): ActividadDTO[] {
@@ -110,6 +156,36 @@ export class RevisionActividad {
     return activa ? 'badge-success' : 'badge-inactive';
   }
 
+  estadoSolicitudLabel(estado?: string): string {
+    const map: Record<string, string> = {
+      'EN_REVISION': 'En revisión',
+      'APROBADA': 'Aprobada',
+      'RECHAZADA': 'Rechazada',
+      'REVISION_HUMANA': 'Revisión IA',
+    };
+    return map[estado || ''] || '—';
+  }
+
+  estadoSolicitudBadgeClass(estado?: string): string {
+    const map: Record<string, string> = {
+      'EN_REVISION': 'status-badge-review',
+      'APROBADA': 'status-badge-approved',
+      'RECHAZADA': 'status-badge-rejected',
+      'REVISION_HUMANA': 'status-badge-review',
+    };
+    return map[estado || ''] || 'status-badge-review';
+  }
+
+  estadoSolicitudIcon(estado?: string): string {
+    const map: Record<string, string> = {
+      'EN_REVISION': 'pi pi-clock',
+      'APROBADA': 'pi pi-check-circle',
+      'RECHAZADA': 'pi pi-times-circle',
+      'REVISION_HUMANA': 'pi pi-spin pi-spinner',
+    };
+    return map[estado || ''] || 'pi pi-clock';
+  }
+
   ejeLabel(eje: ActividadDTO['eje']): string {
     const labels: Record<ActividadDTO['eje'], string> = {
       ENTORNO_SOCIAL: 'Entorno Social',
@@ -120,13 +196,63 @@ export class RevisionActividad {
     return labels[eje] ?? eje;
   }
 
-  periodicidadLabel(periodicidad: ActividadDTO['periodicidad']): string {
-    const labels: Record<ActividadDTO['periodicidad'], string> = {
+  periodicidadLabel(periodicidad: string | undefined): string {
+    const labels: Record<string, string> = {
       UNICA: 'Única ocasión',
       SEMANAL: 'Semanal',
       MENSUAL: 'Mensual'
     };
-    return labels[periodicidad] ?? periodicidad;
+    return labels[periodicidad || ''] ?? periodicidad ?? '—';
+  }
+
+  actividadAprobando: ActividadDTO | null = null;
+
+  abrirModalAprobar(act: ActividadDTO): void {
+    this.actividadAprobando = act;
+    this.puntosTDI = act.puntosTdi || 0;
+    this.ejeSeleccionado = act.eje || '';
+    this.modalAprobarVisible = true;
+  }
+
+  confirmarAprobacion(): void {
+    if (!this.actividadAprobando) return;
+    if (!this.puntosTDI || !this.ejeSeleccionado) {
+      alert('Debes proporcionar los puntos TDI y el eje');
+      return;
+    }
+    const act = this.actividadAprobando;
+    this.modalAprobarVisible = false;
+    // Actualizar puntos y eje primero
+    const actualizada = { ...act, puntosTdi: this.puntosTDI, eje: this.ejeSeleccionado as ActividadDTO['eje'] };
+    this.catalogoService.actualizar(act.id, actualizada).subscribe({
+      next: () => {
+        this.catalogoService.revisar(act.id, 'APROBADA').subscribe({
+          next: (updated) => {
+            const idx = this.actividades.findIndex(a => a.id === act.id);
+            if (idx >= 0) {
+              const original = this.actividades[idx];
+              // Actualizar solo los campos que vienen del servicio y los nuevos puntos/eje
+              this.actividades[idx] = {
+                ...original,
+                estadoRevision: updated?.estadoRevision ?? original.estadoRevision,
+                comentarioRevision: updated?.comentarioRevision ?? original.comentarioRevision,
+                puntosTdi: this.puntosTDI,
+                eje: this.ejeSeleccionado as ActividadDTO['eje'],
+              };
+            }
+            this.cdr.markForCheck();
+          },
+          error: (err) => {
+            console.error('Error aprobando:', err);
+            alert(err.error?.message || 'No se pudo aprobar la actividad');
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Error actualizando actividad:', err);
+        alert(err.error?.message || 'No se pudo actualizar los datos de la actividad');
+      },
+    });
   }
 
   aprobar(act: ActividadDTO): void {
@@ -181,6 +307,81 @@ export class RevisionActividad {
         alert(err.error?.message || 'No se pudo activar la actividad');
       },
     });
+  }
+
+  aprobarPrevia(sol: SolicitudDTO): void {
+    this.previaAprobando = sol;
+    this.puntosTDIPrevia = 0;
+    this.modalAprobarPreviaVisible = true;
+  }
+
+  confirmarAprobarPrevia(): void {
+    if (!this.previaAprobando) return;
+    if (!this.puntosTDIPrevia || this.puntosTDIPrevia < 1) {
+      alert('Debes ingresar los puntos TDI (mínimo 1)');
+      return;
+    }
+    const sol = this.previaAprobando;
+    this.modalAprobarPreviaVisible = false;
+
+    // Llamar endpoint para convertir PREVIA a Actividad en catálogo
+    this.catalogoService.crearDesdePrevia(sol.id, this.getCurrentUserId(), this.getCurrentUserRol(), this.puntosTDIPrevia)
+      .subscribe({
+        next: () => {
+          // Marcar la solicitud como aprobada
+          this.solicitudesService.revisar(sol.id, { estado: 'APROBADA', comentario: undefined }).subscribe({
+            next: () => {
+              this.cargarSolicitudesPrevias();
+              this.cdr.markForCheck();
+            },
+            error: (err) => {
+              console.error('Error aprobando solicitud:', err);
+              alert(err.error?.message || 'No se pudo aprobar la solicitud');
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Error creando actividad desde previa:', err);
+          alert(err.error?.message || 'No se pudo crear la actividad desde la solicitud');
+        }
+      });
+  }
+
+  abrirModalRechazarPrevia(sol: SolicitudDTO): void {
+    this.previaAprobando = sol;
+    this.motivoRechazoPrevia = '';
+    this.modalRechazarPreviaVisible = true;
+  }
+
+  confirmarRechazarPrevia(): void {
+    if (!this.previaAprobando) return;
+    if (!this.motivoRechazoPrevia?.trim()) {
+      alert('Debes proporcionar un motivo de rechazo');
+      return;
+    }
+    const sol = this.previaAprobando;
+    this.modalRechazarPreviaVisible = false;
+
+    this.solicitudesService.revisar(sol.id, { estado: 'RECHAZADA', comentario: this.motivoRechazoPrevia }).subscribe({
+      next: () => {
+        this.cargarSolicitudesPrevias();
+        this.motivoRechazoPrevia = '';
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error rechazando solicitud:', err);
+        alert(err.error?.message || 'No se pudo rechazar la solicitud');
+      }
+    });
+  }
+
+  private getCurrentUserId(): string {
+    // TODO: obtener del Auth service
+    return 'admin';
+  }
+
+  private getCurrentUserRol(): string {
+    return 'ADMINISTRADOR';
   }
 
   desactivar(act: ActividadDTO): void {

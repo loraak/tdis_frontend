@@ -14,7 +14,7 @@ export const authGuard: CanActivateFn = (route) => {
   const requiredRole = route.data?.['role'];
   if (requiredRole === 'admin' && !auth.isAdmin()) {
     if (auth.isExterno()) {
-      router.navigate(['/externo/catalogo']);
+      router.navigate(['/externo/mis-actividades']);
     } else {
       router.navigate(['/alumno/progreso']);
     }
@@ -23,7 +23,7 @@ export const authGuard: CanActivateFn = (route) => {
 
   if (requiredRole === 'alumno' && (auth.isAdmin() || auth.isExterno())) {
     if (auth.isExterno()) {
-      router.navigate(['/externo/catalogo']);
+      router.navigate(['/externo/mis-actividades']);
     } else {
       router.navigate(['/admin/resumen']);
     }

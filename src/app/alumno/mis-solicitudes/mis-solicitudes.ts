@@ -2,14 +2,17 @@ import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angula
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
 import { Auth } from '../../core/services/auth';
 import { SolicitudesService } from '../../core/services/solicitudes.service';
+import { DocumentosService } from '../../core/services/documentos.service';
 import { SolicitudDTO } from '../../core/models/solicitud';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-mis-solicitudes',
-  imports: [CommonModule, CardModule, TagModule],
+  imports: [CommonModule, CardModule, TagModule, DialogModule],
   templateUrl: './mis-solicitudes.html',
   styleUrl: './mis-solicitudes.css',
 })
@@ -18,7 +21,13 @@ export class MisSolicitudes implements OnInit, OnDestroy {
   private auth = inject(Auth);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private documentosService = inject(DocumentosService);
+  private sanitizer = inject(DomSanitizer);
   private pollingInterval: ReturnType<typeof setInterval> | null = null;
+
+  imagenUrl: SafeUrl | null = null;
+  mostrarImagen = false;
+  cargandoImagen = false;
 
   solicitudes: SolicitudDTO[] = [];
   expandedId: string | null = null;
@@ -162,5 +171,30 @@ export class MisSolicitudes implements OnInit, OnDestroy {
     this.filtroActivo = filtro;
     this.expandedId = null;
     this.cdr.detectChanges();
+  }
+
+  verEvidencia(solicitudId: string) {
+    this.cargandoImagen = true;
+    this.documentosService.descargarArchivo(solicitudId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        this.imagenUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+        this.mostrarImagen = true;
+        this.cargandoImagen = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cargandoImagen = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  cerrarImagen() {
+    this.mostrarImagen = false;
+    if (this.imagenUrl) {
+      URL.revokeObjectURL(this.imagenUrl as string);
+      this.imagenUrl = null;
+    }
   }
 }

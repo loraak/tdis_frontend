@@ -47,8 +47,8 @@ export class Navbar implements OnInit {
         this.solicitudesPendientes = sols.length;
         this.cdr.detectChanges();
       });
-      this.catalogoService.listarPorEstadoRevision('PENDIENTE').subscribe(acts => {
-        this.actividadesPendientes = acts.length;
+      this.solicitudesService.listarTodas().subscribe(sols => {
+        this.actividadesPendientes = sols.filter(s => s.tipoSolicitud === 'PREVIA' && (s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA')).length;
         this.cdr.detectChanges();
       });
       this.solicitudesService.listarPorEstado('RECHAZADA').subscribe(sols => {

@@ -61,11 +61,67 @@
                     </div>
                     @if (form.periodicidad === 'UNICA') {
                     <div class="form-field">
-                        <label class="form-label">Fecha de realización *</label>
+                        <label class="form-label">Fecha de inicio *</label>
                         <input class="custom-input" type="date" [(ngModel)]="form.fechaInicio" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Fecha de fin</label>
+                        <input class="custom-input" type="date" [(ngModel)]="form.fechaFin" />
                     </div>
                     }
                 </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="form-label">Horas efectivas</label>
+                        <input class="custom-input" type="number" [(ngModel)]="form.horasEfectivas" min="1" placeholder="Horas de participación" />
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Lugar *</label>
+                        <select class="custom-input" [(ngModel)]="form.lugar">
+                            @for (l of TIPOS_LUGAR; track l.value) {
+                            <option [value]="l.value">{{ l.label }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section-title">Dimensión(es) de Formación Integral * (múltiple)</div>
+                <div class="form-field">
+                    <p-multiSelect [options]="DIMENSIONES" [(ngModel)]="form.dimensionesFormacion" optionLabel="label" optionValue="value" placeholder="Selecciona dimensiones" display="chip" [showHeader]="true" [filter]="true" styleClass="w-full"></p-multiSelect>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="form-label">Nivel de impacto *</label>
+                        <select class="custom-input" [(ngModel)]="form.nivelImpacto">
+                            @for (n of NIVELES_IMPACTO; track n.value) {
+                            <option [value]="n.value">{{ n.label }}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Público objetivo * (múltiple)</label>
+                        <p-multiSelect [options]="PUBLICOS_OBJETIVO" [(ngModel)]="form.publicoObjetivo" optionLabel="label" optionValue="value" placeholder="Selecciona público" display="chip" [showHeader]="true" [filter]="true" styleClass="w-full"></p-multiSelect>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="form-label">Asignaturas relacionadas * (múltiple)</label>
+                        <p-multiSelect [options]="ASIGNATURAS" [(ngModel)]="form.asignaturasRelacionadas" optionLabel="label" optionValue="value" placeholder="Selecciona asignaturas" display="chip" [showHeader]="true" [filter]="true" styleClass="w-full"></p-multiSelect>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Competencias a reforzar * (múltiple)</label>
+                        <p-multiSelect [options]="COMPETENCIAS" [(ngModel)]="form.competenciasReforzar" optionLabel="label" optionValue="value" placeholder="Selecciona competencias" display="chip" [showHeader]="true" [filter]="true" styleClass="w-full"></p-multiSelect>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Tipo de evidencia requerida * (múltiple)</label>
+                    <p-multiSelect [options]="TIPOS_EVIDENCIA" [(ngModel)]="form.tiposEvidenciaRequerida" optionLabel="label" optionValue="value" placeholder="Selecciona tipos de evidencia" display="chip" [showHeader]="true" [filter]="true" styleClass="w-full"></p-multiSelect>
+                </div>
+
             </div>
 
             <div class="form-actions">

@@ -29,6 +29,14 @@ export interface RegisterExternoRequest {
   password: string;
 }
 
+export interface RegisterInternoRequest {
+  matricula: string;
+  email: string;
+  password: string;
+  nombre: string;
+  apellidos: string;
+}
+
 export interface UsuarioDTO {
   id: string;
   matricula?: string;
