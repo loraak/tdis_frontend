@@ -66,7 +66,6 @@ export class NuevaSolicitud implements OnInit {
 
   actividadIdPendiente: string | null = null;
 
-  // Selecciones múltiples para Solicitud Previa
   dimensiones: string[] = [];
   nivelImpacto: string = '';
   publicoObjetivo: string[] = [];
@@ -82,7 +81,6 @@ export class NuevaSolicitud implements OnInit {
   fechaInicio = '';
   fechaFin = '';
   
-  // Campos de Actividad para PREVIA
   eje: string = '';
 
   ngOnInit() {
@@ -191,20 +189,7 @@ export class NuevaSolicitud implements OnInit {
   cambiarTipo(tipo: string): void {
     this.tipoFormulario = tipo;
 
-    if (tipo === 'PREVIA') {
-      // En PREVIA no se precargan datos, es para crear actividad nueva
-      this.nombreActividad = '';
-      this.descripcion = '';
-      this.actividadPrecargada = false;
-      this.lugar = '';
-      this.horas = '';
-      this.horasEfectivas = null;
-      this.materiaRelacionada = '';
-      this.periodicidad = '';
-      this.fechaInicio = '';
-      this.fechaFin = '';
-      this.eje = '';
-    } else if (tipo === 'EVIDENCIA' && this.actividadSeleccionada) {
+    if (tipo === 'EVIDENCIA' && this.actividadSeleccionada) {
       this.nombreActividad = this.actividadSeleccionada.titulo;
       this.descripcion = this.actividadSeleccionada.descripcion || '';
       this.periodicidad = this.actividadSeleccionada.periodicidad || '';
@@ -286,10 +271,6 @@ export class NuevaSolicitud implements OnInit {
       errores.push('El lugar es requerido'); 
       camposInvalidos.push('lugar'); 
     }
-    if (this.tipoFormulario === 'PREVIA') {
-      if (!this.periodicidad) { errores.push('La periodicidad es requerida'); camposInvalidos.push('periodicidad'); }
-      if (!this.fechaInicio || !this.fechaInicio.trim()) { errores.push('La fecha de inicio es requerida'); camposInvalidos.push('fechaInicio'); }
-    }
     if (this.tipoFormulario === 'EVIDENCIA' && this.actividadPrecargada) {
       // Saltar validación de horas si viene precargado
     } else if (!this.horas || !this.horas.trim()) { 
@@ -307,25 +288,6 @@ export class NuevaSolicitud implements OnInit {
       if (!this.descripcion || this.descripcion.trim().length < 20) { errores.push('La descripción debe tener al menos 20 caracteres'); camposInvalidos.push('descripcion'); }
       if (!this.reflexion || this.reflexion.trim().length < 5) { errores.push('La reflexión es requerida (mínimo 5 palabras)'); camposInvalidos.push('reflexion'); }
       if (!this.archivoSeleccionado) { errores.push('Debes adjuntar una evidencia de imagen'); camposInvalidos.push('archivoSeleccionado'); }
-    }
-
-    if (this.tipoFormulario === 'PREVIA') {
-      if (!this.tutor || !this.tutor.trim()) { errores.push('El tutor es requerido'); camposInvalidos.push('tutor'); }
-      if (!this.descripcion || this.descripcion.trim().length < 20) { errores.push('La descripción detallada debe tener al menos 20 caracteres'); camposInvalidos.push('descripcion'); }
-      if (this.dimensiones.length === 0) { errores.push('Selecciona al menos una dimensión de formación integral'); camposInvalidos.push('dimensiones'); }
-      if (!this.nivelImpacto) { errores.push('Selecciona el nivel de impacto'); camposInvalidos.push('nivelImpacto'); }
-      if (this.publicoObjetivo.length === 0) { errores.push('Selecciona al menos un público objetivo'); camposInvalidos.push('publicoObjetivo'); }
-      if (!this.asistenciaEsperada || !this.asistenciaEsperada.trim()) { errores.push('La asistencia esperada es requerida'); camposInvalidos.push('asistenciaEsperada'); }
-      if (!this.alumnosGeneranTdi || !this.alumnosGeneranTdi.trim()) { errores.push('El número de alumnos que generarán TDI\'s es requerido'); camposInvalidos.push('alumnosGeneranTdi'); }
-      if (this.asignaturasRelacionadas.length === 0) { errores.push('Selecciona al menos una asignatura relacionada'); camposInvalidos.push('asignaturasRelacionadas'); }
-      if (this.competenciasReforzar.length === 0) { errores.push('Selecciona al menos una competencia a reforzar'); camposInvalidos.push('competenciasReforzar'); }
-      if (!this.impactoAcademico || this.impactoAcademico.trim().length < 10) { errores.push('El impacto académico es requerido (mínimo 10 caracteres)'); camposInvalidos.push('impactoAcademico'); }
-      if (!this.justificacionPersonal || this.justificacionPersonal.trim().length < 20) { errores.push('La justificación personal debe tener al menos 20 caracteres'); camposInvalidos.push('justificacionPersonal'); }
-      if (this.evidenciasRequeridas.length === 0) { errores.push('Selecciona al menos un tipo de evidencia requerida'); camposInvalidos.push('evidenciasRequeridas'); }
-      // Campos de Actividad requeridos para PREVIA
-      if (!this.eje) { errores.push('Selecciona el eje formativo'); camposInvalidos.push('eje'); }
-      if (!this.lugar) { errores.push('Selecciona el lugar (Interno/Externo)'); camposInvalidos.push('lugar'); }
-      if (!this.horasEfectivas || this.horasEfectivas < 1) { errores.push('Ingresa las horas efectivas (mínimo 1)'); camposInvalidos.push('horasEfectivas'); }
     }
 
     return { errores, camposInvalidos };
@@ -390,7 +352,6 @@ onSubmit() {
       cargoResponsable: this.cargoResponsable || undefined,
       telefonoResponsable: this.telefonoResponsable || undefined,
       correoResponsable: this.correoResponsable || undefined,
-      // Campos de Solicitud Previa
       dimensionesFormacion: this.dimensiones.length > 0 ? this.dimensiones.join(', ') : undefined,
       nivelImpacto: this.nivelImpacto || undefined,
       publicoObjetivo: this.publicoObjetivo.length > 0 ? this.publicoObjetivo.join(', ') : undefined,
@@ -402,13 +363,11 @@ onSubmit() {
       asistenciaEsperada: this.asistenciaEsperada || undefined,
       alumnosGeneranTdi: this.alumnosGeneranTdi || undefined,
       horasEfectivas: this.horasEfectivas ?? undefined,
-      // Campos de Actividad para PREVIA
       eje: this.tipoFormulario === 'PREVIA' ? (this.eje as 'ENTORNO_SOCIAL' | 'PERSONAL' | 'DEPORTIVO' | 'TRASCENDENCIA') : undefined,
       tipoLugar: this.tipoFormulario === 'PREVIA' ? (this.lugar === 'Externo' ? 'EXTERNO' : 'INTERNO') : undefined,
     }).pipe(
       switchMap(solicitud => {
         // Evidencia: subir archivo y analizar con webhook de IA
-        // Solicitud Previa: solo crear la solicitud, sin evidencia
         if (this.tipoFormulario === 'EVIDENCIA' && this.archivoSeleccionado) {
           return this.documentosService.subirArchivo(solicitud.id, this.archivoSeleccionado)
             .pipe(switchMap(() => this.solicitudesService.analizarIA(solicitud.id)));

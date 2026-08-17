@@ -85,9 +85,9 @@ export class Login implements OnInit {
     this.auth.login({ credencial: this.email.trim(), password: this.password }).subscribe({
       next: (res) => {
         if (res.tipoUsuario === 'EXTERNO') {
-        this.router.navigate(['/externo/mis-actividades']);
+          this.router.navigate(['/externo/mis-actividades']);
         } else if (res.tipoUsuario === 'INTERNO') {
-        this.router.navigate(['/interno/mis-actividades']);
+          this.router.navigate(['/interno/mis-actividades']);
         } else {
           this.error.set('Esta cuenta no es de tipo Externo');
           this.auth.logout();
