@@ -49,7 +49,6 @@ export class NuevaSolicitud implements OnInit {
   datosPrecargados = false;
 
   nombreActividad = '';
-  fecha = '';
   horas = '';
   lugar = '';
   tipoActividad = '';
@@ -78,7 +77,13 @@ export class NuevaSolicitud implements OnInit {
   impactoAcademico = '';
   asistenciaEsperada = '';
   alumnosGeneranTdi = '';
-  horasEstimadas = '';
+  horasEfectivas: number | null = null;
+  periodicidad = '';
+  fechaInicio = '';
+  fechaFin = '';
+  
+  // Campos de Actividad para PREVIA
+  eje: string = '';
 
   ngOnInit() {
     const user = this.auth.usuario();
@@ -140,10 +145,21 @@ export class NuevaSolicitud implements OnInit {
     this.tipoFormulario = 'EVIDENCIA';
     this.nombreActividad = act.titulo;
     this.descripcion = act.descripcion || '';
-    if (act.periodicidad === 'UNICA' && act.fechaInicio) {
-      this.fecha = act.fechaInicio;
-    } else {
-      this.fecha = '';
+    this.periodicidad = act.periodicidad || '';
+    this.fechaInicio = act.fechaInicio || '';
+    this.fechaFin = act.fechaFin || '';
+    this.horas = act.horasEfectivas ? String(act.horasEfectivas) : '';
+    
+    // Precargar y bloquear: Lugar
+    if (act.lugar === 'INTERNO') {
+      this.lugar = 'Interno (UTEQ)';
+    } else if (act.lugar === 'EXTERNO') {
+      this.lugar = 'Externo';
+    }
+    
+    // Precargar y bloquear: Materia relacionada (join de asignaturas)
+    if (act.asignaturasRelacionadas && act.asignaturasRelacionadas.length > 0) {
+      this.materiaRelacionada = act.asignaturasRelacionadas.join(', ');
     }
   }
 
@@ -152,7 +168,12 @@ export class NuevaSolicitud implements OnInit {
     this.actividadPrecargada = false;
     this.nombreActividad = '';
     this.descripcion = '';
-    this.fecha = '';
+    this.periodicidad = '';
+    this.fechaInicio = '';
+    this.fechaFin = '';
+    this.lugar = '';
+    this.horas = '';
+    this.materiaRelacionada = '';
   }
 
   volverAlSelector() {
@@ -171,17 +192,44 @@ export class NuevaSolicitud implements OnInit {
     this.tipoFormulario = tipo;
 
     if (tipo === 'PREVIA') {
+      // En PREVIA no se precargan datos, es para crear actividad nueva
       this.nombreActividad = '';
       this.descripcion = '';
+      this.actividadPrecargada = false;
+      this.lugar = '';
+      this.horas = '';
+      this.horasEfectivas = null;
+      this.materiaRelacionada = '';
+      this.periodicidad = '';
+      this.fechaInicio = '';
+      this.fechaFin = '';
+      this.eje = '';
     } else if (tipo === 'EVIDENCIA' && this.actividadSeleccionada) {
       this.nombreActividad = this.actividadSeleccionada.titulo;
       this.descripcion = this.actividadSeleccionada.descripcion || '';
+      this.periodicidad = this.actividadSeleccionada.periodicidad || '';
+      this.fechaInicio = this.actividadSeleccionada.fechaInicio || '';
+      this.fechaFin = this.actividadSeleccionada.fechaFin || '';
+      this.horas = this.actividadSeleccionada.horasEfectivas ? String(this.actividadSeleccionada.horasEfectivas) : '';
+      
+      // Precargar y bloquear: Lugar
+      if (this.actividadSeleccionada.lugar === 'INTERNO') {
+        this.lugar = 'Interno (UTEQ)';
+      } else if (this.actividadSeleccionada.lugar === 'EXTERNO') {
+        this.lugar = 'Externo';
+      }
+      
+      // Precargar y bloquear: Materia relacionada
+      if (this.actividadSeleccionada.asignaturasRelacionadas && this.actividadSeleccionada.asignaturasRelacionadas.length > 0) {
+        this.materiaRelacionada = this.actividadSeleccionada.asignaturasRelacionadas.join(', ');
+      }
+      this.actividadPrecargada = true;
     }
   }
 
   seleccionarDivision(val: string) { this.division = val; this.camposInvalidos.delete('division'); }
   seleccionarTurno(val: string) { this.turno = val; this.camposInvalidos.delete('turno'); }
-  seleccionarLugar(val: string) { this.lugar = val; this.camposInvalidos.delete('lugar'); }
+  seleccionarLugar(val: string) { if (!this.actividadPrecargada) { this.lugar = val; this.camposInvalidos.delete('lugar'); } }
 
   onInputChange(campo: string) { this.camposInvalidos.delete(campo); this.error = ''; }
   isInvalid(campo: string): boolean { return this.camposInvalidos.has(campo); }
@@ -232,13 +280,30 @@ export class NuevaSolicitud implements OnInit {
     if (!this.turno) { errores.push('El turno es requerido'); camposInvalidos.push('turno'); }
 
     if (!this.nombreActividad || !this.nombreActividad.trim()) { errores.push('El nombre de la actividad es requerido'); camposInvalidos.push('nombreActividad'); }
-    if (!this.lugar) { errores.push('El lugar es requerido'); camposInvalidos.push('lugar'); }
-    if (!this.horas || !this.horas.trim()) { errores.push('Las horas son requeridas'); camposInvalidos.push('horas'); }
+    if (this.tipoFormulario === 'EVIDENCIA' && this.actividadPrecargada) {
+      // Saltar validación de lugar y materiaRelacionada si vienen precargados
+    } else if (!this.lugar) { 
+      errores.push('El lugar es requerido'); 
+      camposInvalidos.push('lugar'); 
+    }
+    if (this.tipoFormulario === 'PREVIA') {
+      if (!this.periodicidad) { errores.push('La periodicidad es requerida'); camposInvalidos.push('periodicidad'); }
+      if (!this.fechaInicio || !this.fechaInicio.trim()) { errores.push('La fecha de inicio es requerida'); camposInvalidos.push('fechaInicio'); }
+    }
+    if (this.tipoFormulario === 'EVIDENCIA' && this.actividadPrecargada) {
+      // Saltar validación de horas si viene precargado
+    } else if (!this.horas || !this.horas.trim()) { 
+      errores.push('Las horas son requeridas'); 
+      camposInvalidos.push('horas'); 
+    }
 
     if (this.tipoFormulario === 'EVIDENCIA') {
       if (!this.tutor || !this.tutor.trim()) { errores.push('El tutor es requerido'); camposInvalidos.push('tutor'); }
       if (!this.tipoActividad || !this.tipoActividad.trim()) { errores.push('El tipo de actividad es requerido'); camposInvalidos.push('tipoActividad'); }
-      if (!this.materiaRelacionada || !this.materiaRelacionada.trim()) { errores.push('La materia relacionada es requerida'); camposInvalidos.push('materiaRelacionada'); }
+      if (!this.actividadPrecargada && (!this.materiaRelacionada || !this.materiaRelacionada.trim())) { 
+        errores.push('La materia relacionada es requerida'); 
+        camposInvalidos.push('materiaRelacionada'); 
+      }
       if (!this.descripcion || this.descripcion.trim().length < 20) { errores.push('La descripción debe tener al menos 20 caracteres'); camposInvalidos.push('descripcion'); }
       if (!this.reflexion || this.reflexion.trim().length < 5) { errores.push('La reflexión es requerida (mínimo 5 palabras)'); camposInvalidos.push('reflexion'); }
       if (!this.archivoSeleccionado) { errores.push('Debes adjuntar una evidencia de imagen'); camposInvalidos.push('archivoSeleccionado'); }
@@ -257,6 +322,10 @@ export class NuevaSolicitud implements OnInit {
       if (!this.impactoAcademico || this.impactoAcademico.trim().length < 10) { errores.push('El impacto académico es requerido (mínimo 10 caracteres)'); camposInvalidos.push('impactoAcademico'); }
       if (!this.justificacionPersonal || this.justificacionPersonal.trim().length < 20) { errores.push('La justificación personal debe tener al menos 20 caracteres'); camposInvalidos.push('justificacionPersonal'); }
       if (this.evidenciasRequeridas.length === 0) { errores.push('Selecciona al menos un tipo de evidencia requerida'); camposInvalidos.push('evidenciasRequeridas'); }
+      // Campos de Actividad requeridos para PREVIA
+      if (!this.eje) { errores.push('Selecciona el eje formativo'); camposInvalidos.push('eje'); }
+      if (!this.lugar) { errores.push('Selecciona el lugar (Interno/Externo)'); camposInvalidos.push('lugar'); }
+      if (!this.horasEfectivas || this.horasEfectivas < 1) { errores.push('Ingresa las horas efectivas (mínimo 1)'); camposInvalidos.push('horasEfectivas'); }
     }
 
     return { errores, camposInvalidos };
@@ -306,6 +375,9 @@ onSubmit() {
       reflexion: this.reflexion || undefined,
       lugar: this.lugar || undefined,
       horas: this.horas || undefined,
+      periodicidad: this.periodicidad || undefined,
+      fechaInicio: this.fechaInicio || undefined,
+      fechaFin: this.fechaFin || undefined,
       tipoActividad: this.tipoActividad || undefined,
       materiaRelacionada: this.materiaRelacionada || undefined,
       division: this.division || undefined,
@@ -329,7 +401,10 @@ onSubmit() {
       impactoAcademico: this.impactoAcademico || undefined,
       asistenciaEsperada: this.asistenciaEsperada || undefined,
       alumnosGeneranTdi: this.alumnosGeneranTdi || undefined,
-      horasEstimadas: this.horasEstimadas || undefined,
+      horasEfectivas: this.horasEfectivas ?? undefined,
+      // Campos de Actividad para PREVIA
+      eje: this.tipoFormulario === 'PREVIA' ? (this.eje as 'ENTORNO_SOCIAL' | 'PERSONAL' | 'DEPORTIVO' | 'TRASCENDENCIA') : undefined,
+      tipoLugar: this.tipoFormulario === 'PREVIA' ? (this.lugar === 'Externo' ? 'EXTERNO' : 'INTERNO') : undefined,
     }).pipe(
       switchMap(solicitud => {
         // Evidencia: subir archivo y analizar con webhook de IA

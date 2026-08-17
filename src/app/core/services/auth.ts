@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { LoginRequest, LoginResponse, RegisterRequest, RegisterExternoRequest } from '../models/usuario';
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterExternoRequest, RegisterInternoRequest } from '../models/usuario';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -35,6 +35,14 @@ export class Auth {
 
   register(request: RegisterRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/register`, request).pipe(
+      tap((res) => {
+        this.guardarSesion(res);
+      })
+    );
+  }
+
+  registerInterno(request: RegisterInternoRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/register-interno`, request).pipe(
       tap((res) => {
         this.guardarSesion(res);
       })

@@ -29,9 +29,9 @@ export class Login implements OnInit {
       if (this.auth.isAdmin()) {
         this.router.navigate(['/admin/resumen']);
       } else if (this.auth.isExterno()) {
-        this.router.navigate(['/externo/catalogo']);
+        this.router.navigate(['/externo/mis-actividades']);
       } else if (this.auth.isInterno()) {
-        this.router.navigate(['/interno/catalogo']);
+        this.router.navigate(['/interno/mis-actividades']);
       } else {
         this.router.navigate(['/alumno/progreso']);
       }
@@ -85,9 +85,9 @@ export class Login implements OnInit {
     this.auth.login({ credencial: this.email.trim(), password: this.password }).subscribe({
       next: (res) => {
         if (res.tipoUsuario === 'EXTERNO') {
-          this.router.navigate(['/externo/catalogo']);
+        this.router.navigate(['/externo/mis-actividades']);
         } else if (res.tipoUsuario === 'INTERNO') {
-          this.router.navigate(['/interno/catalogo']);
+        this.router.navigate(['/interno/mis-actividades']);
         } else {
           this.error.set('Esta cuenta no es de tipo Externo');
           this.auth.logout();

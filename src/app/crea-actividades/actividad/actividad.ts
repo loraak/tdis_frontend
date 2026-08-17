@@ -134,6 +134,7 @@ export class Actividad {
       periodicidad: (this.periodicidad as ActividadDTO['periodicidad']) || 'UNICA',
       fechaInicio: this.fechaInicio || '',
       fechaFin: this.fechaFin || undefined,
+      lugar: rol === 'EXTERNO' ? 'EXTERNO' : 'INTERNO',
       activa: false,
       creadorId: user?.usuarioId,
       creadorTipo: rol as ActividadDTO['creadorTipo'],

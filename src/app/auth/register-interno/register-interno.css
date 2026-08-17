@@ -1,0 +1,344 @@
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #F0F4FA 0%, #E2ECF7 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.university-logo {
+    height: 85px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    color: var(--tdis-color-text-blue);
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem 0;
+}
+
+.main-title {
+    color: var(--tdis-color-text-blue);
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0 0 1.5rem 0;
+}
+
+.badge-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-green {
+    background-color: rgba(0, 194, 122, 0.12);
+    color: var(--tdis-color-light-green);
+}
+
+.badge-blue {
+    background-color: rgba(0, 180, 216, 0.12);
+    color: var(--tdis-color-light-blue);
+}
+
+.badge-yellow {
+    background-color: rgba(245, 166, 35, 0.12);
+    color: var(--tdis-color-yellow);
+}
+
+.badge-purple {
+    background-color: rgba(167, 139, 250, 0.12);
+    color: var(--tdis-color-light-purple);
+}
+
+.icon-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-blue {
+    background-color: rgba(0, 180, 216, 0.1);
+    color: var(--tdis-color-light-blue);
+    border: 1px solid rgba(0, 180, 216, 0.2);
+}
+
+.user-icon {
+    font-size: 1.4rem;
+}
+
+::v-deep .login-card-wrapper .p-card {
+    border-radius: 24px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 10px 30px rgba(30, 58, 95, 0.06) !important;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: var(--tdis-color-text-blue);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.card-title-text h2 {
+    color: var(--tdis-color-navy-blue);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.card-title-text p {
+    color: #7A8B9E;
+    font-size: 0.85rem;
+    margin: 0.2rem 0 0 0;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.tipo-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.tipo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.2rem 1rem;
+    border: 2px solid #E2EAF4;
+    border-radius: 14px;
+    background-color: #F4F7FC;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tipo-card:hover {
+    border-color: #00B4D8;
+    background-color: rgba(0, 180, 216, 0.04);
+}
+
+.tipo-card.selected {
+    border-color: #00B4D8;
+    background-color: rgba(0, 180, 216, 0.08);
+    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.1);
+}
+
+.tipo-icon {
+    font-size: 1.6rem;
+    color: var(--tdis-color-light-blue);
+}
+
+.tipo-card.selected .tipo-icon {
+    color: #00B4D8;
+}
+
+.tipo-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--tdis-color-navy-blue);
+}
+
+.tipo-desc {
+    font-size: 0.75rem;
+    color: #7A8B9E;
+}
+
+.section-title {
+    color: var(--tdis-color-navy-blue);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #E2EAF4;
+}
+
+.section-title i {
+    color: var(--tdis-color-light-blue);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    color: #7A8B9E;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 0.6rem;
+}
+
+.form-group input[pInputText] {
+    background-color: #F4F7FC;
+    border: 1px solid #E2EAF4;
+    border-radius: 12px;
+    padding: 0.85rem 1.2rem;
+    color: var(--tdis-color-navy-blue);
+}
+
+.form-group input[pInputText]:focus {
+    border-color: var(--tdis-color-light-blue) !important;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15) !important;
+}
+
+.field-error {
+    color: #DC2626;
+    font-size: 0.75rem;
+    margin-top: 0.35rem;
+}
+
+.btn-submit {
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.1s ease, filter 0.2s ease;
+}
+
+.btn-green {
+    background-color: var(--tdis-color-light-green);
+    box-shadow: 0 4px 12px rgba(0, 194, 122, 0.2);
+}
+
+.btn-blue {
+    background-color: var(--tdis-color-light-blue);
+    box-shadow: 0 4px 12px rgba(0, 180, 216, 0.2);
+}
+
+.btn-submit:hover {
+    filter: brightness(0.95);
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.error-msg {
+    background-color: #FEF2F2;
+    color: #DC2626;
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #FECACA;
+    text-align: center;
+}
+
+.success-content {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.success-icon {
+    font-size: 3rem;
+    color: var(--tdis-color-light-green);
+    margin-bottom: 1rem;
+}
+
+.success-content h2 {
+    color: var(--tdis-color-navy-blue);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.success-content p {
+    color: #7A8B9E;
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem 0;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.25s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

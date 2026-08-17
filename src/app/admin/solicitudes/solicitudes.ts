@@ -3,26 +3,33 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 import { SolicitudesService } from '../../core/services/solicitudes.service';
+import { DocumentosService } from '../../core/services/documentos.service';
 import { SolicitudDTO } from '../../core/models/solicitud';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-solicitudes',
-  imports: [CardModule, TagModule, CommonModule, FormsModule],
+  imports: [CardModule, TagModule, CommonModule, FormsModule, DialogModule],
   templateUrl: './solicitudes.html',
   styleUrl: './solicitudes.css',
 })
 export class Solicitudes implements OnInit {
   private solicitudesService = inject(SolicitudesService);
   private cdr = inject(ChangeDetectorRef);
+  private documentosService = inject(DocumentosService);
+  private sanitizer = inject(DomSanitizer);
 
   solicitudes: SolicitudDTO[] = [];
   filtroEstado: string = 'TODO';
-  filtroActivo: 'EVIDENCIA' | 'PREVIA' = 'EVIDENCIA';
   expandedId: string | null = null;
   loading = true;
 
   nuevoComentario: string = '';
+  imagenUrl: SafeUrl | null = null;
+  mostrarImagen = false;
+  cargandoImagen = false;
 
   ngOnInit() {
     this.cargarSolicitudes();
@@ -44,7 +51,7 @@ export class Solicitudes implements OnInit {
   }
 
   get solicitudesFiltradas(): SolicitudDTO[] {
-    let resultado = this.solicitudes.filter(s => s.tipoSolicitud === this.filtroActivo);
+    let resultado = this.solicitudes.filter(s => s.tipoSolicitud === 'EVIDENCIA');
     if (this.filtroEstado === 'TODO') return resultado;
     if (this.filtroEstado === 'EN_REVISION') return resultado.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA');
     return resultado.filter(s => s.estado === this.filtroEstado);
@@ -53,15 +60,6 @@ export class Solicitudes implements OnInit {
   setFiltro(estado: string) {
     this.filtroEstado = estado;
   }
-
-  cambiarFiltroTipo(filtro: 'EVIDENCIA' | 'PREVIA') {
-    this.filtroActivo = filtro;
-    this.expandedId = null;
-    this.cdr.detectChanges();
-  }
-
-  get totalEvidencias(): number { return this.solicitudes.filter(s => s.tipoSolicitud === 'EVIDENCIA').length; }
-  get totalPrevias(): number { return this.solicitudes.filter(s => s.tipoSolicitud === 'PREVIA').length; }
 
   toggleExpand(id: string) {
     this.expandedId = this.expandedId === id ? null : id;
@@ -120,4 +118,29 @@ export class Solicitudes implements OnInit {
   get pendientes(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'EN_REVISION' || s.estado === 'REVISION_HUMANA').length; }
   get aprobadas(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'APROBADA').length; }
   get rechazadas(): number { return this.solicitudesFiltradas.filter(s => s.estado === 'RECHAZADA').length; }
+
+  verEvidencia(solicitudId: string) {
+    this.cargandoImagen = true;
+    this.documentosService.descargarArchivo(solicitudId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        this.imagenUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+        this.mostrarImagen = true;
+        this.cargandoImagen = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cargandoImagen = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  cerrarImagen() {
+    this.mostrarImagen = false;
+    if (this.imagenUrl) {
+      URL.revokeObjectURL(this.imagenUrl as string);
+      this.imagenUrl = null;
+    }
+  }
 }

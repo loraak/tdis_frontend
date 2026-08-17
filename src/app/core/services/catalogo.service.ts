@@ -60,4 +60,12 @@ export class CatalogoService {
     }
     return this.http.post<ActividadDTO>(`${this.apiUrl}/${id}/revisar`, {}, { params });
   }
+
+  crearDesdePrevia(solicitudId: string, creadorId: string, creadorTipo: string, puntosTdi: number): Observable<ActividadDTO> {
+    const params = new HttpParams()
+      .set('creadorId', creadorId)
+      .set('creadorTipo', creadorTipo)
+      .set('puntosTdi', puntosTdi);
+    return this.http.post<ActividadDTO>(`${this.apiUrl}/desde-previa/${solicitudId}`, {}, { params });
+  }
 }

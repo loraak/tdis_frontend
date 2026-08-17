@@ -446,3 +446,28 @@
     background-color: #e2e8f0;
     color: #334155;
 }
+
+.btn-ver-evidencia {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-ver-evidencia:hover:not(:disabled) {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+.btn-ver-evidencia:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

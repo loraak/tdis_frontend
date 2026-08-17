@@ -30,6 +30,14 @@ export interface CrearSolicitudRequest {
   asistenciaEsperada?: string;
   alumnosGeneranTdi?: string;
   horasEstimadas?: string;
+  periodicidad?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
+  // Campos de Actividad para PREVIA
+  eje?: 'ENTORNO_SOCIAL' | 'PERSONAL' | 'DEPORTIVO' | 'TRASCENDENCIA';
+  puntosTdi?: number;
+  horasEfectivas?: number;
+  tipoLugar?: 'INTERNO' | 'EXTERNO';
 }
 
 export interface SolicitudDTO {
@@ -77,8 +85,16 @@ export interface SolicitudDTO {
   asistenciaEsperada?: string;
   alumnosGeneranTdi?: string;
   horasEstimadas?: string;
+  periodicidad?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
   createdAt: string;
   updatedAt?: string;
+  // Campos de Actividad para PREVIA
+  eje?: 'ENTORNO_SOCIAL' | 'PERSONAL' | 'DEPORTIVO' | 'TRASCENDENCIA';
+  puntosTdi?: number;
+  horasEfectivas?: number;
+  tipoLugar?: 'INTERNO' | 'EXTERNO';
 }
 
 export interface RevisarSolicitudRequest {

@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { CatalogoService } from '../../core/services/catalogo.service';
 import { ActividadDTO } from '../../core/models/actividad';
 
 @Component({
   selector: 'app-admin-catalogo',
-  imports: [CommonModule, FormsModule, CardModule, TagModule],
+  imports: [CommonModule, FormsModule, CardModule, TagModule, DialogModule, CheckboxModule, MultiSelectModule],
   templateUrl: './catalogo.html',
   styleUrl: './catalogo.css',
 })
@@ -28,6 +31,63 @@ export class AdminCatalogo implements OnInit {
 
   EJES = ['ENTORNO_SOCIAL', 'PERSONAL', 'DEPORTIVO', 'TRASCENDENCIA'];
   PERIODICIDADES = ['UNICA', 'SEMANAL', 'MENSUAL'];
+
+  DIMENSIONES = [
+    { label: 'Identidad personal (Aprender a conocer)', value: 'IDENTIDAD_PERSONAL' },
+    { label: 'Entorno social (Aprender a convivir)', value: 'ENTORNO_SOCIAL' },
+    { label: 'Entorno físico (Aprender a Hacer)', value: 'ENTORNO_FISICO' },
+    { label: 'Trascendencia (Aprender a Ser)', value: 'TRASCENDENCIA' },
+  ];
+
+  NIVELES_IMPACTO = [
+    { label: 'Explorador (conoce)', value: 'EXPLORADOR' },
+    { label: 'Promotor (participa)', value: 'PROMOTOR' },
+    { label: 'Líder (hace)', value: 'LIDER' },
+    { label: 'Embajador (Lidera)', value: 'EMBAJADOR' },
+  ];
+
+  PUBLICOS_OBJETIVO = [
+    { label: 'Solo alumnas', value: 'SOLO_ALUMNAS' },
+    { label: 'Solo alumnos', value: 'SOLO_ALUMNOS' },
+    { label: 'Solo División Industrial', value: 'SOLO_DIVISION_INDUSTRIAL' },
+    { label: 'Solo División Económica-Administrativa', value: 'SOLO_DIVISION_ECONOMICO_ADMINISTRATIVA' },
+    { label: 'Solo División Tecnologías', value: 'SOLO_DIVISION_TECNOLOGIAS' },
+    { label: 'Solo División Idiomas', value: 'SOLO_DIVISION_IDIOMAS' },
+    { label: 'Todas las divisiones', value: 'TODAS_LAS_DIVISIONES' },
+  ];
+
+  ASIGNATURAS = [
+    { label: '1ro Desarrollo Humano y Valores', value: 'DESARROLLO_HUMANO_Y_VALORES' },
+    { label: '2do Habilidades Socioemocionales', value: 'HABILIDADES_SOCIOEMOCIONALES' },
+    { label: '3ra Desarrollo del Pensamiento Crítico', value: 'DESARROLLO_DEL_PENSAMIENTO_CRITICO' },
+    { label: '4to Ética y Valores', value: 'ETICA_Y_VALORES' },
+    { label: '5to Liderazgo de Equipos de Alto Desempeño', value: 'LIDERAZGO_DE_EQUIPOS_DE_ALTO_DESEMPENO' },
+    { label: '7mo Habilidades Gerenciales', value: 'HABILIDADES_GERENCIALES' },
+  ];
+
+  COMPETENCIAS = [
+    { label: 'Comunicación efectiva', value: 'COMUNICACION_EFECTIVA' },
+    { label: 'Trabajo en equipo', value: 'TRABAJO_EN_EQUIPO' },
+    { label: 'Liderazgo', value: 'LIDERAZGO' },
+    { label: 'Pensamiento crítico', value: 'PENSAMIENTO_CRITICO' },
+    { label: 'Responsabilidad y ética', value: 'RESPONSABILIDAD_Y_ETICA' },
+    { label: 'Toma de decisiones', value: 'TOMA_DE_DECISIONES' },
+    { label: 'Autogestión y disciplina', value: 'AUTOGESTION_Y_DISCIPLINA' },
+    { label: 'Participación social', value: 'PARTICIPACION_SOCIAL' },
+  ];
+
+  TIPOS_EVIDENCIA = [
+    { label: 'Lista de Asistencia firmada por el responsable', value: 'LISTA_ASISTENCIA_FIRMADA' },
+    { label: 'Fotografía', value: 'FOTOGRAFIA' },
+    { label: 'Constancia / documento', value: 'CONSTANCIA_DOCUMENTO' },
+    { label: 'Producto o reporte elaborado', value: 'PRODUCTO_REPORTE_ELABORADO' },
+    { label: 'Otro', value: 'OTRO' },
+  ];
+
+  TIPOS_LUGAR = [
+    { label: 'Interno (UTEQ)', value: 'INTERNO' },
+    { label: 'Externo', value: 'EXTERNO' },
+  ];
 
   ngOnInit() {
     this.cargarActividades();
@@ -73,6 +133,15 @@ export class AdminCatalogo implements OnInit {
       puntosTdi: actividad.puntosTdi,
       periodicidad: actividad.periodicidad,
       fechaInicio: actividad.fechaInicio || '',
+      fechaFin: actividad.fechaFin || '',
+      horasEfectivas: actividad.horasEfectivas,
+      lugar: actividad.lugar,
+      dimensionesFormacion: actividad.dimensionesFormacion || [],
+      nivelImpacto: actividad.nivelImpacto,
+      publicoObjetivo: actividad.publicoObjetivo || [],
+      asignaturasRelacionadas: actividad.asignaturasRelacionadas || [],
+      competenciasReforzar: actividad.competenciasReforzar || [],
+      tiposEvidenciaRequerida: actividad.tiposEvidenciaRequerida || [],
     };
     this.mostrarFormulario = true;
   }
@@ -95,6 +164,15 @@ export class AdminCatalogo implements OnInit {
       puntosTdi: this.form.puntosTdi,
       periodicidad: this.form.periodicidad as ActividadDTO['periodicidad'],
       fechaInicio: this.form.periodicidad === 'UNICA' ? this.form.fechaInicio : '',
+      fechaFin: this.form.fechaFin || undefined,
+      horasEfectivas: this.form.horasEfectivas,
+      lugar: this.form.lugar,
+      dimensionesFormacion: this.form.dimensionesFormacion as ActividadDTO['dimensionesFormacion'],
+      nivelImpacto: this.form.nivelImpacto as ActividadDTO['nivelImpacto'],
+      publicoObjetivo: this.form.publicoObjetivo as ActividadDTO['publicoObjetivo'],
+      asignaturasRelacionadas: this.form.asignaturasRelacionadas as ActividadDTO['asignaturasRelacionadas'],
+      competenciasReforzar: this.form.competenciasReforzar as ActividadDTO['competenciasReforzar'],
+      tiposEvidenciaRequerida: this.form.tiposEvidenciaRequerida as ActividadDTO['tiposEvidenciaRequerida'],
       activa: true,
       createdAt: new Date(),
     };
@@ -144,7 +222,23 @@ export class AdminCatalogo implements OnInit {
   }
 
   private formVacio(): FormActividad {
-    return { titulo: '', descripcion: '', eje: 'ENTORNO_SOCIAL', puntosTdi: 1, periodicidad: 'UNICA', fechaInicio: '' };
+    return {
+      titulo: '',
+      descripcion: '',
+      eje: 'ENTORNO_SOCIAL',
+      puntosTdi: 1,
+      periodicidad: 'UNICA',
+      fechaInicio: '',
+      fechaFin: '',
+      horasEfectivas: undefined,
+      lugar: 'INTERNO',
+      dimensionesFormacion: [],
+      nivelImpacto: undefined,
+      publicoObjetivo: [],
+      asignaturasRelacionadas: [],
+      competenciasReforzar: [],
+      tiposEvidenciaRequerida: [],
+    };
   }
 }
 
@@ -155,4 +249,13 @@ interface FormActividad {
   puntosTdi: number;
   periodicidad: string;
   fechaInicio: string;
+  fechaFin: string;
+  horasEfectivas?: number;
+  lugar?: 'INTERNO' | 'EXTERNO';
+  dimensionesFormacion: string[];
+  nivelImpacto?: string;
+  publicoObjetivo: string[];
+  asignaturasRelacionadas: string[];
+  competenciasReforzar: string[];
+  tiposEvidenciaRequerida: string[];
 }

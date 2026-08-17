@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
 import { RegisterExterno } from './auth/register-externo/register-externo';
+import { RegisterInterno } from './auth/register-interno/register-interno';
 import { MainLayout } from './shared/components/main-layout/main-layout';
 import { NuevaSolicitud } from './alumno/nueva-solicitud/nueva-solicitud';
 import { MisSolicitudes } from './alumno/mis-solicitudes/mis-solicitudes';
@@ -20,6 +21,7 @@ export const routes: Routes = [
     {path: 'login', component: Login},
     {path: 'register', component: Register},
     {path: 'register-externo', component: RegisterExterno},
+    {path: 'register-interno', component: RegisterInterno},
     {path: 'alumno', component: MainLayout, canActivate: [authGuard], data: {role: 'alumno'}, children: [
         { path: 'progreso',    component: ProgresoAlumno },
         { path: 'nueva-solicitud',   component: NuevaSolicitud },

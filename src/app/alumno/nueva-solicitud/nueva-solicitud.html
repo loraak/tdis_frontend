@@ -177,23 +177,67 @@
                     }
                 </div>
 
+                @if (tipoFormulario === 'PREVIA') {
                 <div class="form-field">
-                    <label class="form-label">Fecha en que se realizó *</label>
-                    <input class="custom-input" type="text" [(ngModel)]="fecha" name="fecha" [disabled]="actividadPrecargada" />
+                    <label class="form-label">Eje formativo *</label>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('eje')">
+                        <button type="button" class="pill-button" [class.selected]="eje === 'ENTORNO_SOCIAL'" (click)="eje = 'ENTORNO_SOCIAL'">Entorno Social</button>
+                        <button type="button" class="pill-button" [class.selected]="eje === 'PERSONAL'" (click)="eje = 'PERSONAL'">Personal</button>
+                        <button type="button" class="pill-button" [class.selected]="eje === 'DEPORTIVO'" (click)="eje = 'DEPORTIVO'">Deportivo</button>
+                        <button type="button" class="pill-button" [class.selected]="eje === 'TRASCENDENCIA'" (click)="eje = 'TRASCENDENCIA'">Trascendencia</button>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Periodicidad *</label>
+                    <div class="pill-selection-wrapper" [class.has-error]="!periodicidad">
+                        <button type="button" class="pill-button" [class.selected]="periodicidad === 'UNICA'" (click)="periodicidad = 'UNICA'">Única ocasión</button>
+                        <button type="button" class="pill-button" [class.selected]="periodicidad === 'SEMANAL'" (click)="periodicidad = 'SEMANAL'">Semanal</button>
+                        <button type="button" class="pill-button" [class.selected]="periodicidad === 'MENSUAL'" (click)="periodicidad = 'MENSUAL'">Mensual</button>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Fecha de inicio *</label>
+                    <input class="custom-input" type="date" [(ngModel)]="fechaInicio" name="fechaInicio" [class.is-invalid]="isInvalid('fechaInicio')" (input)="onInputChange('fechaInicio')" />
                 </div>
                 <div class="form-field">
-                    <label class="form-label">Horas efectivas o tiempo de participación *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." [(ngModel)]="horas" name="horas" [class.is-invalid]="isInvalid('horas')" (input)="onInputChange('horas')" />
+                    <label class="form-label">Fecha de finalización</label>
+                    <input class="custom-input" type="date" [(ngModel)]="fechaFin" name="fechaFin" (input)="onInputChange('fechaFin')" />
+                </div>
 
+                <div class="form-field">
+                    <label class="form-label">Horas efectivas *</label>
+                    <input class="custom-input" type="number" min="1" placeholder="Ej. 8" [(ngModel)]="horasEfectivas" name="horasEfectivas" [class.is-invalid]="isInvalid('horasEfectivas')" (input)="onInputChange('horasEfectivas')" />
+                </div>
+
+                <div class="form-field full-width">
+                    <label class="form-label">Lugar *</label>
+                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('lugar')">
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Interno (UTEQ)'" [class.is-invalid]="isInvalid('lugar')" (click)="lugar = 'Interno (UTEQ)'">Interno (UTEQ)</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Externo'" [class.is-invalid]="isInvalid('lugar')" (click)="lugar = 'Externo'">Externo</button>
+                    </div>
+                </div>
+                }
+
+<div class="form-field">
+                    <label class="form-label">Horas efectivas o tiempo de participación *</label>
+                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." [(ngModel)]="horas" name="horas" [class.is-invalid]="isInvalid('horas')" (input)="onInputChange('horas')" [disabled]="actividadPrecargada" />
+                    @if (actividadPrecargada) {
+                    <small class="text-muted">Precargado desde la actividad seleccionada</small>
+                    }
                 </div>
 
                 <div class="form-field full-width">
                     <label class="form-label">Lugar en donde se llevó a cabo *</label>
                     <div class="pill-selection-wrapper" [class.has-error]="isInvalid('lugar')">
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Interno (UTEQ)'" [class.is-invalid]="isInvalid('lugar')" (click)="seleccionarLugar('Interno (UTEQ)')">Interno (UTEQ)</button>
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Externo'" [class.is-invalid]="isInvalid('lugar')" (click)="seleccionarLugar('Externo')">Externo</button>
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Otro'" [class.is-invalid]="isInvalid('lugar')" (click)="seleccionarLugar('Otro')">Otro</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Interno (UTEQ)'" [class.is-invalid]="isInvalid('lugar')" [disabled]="actividadPrecargada" (click)="actividadPrecargada || seleccionarLugar('Interno (UTEQ)')">Interno (UTEQ)</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Externo'" [class.is-invalid]="isInvalid('lugar')" [disabled]="actividadPrecargada" (click)="actividadPrecargada || seleccionarLugar('Externo')">Externo</button>
+                        <button type="button" class="pill-button" [class.selected]="lugar === 'Otro'" [class.is-invalid]="isInvalid('lugar')" [disabled]="actividadPrecargada" (click)="actividadPrecargada || seleccionarLugar('Otro')">Otro</button>
                     </div>
+                    @if (actividadPrecargada) {
+                    <small class="text-muted">Precargado desde la actividad seleccionada</small>
+                    }
                 </div>
 
                 @if (tipoFormulario === 'PREVIA') {
@@ -239,7 +283,10 @@
 
                 <div class="form-field full-width">
                     <label class="form-label">Materia con la que se relaciona tu actividad *</label>
-                    <input type="text" class="custom-input" [(ngModel)]="materiaRelacionada" name="materiaRelacionada" [class.is-invalid]="isInvalid('materiaRelacionada')" (input)="onInputChange('materiaRelacionada')" />
+                    <input type="text" class="custom-input" [(ngModel)]="materiaRelacionada" name="materiaRelacionada" [class.is-invalid]="isInvalid('materiaRelacionada')" (input)="onInputChange('materiaRelacionada')" [disabled]="actividadPrecargada" />
+                    @if (actividadPrecargada) {
+                    <small class="text-muted">Precargado desde la actividad seleccionada</small>
+                    }
                 </div>
                 }
 
@@ -326,11 +373,6 @@
                         <button type="button" class="pill-button" [class.selected]="competenciasReforzar.includes('Otro')" (click)="toggleCompetencia('Otro')">Otro</button>
                     </div>
                 </div>
-
-                <div class="form-field full-width">
-                    <label class="form-label">Horas estimadas *</label>
-                    <input type="text" class="custom-input" placeholder="Ej. 4" [(ngModel)]="horasEstimadas" name="horasEstimadas" [class.is-invalid]="isInvalid('horasEstimadas')" (input)="onInputChange('horasEstimadas')" />
-                </div>
                 } @else {
                 <div class="form-field full-width">
                     <label class="form-label">Reflexión sobre tu aprendizaje *</label>
@@ -363,7 +405,7 @@
                     <label class="form-label">Tipo de evidencia requerida * <small>(múltiple)</small></label>
                     <div class="pill-selection-wrapper" [class.has-error]="isInvalid('evidenciasRequeridas')">
                         <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Lista de Asistencia firmada por el responsable')" (click)="toggleEvidencia('Lista de Asistencia firmada por el responsable')">Lista de Asistencia firmada por el responsable</button>
-                        <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Fotografía + reflexión escrita')" (click)="toggleEvidencia('Fotografía + reflexión escrita')">Fotografía + reflexión escrita</button>
+                        <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Fotografía')" (click)="toggleEvidencia('Fotografía')">Fotografía</button>
                         <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Constancia / documento')" (click)="toggleEvidencia('Constancia / documento')">Constancia / documento</button>
                         <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Producto o reporte elaborado')" (click)="toggleEvidencia('Producto o reporte elaborado')">Producto o reporte elaborado</button>
                         <button type="button" class="pill-button" [class.selected]="evidenciasRequeridas.includes('Otro')" (click)="toggleEvidencia('Otro')">Otro</button>
@@ -460,7 +502,7 @@
         </p-card>
     }
 
-    <button type="submit" class="btn-submit btn-yellow" (click)="onSubmit()" [disabled]="loading || !actividadSeleccionada">{{ loading ? 'Enviando...' : 'Enviar solicitud de validación' }}
+    <button type="submit" class="btn-submit btn-yellow" (click)="onSubmit()" [disabled]="loading || (tipoFormulario === 'EVIDENCIA' && !actividadSeleccionada)">{{ loading ? 'Enviando...' : 'Enviar solicitud de validación' }}
     </button>
 
     }
