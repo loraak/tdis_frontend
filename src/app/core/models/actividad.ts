@@ -4,7 +4,7 @@ export interface ActividadDTO {
   descripcion: string;
   eje: 'ENTORNO_SOCIAL' | 'PERSONAL' | 'DEPORTIVO' | 'TRASCENDENCIA';
   puntosTdi: number;
-  periodicidad: 'UNICA' | 'SEMANAL' | 'MENSUAL';
+  periodicidad: 'UNICA' | 'SEMANAL' | 'MENSUAL' | 'CUATRIMESTRAL' | 'ANUAL';
   fechaInicio: string;
   fechaFin?: string;
   horasEfectivas?: number;
@@ -17,6 +17,7 @@ export interface ActividadDTO {
   tiposEvidenciaRequerida?: ('LISTA_ASISTENCIA_FIRMADA' | 'FOTOGRAFIA' | 'CONSTANCIA_DOCUMENTO' | 'PRODUCTO_REPORTE_ELABORADO' | 'OTRO')[];
   activa: boolean;
   estadoRevision?: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA';
+  area?: string;
   creadorId?: string;
   creadorNombre?: string;
   creadorTipo?: 'INTERNO' | 'EXTERNO' | 'ADMINISTRADOR' | 'ALUMNO';

@@ -124,7 +124,9 @@ export class Actividades {
     const labels: Record<ActividadDTO['periodicidad'], string> = {
       UNICA: 'Única ocasión',
       SEMANAL: 'Semanal',
-      MENSUAL: 'Mensual'
+      MENSUAL: 'Mensual',
+      CUATRIMESTRAL: 'Cuatrimestral',
+      ANUAL: 'Anual'
     };
     return labels[periodicidad] ?? periodicidad;
   }

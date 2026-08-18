@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AlumnoResumenDTO } from '../models/admin';
-import { generarGraficoAlumnosRecientes, generarGraficoNiveles, generarGraficoEjes, generarGraficoActividadesRecientes, generarGraficoTemporalidad } from '../utils/reporte-charts.utils';
+import { generarGraficoAlumnosRecientes, generarGraficoNiveles, generarGraficoEjes, generarGraficoActividadesRecientes, generarGraficoTemporalidad, generarGraficoAreas } from '../utils/reporte-charts.utils';
 import { ActividadDTO } from '../models/actividad';
 import { filtrarAlumnosEnRiesgo } from '../utils/riesgo.utils';
 import { obtenerCuatrimestreActual, Periodo } from '../utils/periodo.utils';
@@ -25,6 +25,7 @@ export interface ReporteActividadesData {
   actividades: ActividadDTO[];
   distribucionEjes: Record<string, number>;
   distribucionPeriodicidad: Record<string, number>;
+  distribucionAreas: Record<string, number>;
 }
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
@@ -182,55 +183,62 @@ export class ReporteService {
   async generarReporteActividades(data: ReporteActividadesData): Promise<void> {
     const doc = new jsPDF();
     const altoCabecera = 30;
-    doc.setFillColor(7, 23, 40);
-    doc.rect(0, 0, 210, altoCabecera, 'F'); 
-
-    let y = 14; 
-
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255, 255, 255);
-    doc.text('REPORTE DE ACTIVIDADES', 14, y);
-
-    y += 7;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(203, 213, 225);
-    doc.text('Tokens de Desarrollo Integral', 14, y);
-
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255, 255, 255);
-    doc.text(`FECHA: ${new Date().toLocaleDateString('es-MX')}`, 196, y - 7, { align: 'right' });
     
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(203, 213, 225);
-    doc.text(`Total Registros: ${data.actividades.length} actividades`, 196, y, { align: 'right' });
+    const dibujarCabecera = () => {
+      doc.setFillColor(7, 23, 40);
+      doc.rect(0, 0, 210, altoCabecera, 'F'); 
 
-    y = altoCabecera + 12; 
-    doc.setTextColor(15, 23, 42);
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text('REPORTE DE ACTIVIDADES', 14, 14);
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(203, 213, 225);
+      doc.text('Tokens de Desarrollo Integral', 14, 21);
+
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text(`FECHA: ${new Date().toLocaleDateString('es-MX')}`, 196, 14, { align: 'right' });
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(203, 213, 225);
+      doc.text(`Total Registros: ${data.actividades.length} actividades`, 196, 21, { align: 'right' });
+    };
+
+    let y = altoCabecera + 12; 
 
     const imgEjes = await generarGraficoEjes(data.distribucionEjes);
-    doc.addImage(imgEjes, 'PNG', 14, y, 85, 60);
+    doc.addImage(imgEjes, 'PNG', 14, y, 85, 70);
 
     const imgTemporalidad = await generarGraficoTemporalidad(data.distribucionPeriodicidad);
-    doc.addImage(imgTemporalidad, 'PNG', 105, y, 90, 60);
-    y += 68;
+    doc.addImage(imgTemporalidad, 'PNG', 105, y, 90, 70);
+    y += 72;
 
     const imgRecientes = await generarGraficoActividadesRecientes(data.actividades);
-    doc.addImage(imgRecientes, 'PNG', 14, y, 180, 55);
-    y += 63;
+    doc.addImage(imgRecientes, 'PNG', 14, y, 180, 74);
+    y += 78;
+
+    const imgAreas = await generarGraficoAreas(data.distribucionAreas);
+    doc.addImage(imgAreas, 'PNG', 55, y, 100, 74);
+    y += 90;
+
+    doc.addPage();
+    y = altoCabecera + 12;
 
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0);
     doc.text('Actividades registradas', 14, y);
-    y += 5;
+    y += 6;
 
     autoTable(doc, {
       startY: y,
+      margin: { top: altoCabecera + 12 },
       head: [['ID', 'Título', 'Eje Formativo', 'Temporalidad', "TDI's", 'Estado']],
-      body: data.actividades.map((act, index) => [
+      body: data.actividades.map((act) => [
         act.id,
         act.titulo,
         EJE_LABEL[act.eje] || act.eje,
@@ -240,6 +248,12 @@ export class ReporteService {
       ]),
       styles: { fontSize: 8 },
     });
+
+    const totalPaginas = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPaginas; i++) {
+      doc.setPage(i);
+      dibujarCabecera();
+    }
 
     doc.save(`reporte-actividades-${Date.now()}.pdf`);
   }
