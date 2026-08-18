@@ -200,7 +200,9 @@ export class RevisionActividad {
     const labels: Record<string, string> = {
       UNICA: 'Única ocasión',
       SEMANAL: 'Semanal',
-      MENSUAL: 'Mensual'
+      MENSUAL: 'Mensual',
+      CUATRIMESTRAL: 'Cuatrimestral',
+      ANUAL: 'Anual'
     };
     return labels[periodicidad || ''] ?? periodicidad ?? '—';
   }

@@ -158,10 +158,17 @@ export class Resumen implements OnInit {
         return acc;
       }, {} as Record<string, number>);
 
+      const distribucionAreas = this.actividades.reduce((acc, act) => {
+        const area = act.area || 'Sin Área';
+        acc[area] = (acc[area] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
       await this.reporteService.generarReporteActividades({
         actividades: this.actividades,
         distribucionEjes,
-        distribucionPeriodicidad
+        distribucionPeriodicidad,
+        distribucionAreas
       });
 
     } finally {
