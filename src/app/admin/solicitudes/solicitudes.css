@@ -450,24 +450,31 @@
 .btn-ver-evidencia {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    background-color: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    font-size: 0.7rem;
+    gap: 0.5rem;
+    background-color: #3b82f6;
+    color: #fff;
+    border: none;
+    font-size: 0.8rem;
     font-weight: 600;
-    padding: 0.35rem 0.6rem;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .btn-ver-evidencia:hover:not(:disabled) {
-    background-color: #e2e8f0;
-    color: #334155;
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .btn-ver-evidencia:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+}
+
+.btn-ver-text {
+    display: inline-block;
 }
