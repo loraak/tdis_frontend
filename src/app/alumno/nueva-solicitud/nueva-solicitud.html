@@ -181,9 +181,9 @@
                 <div class="form-field">
                     <label class="form-label">Eje formativo *</label>
                     <div class="pill-selection-wrapper" [class.has-error]="isInvalid('eje')">
+                        <button type="button" class="pill-button" [class.selected]="eje === 'PERSONAL'" (click)="eje = 'PERSONAL'">Identidad Personal</button>
                         <button type="button" class="pill-button" [class.selected]="eje === 'ENTORNO_SOCIAL'" (click)="eje = 'ENTORNO_SOCIAL'">Entorno Social</button>
-                        <button type="button" class="pill-button" [class.selected]="eje === 'PERSONAL'" (click)="eje = 'PERSONAL'">Personal</button>
-                        <button type="button" class="pill-button" [class.selected]="eje === 'DEPORTIVO'" (click)="eje = 'DEPORTIVO'">Deportivo</button>
+                        <button type="button" class="pill-button" [class.selected]="eje === 'DEPORTIVO'" (click)="eje = 'DEPORTIVO'">Físico</button>
                         <button type="button" class="pill-button" [class.selected]="eje === 'TRASCENDENCIA'" (click)="eje = 'TRASCENDENCIA'">Trascendencia</button>
                     </div>
                 </div>

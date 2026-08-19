@@ -10,15 +10,15 @@ import { calcularAlertasEje } from '../utils/eje.utils';
 import { calcularProgresoNivel } from '../utils/nivel.utils';
 
 const EJE_LABEL: Record<string, string> = {
-    PERSONAL: 'Personal',
+    PERSONAL: 'Identidad Personal',
     ENTORNO_SOCIAL: 'Entorno Social',
-    DEPORTIVO: 'Deportivo',
+    DEPORTIVO: 'Físico',
     TRASCENDENCIA: 'Trascendencia',
 };
 const CAMPO_EJE: Record<string, string> = {
-  personal: 'Personal',
+  personal: 'Identidad Personal',
   social: 'Entorno Social',
-  dep: 'Deportivo',
+  dep: 'Físico',
   trasc: 'Trascendencia',
 };
 export interface ReporteActividadesData {

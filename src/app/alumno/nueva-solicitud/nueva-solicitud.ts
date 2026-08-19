@@ -130,9 +130,9 @@ export class NuevaSolicitud implements OnInit {
 
   ejeLabel(eje: string): string {
     const map: Record<string, string> = {
+      'PERSONAL': 'Identidad Personal',
       'ENTORNO_SOCIAL': 'Entorno Social',
-      'PERSONAL': 'Personal',
-      'DEPORTIVO': 'Deportivo',
+      'DEPORTIVO': 'Físico',
       'TRASCENDENCIA': 'Trascendencia',
     };
     return map[eje] || eje;

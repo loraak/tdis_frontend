@@ -22,7 +22,7 @@ export class Catalogo implements OnInit {
   filtroActivo = signal<string>('TODAS');
 
   EJES = ['ENTORNO_SOCIAL', 'PERSONAL', 'DEPORTIVO', 'TRASCENDENCIA'];
-  TIEMPO = ['UNICA', 'SEMANAL', 'MENSUAL']
+  TIEMPO = ['UNICA', 'SEMANAL', 'MENSUAL', 'CUATRIMESTRAL', 'ANUAL']
 
   ngOnInit() {
     this.cargarActividades();
@@ -56,9 +56,9 @@ export class Catalogo implements OnInit {
 
   ejeLabel(eje: string): string {
     const map: Record<string, string> = {
+      'PERSONAL': 'Identidad Personal',
       'ENTORNO_SOCIAL': 'Entorno Social',
-      'PERSONAL': 'Personal',
-      'DEPORTIVO': 'Deportivo',
+      'DEPORTIVO': 'Físico',
       'TRASCENDENCIA': 'Trascendencia',
     };
     return map[eje] || eje;
@@ -87,7 +87,9 @@ export class Catalogo implements OnInit {
     const map: Record<string, string> = {
       'UNICA': 'Única ocasión',
       'SEMANAL': 'Semanal',
-      'MENSUAL': 'Mensual'
+      'MENSUAL': 'Mensual',
+      'CUATRIMESTRAL': 'Cuatrimestral',
+      'ANUAL': 'Anual'
     };
     return map[periodicidad] || periodicidad;
   }

@@ -190,9 +190,9 @@ export class RevisionActividad {
 
   ejeLabel(eje: ActividadDTO['eje']): string {
     const labels: Record<ActividadDTO['eje'], string> = {
+      PERSONAL: 'Identidad Personal',
       ENTORNO_SOCIAL: 'Entorno Social',
-      PERSONAL: 'Personal',
-      DEPORTIVO: 'Deportivo',
+      DEPORTIVO: 'Físico',
       TRASCENDENCIA: 'Trascendencia'
     };
     return labels[eje] ?? eje;

@@ -111,9 +111,9 @@ export class Resumen implements OnInit {
 
   ejeLabel(key: string): string {
     const map: Record<string, string> = {
-      'PERSONAL': 'Personal',
+      'PERSONAL': 'Identidad Personal',
       'ENTORNO-SOCIAL': 'Entorno Social',
-      'DEPORTIVO': 'Deportivo',
+      'DEPORTIVO': 'Físico',
       'TRASCENDENCIA': 'Trascendencia',
     };
     return map[key] || key;
