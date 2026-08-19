@@ -97,6 +97,12 @@ export class Register {
       password: this.password,
       nombre: this.nombre.trim(),
       apellidos: this.apellidos.trim(),
+      division: this.division,
+      programa: this.programa.trim(),
+      grupo: this.grupo.trim(),
+      cuatrimestre: this.cuatrimestre.trim(),
+      turno: this.turno,
+      tutor: this.tutor.trim(),
     }).subscribe({
       next: () => {
         const studentProfile = {
