@@ -43,6 +43,15 @@ export class Resumen implements OnInit {
 
   maxPuntosEje = 100;
   generandoReporte: boolean = false;
+  divisionSeleccionada: string = 'TODAS';
+
+  divisiones = [
+    { label: 'Todas las divisiones', value: 'TODAS' },
+    { label: 'Tecnologías de la Información', value: 'TECNOLOGIAS' },
+    { label: 'Idiomas', value: 'IDIOMAS' },
+    { label: 'Económico-Administrativa', value: 'ECONOMICO_ADMINISTRATIVA' },
+    { label: 'Industrial y Nanotecnología', value: 'INDUSTRIAL_Y_NANOTECNOLOGIA' }
+  ];
 
   ngOnInit() {
     this.cargarDatos();
@@ -102,9 +111,9 @@ export class Resumen implements OnInit {
 
   ejeLabel(key: string): string {
     const map: Record<string, string> = {
-      'PERSONAL': 'Personal',
+      'PERSONAL': 'Identidad Personal',
       'ENTORNO-SOCIAL': 'Entorno Social',
-      'DEPORTIVO': 'Deportivo',
+      'DEPORTIVO': 'Físico',
       'TRASCENDENCIA': 'Trascendencia',
     };
     return map[key] || key;
@@ -127,8 +136,20 @@ export class Resumen implements OnInit {
   async onGenerarReporteAlumnos(): Promise<void> {
     this.generandoReporte = true;
     try {
+      const listaBase = this.alumnos ?? [];
+      const esGeneral = !this.divisionSeleccionada || this.divisionSeleccionada === 'TODAS';
+      const alumnosAProcesar = esGeneral
+      ? listaBase
+      : listaBase.filter(a => a.division === this.divisionSeleccionada);
+
+      const divisionObj = this.divisiones.find(d => d.value === this.divisionSeleccionada);
+    const nombreFiltro = esGeneral 
+      ? 'General / Todas las divisiones' 
+      : (divisionObj?.label ?? 'General');
+
       await this.reporteService.generarReporteAlumnos(
-        this.alumnosFiltrados,
+        alumnosAProcesar,
+        nombreFiltro,
         this.resumenData?.distribucionNiveles ?? {},
         this.resumenData?.puntosPorEje ?? {}
       );

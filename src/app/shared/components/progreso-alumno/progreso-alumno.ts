@@ -186,7 +186,7 @@ export class ProgresoAlumno implements OnInit, OnChanges {
     this.dataTrascendencia = this.donutData(tras, '#8b5cf6');
 
     this.radarData = {
-      labels: ['Personal', 'Social', 'Dep.', 'Trasc.'],
+      labels: ['Personal', 'Social', 'Físico', 'Trasc.'],
       datasets: [{
         label: 'Perfil de Avance',
         data: [personal, soc, dep, tras],
@@ -210,7 +210,7 @@ export class ProgresoAlumno implements OnInit, OnChanges {
 
   initCharts() {
     this.radarData = {
-      labels: ['Personal', 'Social', 'Dep.', 'Trasc.'],
+      labels: ['Personal', 'Social', 'Físico', 'Trasc.'],
       datasets: [{
         label: 'Perfil de Avance',
         data: [0, 0, 0, 0],

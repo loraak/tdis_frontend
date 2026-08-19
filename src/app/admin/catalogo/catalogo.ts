@@ -231,22 +231,16 @@ export class AdminCatalogo implements OnInit {
 
   ejeLabel(eje: string): string {
     const map: Record<string, string> = {
+      'PERSONAL': 'Identidad Personal',
       'ENTORNO_SOCIAL': 'Entorno Social',
-      'PERSONAL': 'Personal',
-      'DEPORTIVO': 'Deportivo',
+      'DEPORTIVO': 'Físico',
       'TRASCENDENCIA': 'Trascendencia',
     };
     return map[eje] || eje;
   }
 
   periodicidadLabel(p: string): string {
-    const map: Record<string, string> = { 
-      'UNICA': 'Única', 
-      'SEMANAL': 'Semanal', 
-      'MENSUAL': 'Mensual',
-      'CUATRIMESTRAL': 'Cuatrimestral',
-      'ANUAL': 'Anual'
-    };
+    const map: Record<string, string> = { 'UNICA': 'Única', 'SEMANAL': 'Semanal', 'MENSUAL': 'Mensual', 'CUATRIMESTRAL': 'Cuatrimestral', 'ANUAL': 'Anual' };
     return map[p] || p;
   }
 

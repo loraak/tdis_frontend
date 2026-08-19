@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AlumnoResumenDTO } from '../models/admin';
-import { generarGraficoAlumnosRecientes, generarGraficoNiveles, generarGraficoEjes, generarGraficoActividadesRecientes, generarGraficoTemporalidad, generarGraficoAreas } from '../utils/reporte-charts.utils';
+import { generarGraficoAlumnosRecientes, generarGraficoNiveles, generarGraficoEjes, generarGraficoActividadesRecientes, generarGraficoTemporalidad, generarGraficoAreas, generarGraficoDivisiones } from '../utils/reporte-charts.utils';
 import { ActividadDTO } from '../models/actividad';
 import { filtrarAlumnosEnRiesgo } from '../utils/riesgo.utils';
 import { obtenerCuatrimestreActual, Periodo } from '../utils/periodo.utils';
@@ -10,15 +10,15 @@ import { calcularAlertasEje } from '../utils/eje.utils';
 import { calcularProgresoNivel } from '../utils/nivel.utils';
 
 const EJE_LABEL: Record<string, string> = {
-    PERSONAL: 'Personal',
+    PERSONAL: 'Identidad Personal',
     ENTORNO_SOCIAL: 'Entorno Social',
-    DEPORTIVO: 'Deportivo',
+    DEPORTIVO: 'Físico',
     TRASCENDENCIA: 'Trascendencia',
 };
 const CAMPO_EJE: Record<string, string> = {
-  personal: 'Personal',
+  personal: 'Identidad Personal',
   social: 'Entorno Social',
-  dep: 'Deportivo',
+  dep: 'Físico',
   trasc: 'Trascendencia',
 };
 export interface ReporteActividadesData {
@@ -32,48 +32,64 @@ export class ReporteService {
 
   async generarReporteAlumnos(
     alumnos: AlumnoResumenDTO[],
+    filtroSeleccionado: string = 'General',
     distribucionNiveles: Record<string, number>,
     puntosPorEje: Record<string, number>,
   ): Promise<void> {
     const doc = new jsPDF();
     const altoCabecera = 30;
-    doc.setFillColor(7, 23, 40);
-    doc.rect(0, 0, 210, altoCabecera, 'F'); 
+    const dibujarCabecera = () => {
+      doc.setFillColor(7, 23, 40);
+      doc.rect(0, 0, 210, altoCabecera, 'F'); 
 
-    let y = 14; 
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text('REPORTE DE ALUMNOS', 14, 14);
 
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255, 255, 255);
-    doc.text('REPORTE DE ALUMNOS', 14, y);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(203, 213, 225);
+      doc.text(`Reporte ${filtroSeleccionado} | Tokens de Desarrollo Integral`, 14, 21);
 
-    y += 7;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(203, 213, 225);
-    doc.text('Tokens de Desarrollo Integral', 14, y);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.text(`FECHA: ${new Date().toLocaleDateString('es-MX')}`, 196, 14, { align: 'right' });
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(203, 213, 225);
+      doc.text(`Total Registros: ${alumnos.length} alumnos`, 196, 21, { align: 'right' });
+    };
 
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255, 255, 255);
-    doc.text(`FECHA: ${new Date().toLocaleDateString('es-MX')}`, 196, y - 7, { align: 'right' });
-    
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(203, 213, 225);
-    doc.text(`Total Registros: ${alumnos.length} alumnos`, 196, y, { align: 'right' });
-
-    y = altoCabecera + 12; 
+    let y = altoCabecera + 12; 
     doc.setTextColor(15, 23, 42);
 
+    const esGeneral = filtroSeleccionado.toLowerCase().includes('general');
+
     const imgNiveles = await generarGraficoNiveles(distribucionNiveles);
-    doc.addImage(imgNiveles, 'PNG', 14, y, 85, 60);
+    doc.addImage(imgNiveles, 'PNG', 14, y, 85, 70);
     const imgEjes = await generarGraficoEjes(puntosPorEje);
-    doc.addImage(imgEjes, 'PNG', 105, y, 90, 60);
+    doc.addImage(imgEjes, 'PNG', 105, y, 90, 70);
     y += 70;
 
     const imgRecientes = await generarGraficoAlumnosRecientes(alumnos);
-    doc.addImage(imgRecientes, 'PNG', 14, y, 180, 60);
-    y += 65;
+    doc.addImage(imgRecientes, 'PNG', 14, y, 180, 70);
+    y += 75;
+
+    if (esGeneral) {
+      const distribucionDivisiones: Record<string, number> = {};
+      alumnos.forEach(alumno => {
+        const key = alumno.division ?? 'SIN_DIVISION';
+        distribucionDivisiones[key] = (distribucionDivisiones[key] || 0) + 1;
+      });
+
+      const imgDivisiones = await generarGraficoDivisiones(distribucionDivisiones);
+      doc.addImage(imgDivisiones, 'PNG', 50, y, 100, 70);
+    }
+
+    doc.addPage();
+    y = altoCabecera + 12;
 
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
@@ -83,7 +99,8 @@ export class ReporteService {
 
     autoTable(doc, {
       startY: y,
-      head: [['#', 'Matrícula', 'Nivel', 'Personal', 'Social', 'Dep.', 'Trasc.', 'Total']],
+      margin: { top: altoCabecera + 12 },
+      head: [['#', 'Matrícula', 'Nivel', 'Personal', 'Social', 'Físico', 'Trasc.', 'Total']],
       body: alumnos.map((a, i) => [i + 1, a.matricula, calcularProgresoNivel(a.total).nivelActual, a.personal, a.social, a.dep, a.trasc, a.total]),
       styles: { fontSize: 8 },
       didParseCell: (data) => {
@@ -109,6 +126,12 @@ export class ReporteService {
     doc.setFontSize(7);
     doc.setTextColor(150, 150, 150);
     doc.text('*Rojo: eje por debajo del 25% mínimo requerido.', 14, finalY);
+
+    const totalPaginas = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPaginas; i++) {
+      doc.setPage(i);
+      dibujarCabecera();
+    }
 
     doc.save(`reporte-alumnos-${Date.now()}.pdf`);
   }
