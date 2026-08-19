@@ -58,10 +58,32 @@
         </div>
 
         <div class="reportes-actions">
-            <div class="direct-reports-group">
-                <button type="button" class="btn-report alumnos" (click)="onGenerarReporteAlumnos()">
+            <div class="filtered-report-card">
+                <div class="filter-instruction">
+                    <i class="pi pi-info-circle"></i>
+                    <span>Selecciona la división o genera un reporte con todas las divisiones:</span>
+                </div>
+
+                <div class="input-button-pair">
+                <p-select 
+                    [options]="divisiones" 
+                    optionLabel="label" 
+                    optionValue="value"
+                    [(ngModel)]="divisionSeleccionada"
+                    placeholder="- Selecciona división -" 
+                    [showClear]="true"
+                    appendTo="body" 
+                    class="custom-select">
+                </p-select>
+
+                <button type="button" class="btn-report alumnos" (click)="onGenerarReporteAlumnos()" [disabled]="generandoReporte">
                     Reporte de Alumnos
                 </button>
+            </div>
+            </div>
+            
+            <div class="direct-reports-group">
+                
                 <button type="button" class="btn-report actividades" (click)="onGenerarReporteActividades()">
                     Reporte de Actividades
                 </button>
