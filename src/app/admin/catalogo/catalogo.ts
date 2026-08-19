@@ -40,10 +40,10 @@ export class AdminCatalogo implements OnInit {
   ];
 
   NIVELES_IMPACTO = [
-    { label: 'Explorador (conoce)', value: 'EXPLORADOR' },
-    { label: 'Promotor (participa)', value: 'PROMOTOR' },
-    { label: 'Líder (hace)', value: 'LIDER' },
-    { label: 'Embajador (Lidera)', value: 'EMBAJADOR' },
+    { label: 'Sensibilizador (solo escucha)', value: 'SENSIBILIZADOR' },
+    { label: 'Formativo (intercambio de ideas)', value: 'FORMATIVO' },
+    { label: 'Aplicación (participación activa)', value: 'APLICACION' },
+    { label: 'Implementador (dirige)', value: 'IMPLEMENTADOR' },
   ];
 
   PUBLICOS_OBJETIVO = [
@@ -74,6 +74,7 @@ export class AdminCatalogo implements OnInit {
     { label: 'Toma de decisiones', value: 'TOMA_DE_DECISIONES' },
     { label: 'Autogestión y disciplina', value: 'AUTOGESTION_Y_DISCIPLINA' },
     { label: 'Participación social', value: 'PARTICIPACION_SOCIAL' },
+    { label: 'Otro', value: 'OTRO' },
   ];
 
   TIPOS_EVIDENCIA = [
@@ -126,6 +127,16 @@ export class AdminCatalogo implements OnInit {
 
   abrirEditar(actividad: ActividadDTO) {
     this.editandoId = actividad.id;
+    const competencias = (actividad.competenciasReforzar || []) as string[];
+    const competenciasEstandarSet = new Set(['COMUNICACION_EFECTIVA', 'TRABAJO_EN_EQUIPO', 'LIDERAZGO', 'PENSAMIENTO_CRITICO', 'RESPONSABILIDAD_Y_ETICA', 'TOMA_DE_DECISIONES', 'AUTOGESTION_Y_DISCIPLINA', 'PARTICIPACION_SOCIAL', 'OTRO']);
+    const otraCompetencia: string = competencias.find(c => !competenciasEstandarSet.has(c)) || '';
+    const competenciasFiltradas = competencias.filter(c => c !== 'OTRO' && c !== otraCompetencia);
+
+    const evidencias = (actividad.tiposEvidenciaRequerida || []) as string[];
+    const evidenciasEstandarSet = new Set(['LISTA_ASISTENCIA_FIRMADA', 'FOTOGRAFIA', 'CONSTANCIA_DOCUMENTO', 'PRODUCTO_REPORTE_ELABORADO', 'OTRO']);
+    const otraEvidencia: string = evidencias.find(e => !evidenciasEstandarSet.has(e)) || '';
+    const evidenciasFiltradas = evidencias.filter(e => e !== 'OTRO' && e !== otraEvidencia);
+    
     this.form = {
       titulo: actividad.titulo,
       descripcion: actividad.descripcion,
@@ -136,12 +147,15 @@ export class AdminCatalogo implements OnInit {
       fechaFin: actividad.fechaFin || '',
       horasEfectivas: actividad.horasEfectivas,
       lugar: actividad.lugar,
-      dimensionesFormacion: actividad.dimensionesFormacion || [],
+      area: actividad.area || '',
+      dimensionesFormacion: (actividad.dimensionesFormacion as string[] | undefined)?.join(',') || '',
       nivelImpacto: actividad.nivelImpacto,
       publicoObjetivo: actividad.publicoObjetivo || [],
       asignaturasRelacionadas: actividad.asignaturasRelacionadas || [],
-      competenciasReforzar: actividad.competenciasReforzar || [],
-      tiposEvidenciaRequerida: actividad.tiposEvidenciaRequerida || [],
+      competenciasReforzar: competenciasFiltradas,
+      competenciaOtro: otraCompetencia,
+      tiposEvidenciaRequerida: evidenciasFiltradas,
+      evidenciaOtro: otraEvidencia,
     };
     this.mostrarFormulario = true;
   }
@@ -167,12 +181,13 @@ export class AdminCatalogo implements OnInit {
       fechaFin: this.form.fechaFin || undefined,
       horasEfectivas: this.form.horasEfectivas,
       lugar: this.form.lugar,
+      area: this.form.area,
       dimensionesFormacion: this.form.dimensionesFormacion as ActividadDTO['dimensionesFormacion'],
       nivelImpacto: this.form.nivelImpacto as ActividadDTO['nivelImpacto'],
       publicoObjetivo: this.form.publicoObjetivo as ActividadDTO['publicoObjetivo'],
       asignaturasRelacionadas: this.form.asignaturasRelacionadas as ActividadDTO['asignaturasRelacionadas'],
-      competenciasReforzar: this.form.competenciasReforzar as ActividadDTO['competenciasReforzar'],
-      tiposEvidenciaRequerida: this.form.tiposEvidenciaRequerida as ActividadDTO['tiposEvidenciaRequerida'],
+      competenciasReforzar: [...this.form.competenciasReforzar, ...(this.form.competenciaOtro?.trim() ? [this.form.competenciaOtro.trim()] : [])] as ActividadDTO['competenciasReforzar'],
+      tiposEvidenciaRequerida: [...this.form.tiposEvidenciaRequerida, ...(this.form.evidenciaOtro?.trim() ? [this.form.evidenciaOtro.trim()] : [])] as ActividadDTO['tiposEvidenciaRequerida'],
       activa: true,
       createdAt: new Date(),
     };
@@ -185,7 +200,11 @@ export class AdminCatalogo implements OnInit {
           this.cerrarFormulario();
           this.cargarActividades();
         },
-        error: () => { this.guardando = false; this.cdr.detectChanges(); },
+        error: (err) => { 
+          this.guardando = false; 
+          this.cdr.detectChanges();
+          alert(err.error?.message || 'Error al actualizar'); 
+        },
       });
     } else {
       this.catalogoService.crear(dto).subscribe({
@@ -194,7 +213,11 @@ export class AdminCatalogo implements OnInit {
           this.cerrarFormulario();
           this.cargarActividades();
         },
-        error: () => { this.guardando = false; this.cdr.detectChanges(); },
+        error: (err) => { 
+          this.guardando = false; 
+          this.cdr.detectChanges();
+          alert(err.error?.message || 'Error al crear'); 
+        },
       });
     }
   }
@@ -232,12 +255,15 @@ export class AdminCatalogo implements OnInit {
       fechaFin: '',
       horasEfectivas: undefined,
       lugar: 'INTERNO',
-      dimensionesFormacion: [],
+      area: '',
+      dimensionesFormacion: '',
       nivelImpacto: undefined,
       publicoObjetivo: [],
       asignaturasRelacionadas: [],
       competenciasReforzar: [],
+      competenciaOtro: '',
       tiposEvidenciaRequerida: [],
+      evidenciaOtro: '',
     };
   }
 }
@@ -252,10 +278,13 @@ interface FormActividad {
   fechaFin: string;
   horasEfectivas?: number;
   lugar?: 'INTERNO' | 'EXTERNO';
-  dimensionesFormacion: string[];
+  area?: string;
+  dimensionesFormacion: string;
   nivelImpacto?: string;
   publicoObjetivo: string[];
   asignaturasRelacionadas: string[];
   competenciasReforzar: string[];
+  competenciaOtro: string;
   tiposEvidenciaRequerida: string[];
+  evidenciaOtro: string;
 }

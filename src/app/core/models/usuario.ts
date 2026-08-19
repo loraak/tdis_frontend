@@ -19,6 +19,12 @@ export interface RegisterRequest {
   password: string;
   nombre: string;
   apellidos: string;
+  division?: string;
+  programa?: string;
+  grupo?: string;
+  cuatrimestre?: string;
+  turno?: string;
+  tutor?: string;
 }
 
 export interface RegisterExternoRequest {

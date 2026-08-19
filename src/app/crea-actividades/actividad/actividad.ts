@@ -135,6 +135,7 @@ export class Actividad {
       fechaInicio: this.fechaInicio || '',
       fechaFin: this.fechaFin || undefined,
       lugar: rol === 'EXTERNO' ? 'EXTERNO' : 'INTERNO',
+      area: this.area,
       activa: false,
       creadorId: user?.usuarioId,
       creadorTipo: rol as ActividadDTO['creadorTipo'],

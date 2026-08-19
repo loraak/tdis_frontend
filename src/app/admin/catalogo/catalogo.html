@@ -84,11 +84,20 @@
                             }
                         </select>
                     </div>
+                    <div class="form-field">
+                        <label class="form-label">Área</label>
+                        <input class="custom-input" type="text" [(ngModel)]="form.area" placeholder="Ej. Bienestar, Deportes, Cultura..." />
+                    </div>
                 </div>
 
-                <div class="form-section-title">Dimensión(es) de Formación Integral * (múltiple)</div>
                 <div class="form-field">
-                    <p-multiSelect [options]="DIMENSIONES" [(ngModel)]="form.dimensionesFormacion" optionLabel="label" optionValue="value" placeholder="Selecciona dimensiones" display="chip" [showHeader]="true" [filter]="true" styleClass="w-full"></p-multiSelect>
+                    <label class="form-label">Dimensión de Formación Integral *</label>
+                    <select class="custom-input" [(ngModel)]="form.dimensionesFormacion">
+                        <option value="">Selecciona una dimensión</option>
+                        @for (d of DIMENSIONES; track d.value) {
+                        <option [value]="d.value">{{ d.label }}</option>
+                        }
+                    </select>
                 </div>
 
                 <div class="form-row">
@@ -117,10 +126,24 @@
                     </div>
                 </div>
 
+                @if (form.competenciasReforzar.includes('OTRO')) {
+                <div class="form-field">
+                    <label class="form-label">Otra competencia</label>
+                    <input class="custom-input" type="text" [(ngModel)]="form.competenciaOtro" placeholder="Escribe la competencia personalizada" />
+                </div>
+                }
+
                 <div class="form-field">
                     <label class="form-label">Tipo de evidencia requerida * (múltiple)</label>
                     <p-multiSelect [options]="TIPOS_EVIDENCIA" [(ngModel)]="form.tiposEvidenciaRequerida" optionLabel="label" optionValue="value" placeholder="Selecciona tipos de evidencia" display="chip" [showHeader]="true" [filter]="true" styleClass="w-full"></p-multiSelect>
                 </div>
+
+                @if (form.tiposEvidenciaRequerida.includes('OTRO')) {
+                <div class="form-field">
+                    <label class="form-label">Otro tipo de evidencia</label>
+                    <input class="custom-input" type="text" [(ngModel)]="form.evidenciaOtro" placeholder="Escribe el tipo de evidencia personalizado" />
+                </div>
+                }
 
             </div>
 
