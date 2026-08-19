@@ -39,6 +39,7 @@
                         <span class="meta-item"><i class="pi pi-image"></i> {{ sol.nombreArchivo }}</span>
                         <button class="btn-ver-evidencia" (click)="verEvidencia(sol.id)" [disabled]="cargandoImagen" title="Ver evidencia">
                             <i class="pi pi-eye"></i>
+                            <span class="btn-ver-text">Ver imagen</span>
                             @if (cargandoImagen) {
                                 <i class="pi pi-spin pi-spinner"></i>
                             }
