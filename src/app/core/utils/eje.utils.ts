@@ -13,7 +13,7 @@ export function calcularAlertasEje(alumno: {
     const ejes = [
         { eje: 'Personal', puntos: alumno.personal },
         { eje: 'Entorno Social', puntos: alumno.social },
-        { eje: 'Deportivo', puntos: alumno.dep },
+        { eje: 'Físico', puntos: alumno.dep },
         { eje: 'Trascendencia', puntos: alumno.trasc },
     ];
 

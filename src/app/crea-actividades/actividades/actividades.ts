@@ -112,9 +112,9 @@ export class Actividades {
 
   ejeLabel(eje: ActividadDTO['eje']): string {
     const labels: Record<ActividadDTO['eje'], string> = {
+      PERSONAL: 'Identidad Personal',
       ENTORNO_SOCIAL: 'Entorno Social',
-      PERSONAL: 'Personal',
-      DEPORTIVO: 'Deportivo',
+      DEPORTIVO: 'Físico',
       TRASCENDENCIA: 'Trascendencia'
     };
     return labels[eje] ?? eje;
@@ -124,7 +124,9 @@ export class Actividades {
     const labels: Record<ActividadDTO['periodicidad'], string> = {
       UNICA: 'Única ocasión',
       SEMANAL: 'Semanal',
-      MENSUAL: 'Mensual'
+      MENSUAL: 'Mensual',
+      CUATRIMESTRAL: 'Cuatrimestral',
+      ANUAL: 'Anual'
     };
     return labels[periodicidad] ?? periodicidad;
   }

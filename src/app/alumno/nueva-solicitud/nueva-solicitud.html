@@ -181,9 +181,9 @@
                 <div class="form-field">
                     <label class="form-label">Eje formativo *</label>
                     <div class="pill-selection-wrapper" [class.has-error]="isInvalid('eje')">
+                        <button type="button" class="pill-button" [class.selected]="eje === 'PERSONAL'" (click)="eje = 'PERSONAL'">Identidad Personal</button>
                         <button type="button" class="pill-button" [class.selected]="eje === 'ENTORNO_SOCIAL'" (click)="eje = 'ENTORNO_SOCIAL'">Entorno Social</button>
-                        <button type="button" class="pill-button" [class.selected]="eje === 'PERSONAL'" (click)="eje = 'PERSONAL'">Personal</button>
-                        <button type="button" class="pill-button" [class.selected]="eje === 'DEPORTIVO'" (click)="eje = 'DEPORTIVO'">Deportivo</button>
+                        <button type="button" class="pill-button" [class.selected]="eje === 'DEPORTIVO'" (click)="eje = 'DEPORTIVO'">Físico</button>
                         <button type="button" class="pill-button" [class.selected]="eje === 'TRASCENDENCIA'" (click)="eje = 'TRASCENDENCIA'">Trascendencia</button>
                     </div>
                 </div>
@@ -220,25 +220,7 @@
                 </div>
                 }
 
-<div class="form-field">
-                    <label class="form-label">Horas efectivas o tiempo de participación *</label>
-                    <input class="custom-input" type="text" placeholder="Ej. 2 horas, una semana..." [(ngModel)]="horas" name="horas" [class.is-invalid]="isInvalid('horas')" (input)="onInputChange('horas')" [disabled]="actividadPrecargada" />
-                    @if (actividadPrecargada) {
-                    <small class="text-muted">Precargado desde la actividad seleccionada</small>
-                    }
-                </div>
-
-                <div class="form-field full-width">
-                    <label class="form-label">Lugar en donde se llevó a cabo *</label>
-                    <div class="pill-selection-wrapper" [class.has-error]="isInvalid('lugar')">
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Interno (UTEQ)'" [class.is-invalid]="isInvalid('lugar')" [disabled]="actividadPrecargada" (click)="actividadPrecargada || seleccionarLugar('Interno (UTEQ)')">Interno (UTEQ)</button>
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Externo'" [class.is-invalid]="isInvalid('lugar')" [disabled]="actividadPrecargada" (click)="actividadPrecargada || seleccionarLugar('Externo')">Externo</button>
-                        <button type="button" class="pill-button" [class.selected]="lugar === 'Otro'" [class.is-invalid]="isInvalid('lugar')" [disabled]="actividadPrecargada" (click)="actividadPrecargada || seleccionarLugar('Otro')">Otro</button>
-                    </div>
-                    @if (actividadPrecargada) {
-                    <small class="text-muted">Precargado desde la actividad seleccionada</small>
-                    }
-                </div>
+<!-- Horas y Lugar se definen en PREVIA y se envían al admin. En EVIDENCIA se precargan y bloquean. -->
 
                 @if (tipoFormulario === 'PREVIA') {
                 <div class="form-field full-width">
@@ -254,10 +236,10 @@
                 <div class="form-field full-width">
                     <label class="form-label">Nivel de impacto *</label>
                     <div class="pill-selection-wrapper" [class.has-error]="isInvalid('nivelImpacto')">
-                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Explorador (conoce)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Explorador (conoce)')">Explorador (conoce)</button>
-                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Promotor (participa)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Promotor (participa)')">Promotor (participa)</button>
-                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Líder (hace)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Líder (hace)')">Líder (hace)</button>
-                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'Embajador (Lidera)'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('Embajador (Lidera)')">Embajador (Lidera)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'EXPLORADOR'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('EXPLORADOR')">Explorador (conoce)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'PROMOTOR'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('PROMOTOR')">Promotor (participa)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'LIDER'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('LIDER')">Líder (hace)</button>
+                        <button type="button" class="pill-button" [class.selected]="nivelImpacto === 'EMBAJADOR'" [class.is-invalid]="isInvalid('nivelImpacto')" (click)="seleccionarNivelImpacto('EMBAJADOR')">Embajador (Lidera)</button>
                     </div>
                 </div>
 

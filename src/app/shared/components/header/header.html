@@ -10,7 +10,7 @@
                 <p>{{ getNombreUsuario() }} · Desarrollo Humano</p>
             } @else {
                 <h1 class="title-alumno">Tokens de Desarrollo Integral</h1>
-                <p>Matrícula {{ getMatricula() }}</p>
+                <p> {{ getMatricula() || getNombreUsuario() }}</p>
             }
         </div>
     </div>
@@ -25,7 +25,7 @@
         } @else {
             <button class="btn-header" (click)="cerrarSesion()">
                 <i class="pi pi-user"></i> 
-                <span>{{ getMatricula() }}</span> 
+                <span>{{ getMatricula() || getNombreUsuario() }}</span> 
                 <i class="pi pi-sign-out"></i>
             </button>
         }

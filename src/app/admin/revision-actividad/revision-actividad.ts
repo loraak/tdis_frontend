@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { CatalogoService } from '../../core/services/catalogo.service';
 import { SolicitudesService } from '../../core/services/solicitudes.service';
+import { Auth } from '../../core/services/auth';
 import { ActividadDTO } from '../../core/models/actividad';
 import { SolicitudDTO } from '../../core/models/solicitud';
 
@@ -20,6 +21,7 @@ export class RevisionActividad {
   private cdr = inject(ChangeDetectorRef);
   private catalogoService = inject(CatalogoService);
   private solicitudesService = inject(SolicitudesService);
+  private auth = inject(Auth);
 
   expandedId: string | null = null;
   loading = true;
@@ -188,9 +190,9 @@ export class RevisionActividad {
 
   ejeLabel(eje: ActividadDTO['eje']): string {
     const labels: Record<ActividadDTO['eje'], string> = {
+      PERSONAL: 'Identidad Personal',
       ENTORNO_SOCIAL: 'Entorno Social',
-      PERSONAL: 'Personal',
-      DEPORTIVO: 'Deportivo',
+      DEPORTIVO: 'Físico',
       TRASCENDENCIA: 'Trascendencia'
     };
     return labels[eje] ?? eje;
@@ -200,7 +202,9 @@ export class RevisionActividad {
     const labels: Record<string, string> = {
       UNICA: 'Única ocasión',
       SEMANAL: 'Semanal',
-      MENSUAL: 'Mensual'
+      MENSUAL: 'Mensual',
+      CUATRIMESTRAL: 'Cuatrimestral',
+      ANUAL: 'Anual'
     };
     return labels[periodicidad || ''] ?? periodicidad ?? '—';
   }
@@ -342,7 +346,10 @@ export class RevisionActividad {
         },
         error: (err) => {
           console.error('Error creando actividad desde previa:', err);
-          alert(err.error?.message || 'No se pudo crear la actividad desde la solicitud');
+          console.error('Error status:', err.status);
+          console.error('Error body:', err.error);
+          const msg = err.error?.message || err.error?.error || JSON.stringify(err.error) || 'No se pudo crear la actividad desde la solicitud';
+          alert(msg);
         }
       });
   }
@@ -376,12 +383,13 @@ export class RevisionActividad {
   }
 
   private getCurrentUserId(): string {
-    // TODO: obtener del Auth service
-    return 'admin';
+    const user = this.auth.usuario();
+    return user?.usuarioId || '';
   }
 
   private getCurrentUserRol(): string {
-    return 'ADMINISTRADOR';
+    const user = this.auth.usuario();
+    return user?.tipoUsuario || 'ADMINISTRADOR';
   }
 
   desactivar(act: ActividadDTO): void {

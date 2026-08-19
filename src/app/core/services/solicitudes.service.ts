@@ -43,4 +43,8 @@ export class SolicitudesService {
   revisar(id: string, request: RevisarSolicitudRequest): Observable<SolicitudDTO> {
     return this.http.put<SolicitudDTO>(`${this.apiUrl}/${id}/revisar`, request);
   }
+
+  actualizarNombreArchivo(id: string, nombreArchivo: string): Observable<SolicitudDTO> {
+    return this.http.put<SolicitudDTO>(`${this.apiUrl}/${id}/nombre-archivo`, { nombreArchivo });
+  }
 }

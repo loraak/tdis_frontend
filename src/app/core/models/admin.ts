@@ -16,6 +16,7 @@ export interface AlumnoResumenDTO {
   nivel: string;
   personal: number;
   social: number;
+  division?: string;
   dep: number;
   trasc: number;
   total: number;

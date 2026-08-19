@@ -65,6 +65,12 @@
                     @if (actividad.periodicidad === 'UNICA' && actividad.fechaInicio) {
                     <span class="info-date"><i class="pi pi-calendar"></i> {{ actividad.fechaInicio }}</span>
                     }
+                    @if (actividad.nombreResponsable) {
+                    <span class="info-responsable"><i class="pi pi-user"></i> {{ actividad.nombreResponsable }}</span>
+                    }
+                    @if (actividad.telefonoResponsable) {
+                    <span class="info-telefono"><i class="pi pi-phone"></i> {{ actividad.telefonoResponsable }}</span>
+                    }
                     <span class="badge-evidence-required"><i class="pi pi-file"></i> Evidencia requerida</span>
                 </div>
 
