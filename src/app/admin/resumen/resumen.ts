@@ -112,7 +112,7 @@ export class Resumen implements OnInit {
   ejeLabel(key: string): string {
     const map: Record<string, string> = {
       'PERSONAL': 'Identidad Personal',
-      'ENTORNO-SOCIAL': 'Entorno Social',
+      'ENTORNO_SOCIAL': 'Entorno Social',
       'DEPORTIVO': 'Físico',
       'TRASCENDENCIA': 'Trascendencia',
     };
@@ -120,7 +120,7 @@ export class Resumen implements OnInit {
   }
 
   get barEjes(): string[] {
-    return ['PERSONAL', 'ENTORNO-SOCIAL', 'DEPORTIVO', 'TRASCENDENCIA'];
+    return ['PERSONAL', 'ENTORNO_SOCIAL', 'DEPORTIVO', 'TRASCENDENCIA'];
   }
 
   nivelLabel(key: string): string {
