@@ -106,6 +106,13 @@
                 <p class="text-block-content">{{ sol.descripcion }}</p>
                 }
 
+                @if (sol.aiMotivo) {
+                  <span class="text-block-title">Análisis de la IA</span>
+                  <p class="text-block-content">
+                    <i class="pi pi-info-circle"></i> {{ sol.aiMotivo }}
+                  </p>
+                }
+
                 @if (sol.tipoSolicitud === 'PREVIA') {
                 <span class="data-section-title space-top">Datos de Solicitud Previa</span>
                 <div class="data-grid-layout">

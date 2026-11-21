@@ -73,25 +73,26 @@
 
 
 .role-selection-container {
-    display: flex;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 880px;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 880px;
+  justify-content: center;
 }
 
-::v-deep .role-card-wrapper .p-card {
-    border-radius: 24px;
-    width: 100%;
-    max-width: 320px;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(30, 58, 95, 0.04) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.role-card-wrapper {
+  flex: 1 1 180px;      /* todas parten del mismo ancho y crecen igual */
+  max-width: 200px;     /* ninguna se hace más ancha que las demás */
+  cursor: pointer;      /* manita al pasar el mouse */
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(30, 58, 95, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-::v-deep .role-card-wrapper .p-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(30, 58, 95, 0.08) !important;
+.role-card-wrapper:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(30, 58, 95, 0.08);
 }
 
 .card-content-layout {
@@ -152,13 +153,6 @@
 .role-icon,
 .user-icon {
     font-size: 1.4rem;
-}
-
-::v-deep .login-card-wrapper .p-card {
-    border-radius: 24px;
-    width: 100%;
-    max-width: 460px;
-    box-shadow: 0 10px 30px rgba(30, 58, 95, 0.06) !important;
 }
 
 .btn-back {

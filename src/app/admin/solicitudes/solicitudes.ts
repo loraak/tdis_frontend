@@ -99,7 +99,7 @@ export class Solicitudes implements OnInit {
       'EN_REVISION': 'En revisión',
       'APROBADA': 'Aprobada',
       'RECHAZADA': 'Rechazada',
-      'REVISION_HUMANA': 'Revisión IA',
+      'REVISION_HUMANA': 'Requiere revisión',
     };
     return map[estado] || estado;
   }
@@ -109,7 +109,7 @@ export class Solicitudes implements OnInit {
       'EN_REVISION': 'pi pi-clock',
       'APROBADA': 'pi pi-check-circle',
       'RECHAZADA': 'pi pi-times-circle',
-      'REVISION_HUMANA': 'pi pi-spin pi-spinner',
+      'REVISION_HUMANA': 'pi pi-user',
     };
     return map[estado] || 'pi pi-clock';
   }

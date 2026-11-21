@@ -77,7 +77,7 @@ export class Auth {
     this.isAdmin.set(false);
     this.isExterno.set(false);
     this.isInterno.set(false);
-    this.rol = signal<string | null>(null);
+    this.rol.set(null);
     this.router.navigate(['/login']);
   }
 
