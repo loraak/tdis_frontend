@@ -106,12 +106,15 @@
                 <p class="text-block-content">{{ sol.descripcion }}</p>
                 }
 
-                @if (sol.aiMotivo) {
-                  <span class="text-block-title">Análisis de la IA</span>
-                  <p class="text-block-content">
-                    <i class="pi pi-info-circle"></i> {{ sol.aiMotivo }}
-                  </p>
-                }
+              @if (sol.aiEstado) {
+                <span class="text-block-title">Recomendación de la IA: {{ sol.aiEstado }}</span>
+                <p class="text-block-content">
+                  <i class="pi pi-info-circle"></i> {{ sol.aiMotivo }}
+                  @if (sol.aiDescripcionAnalisis) {
+                    <br><small>{{ sol.aiDescripcionAnalisis }}</small>
+                  }
+                </p>
+              }
 
                 @if (sol.tipoSolicitud === 'PREVIA') {
                 <span class="data-section-title space-top">Datos de Solicitud Previa</span>
