@@ -1,4 +1,4 @@
 export const environment = {
-    production: true,
-    apiUrl: 'https://api-gateway-production-2b72.up.railway.app/api',
+  production: true,
+  apiUrl: 'https://api-gateway-314367565677.us-central1.run.app/api',
 };

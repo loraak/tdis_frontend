@@ -282,7 +282,7 @@
                     <label class="form-label-small">¿Qué hiciste, con quién, para qué?</label>
                     }
                     <textarea class="custom-input" name="descripcion" id="descripcion" [(ngModel)]="descripcion" [disabled]="actividadPrecargada" [class.is-invalid]="isInvalid('descripcion')" (input)="onInputChange('descripcion')"></textarea>
-                    <label class="form-numbers">{{ descripcion?.length || 0 }} / 20 mín.</label>
+                    <label class="form-numbers">{{ descripcion.length }} / 20 mín.</label>
                 </div>
 
                 @if (tipoFormulario === 'PREVIA') {
@@ -414,7 +414,7 @@
                     <label class="form-label">Justificación personal *</label>
                     <textarea class="custom-input" name="justificacionPersonal" id="justificacionPersonal" [(ngModel)]="justificacionPersonal"
                         placeholder="Explica la importancia de esta actividad para tu formación integral…" [class.is-invalid]="isInvalid('justificacionPersonal')" (input)="onInputChange('justificacionPersonal')"></textarea>
-                    <label class="form-numbers">{{ justificacionPersonal?.length || 0 }} / 20 mín.</label>
+                    <label class="form-numbers">{{ justificacionPersonal.length }} / 20 mín.</label>
                 </div>
             </form>
         </div>
