@@ -31,6 +31,14 @@ export class Solicitudes implements OnInit {
   mostrarImagen = false;
   cargandoImagen = false;
 
+  // Diálogo de rechazo
+  mostrarRechazo = false;
+  solicitudARechazar: SolicitudDTO | null = null;
+  motivoRechazo = '';
+  errorRechazo = '';
+  enviandoRechazo = false;
+  readonly MIN_MOTIVO = 10;
+
   ngOnInit() {
     this.cargarSolicitudes();
   }
@@ -78,10 +86,38 @@ export class Solicitudes implements OnInit {
   }
 
   rechazar(sol: SolicitudDTO) {
-    const motivo = prompt('Motivo de rechazo:');
-    if (!motivo) return;
-    this.solicitudesService.revisar(sol.id, { estado: 'RECHAZADA', comentario: motivo })
-      .subscribe({ next: () => this.cargarSolicitudes() });
+    this.solicitudARechazar = sol;
+    this.motivoRechazo = '';
+    this.errorRechazo = '';
+    this.mostrarRechazo = true;
+  }
+
+  cancelarRechazo() {
+    this.mostrarRechazo = false;
+    this.solicitudARechazar = null;
+  }
+
+  confirmarRechazo() {
+    const motivo = this.motivoRechazo.trim();
+    if (!this.solicitudARechazar || motivo.length < this.MIN_MOTIVO) return;
+
+    this.enviandoRechazo = true;
+    this.errorRechazo = '';
+    this.solicitudesService
+      .revisar(this.solicitudARechazar.id, { estado: 'RECHAZADA', comentario: motivo })
+      .subscribe({
+        next: () => {
+          this.enviandoRechazo = false;
+          this.mostrarRechazo = false;
+          this.solicitudARechazar = null;
+          this.cargarSolicitudes();
+        },
+        error: (err) => {
+          this.enviandoRechazo = false;
+          this.errorRechazo = err.error?.message || 'No se pudo rechazar la solicitud.';
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   estadoBadgeClass(estado: string): string {

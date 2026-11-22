@@ -224,4 +224,47 @@
         }
     </p-dialog>
 
+  <p-dialog
+    header="Rechazar evidencia"
+    [(visible)]="mostrarRechazo"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '480px' }"
+    [draggable]="false"
+    [resizable]="false"
+    (onHide)="cancelarRechazo()">
+    <div class="rechazo-body">
+      @if (solicitudARechazar) {
+        <p class="rechazo-info">
+          <strong>{{ solicitudARechazar.alumnoNombre }}</strong> ·
+          {{ solicitudARechazar.actividadTitulo || solicitudARechazar.nombreActividad }}
+        </p>
+      }
+
+      <label for="motivoRechazo" class="text-block-title">Motivo del rechazo</label>
+      <textarea id="motivoRechazo" class="rechazo-textarea" [(ngModel)]="motivoRechazo"
+                maxlength="500" placeholder="Explícale al alumno por qué no se acepta la evidencia…"></textarea>
+      <span class="rechazo-contador">
+                {{ motivoRechazo.trim().length }} / 500 · mínimo {{ MIN_MOTIVO }}
+            </span>
+
+      @if (errorRechazo) {
+        <span class="rechazo-error"><i class="pi pi-exclamation-circle"></i> {{ errorRechazo }}</span>
+      }
+
+      <div class="rechazo-acciones">
+        <button class="btn-action btn-gris" (click)="cancelarRechazo()" [disabled]="enviandoRechazo">
+          <span>Cancelar</span>
+        </button>
+        <button class="btn-action btn-red" (click)="confirmarRechazo()"
+                [disabled]="enviandoRechazo || motivoRechazo.trim().length < MIN_MOTIVO">
+          <div class="btn-text-action">
+            <i class="pi" [class.pi-times-circle]="!enviandoRechazo"
+               [class.pi-spin]="enviandoRechazo" [class.pi-spinner]="enviandoRechazo"></i>
+            <span>{{ enviandoRechazo ? 'Rechazando…' : 'Rechazar' }}</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+
 </div>

@@ -478,3 +478,69 @@
 .btn-ver-text {
     display: inline-block;
 }
+
+/* ---------- Diálogo de rechazo ---------- */
+.rechazo-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.rechazo-info {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.88rem;
+  color: var(--tdis-color-text-blue);
+}
+
+.rechazo-textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font: inherit;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.rechazo-textarea:focus {
+  outline: none;
+  border-color: var(--tdis-color-light-red);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.rechazo-contador {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: right;
+}
+
+.rechazo-error {
+  font-size: 0.82rem;
+  color: var(--tdis-color-light-red);
+}
+
+.rechazo-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.rechazo-acciones .btn-action {
+  width: auto;
+  padding: 9px 18px;
+}
+
+.btn-gris {
+  color: #475569;
+  border-radius: 9px;
+  border: 0.667px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
